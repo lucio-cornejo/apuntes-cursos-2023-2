@@ -1,0 +1,159 @@
+:root {
+  --hover-color: gold;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#cursos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#cursos li {
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 1.5em;
+  text-align: center;
+  color: whitesmoke;
+  background-color: crimson;
+  background-image: linear-gradient(
+    to bottom, 
+    rgb(0, 0, 0, 0),
+    rgb(0, 0, 0, .5)
+  );
+  border: dashed 1px gold;
+}
+#cursos .selected { background-color: black; }
+#cursos li:hover, #cursos li:focus { 
+  background-color: var(--hover-color) 
+}
+
+#inputs {
+  display: flex;
+  flex-direction: column;
+}
+#inputs > div { 
+  gap: 30px;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+#inputs > * {
+  flex: 2;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#inputs .controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#inputs .controls > * {
+  margin: 0;
+  flex: 1 1 0px;
+  cursor: pointer;
+  padding: 10px 15px;
+  border: 2px solid black;
+  background-color: greenyellow;
+}
+#inputs .control:hover, 
+#inputs .control:focus {
+  background-color: var(--hover-color);
+}
+#inputs .controls :not(.control) {
+  cursor: default;
+  background-color: transparent;
+}
+
+input[type="button"] {
+  min-height: 40px;
+}
+input[type="button"]:hover {
+  font-size: 120%;
+  background-color: var(--hover-color);
+}
+  
+/* Text for course class URL copy */
+/* Button to show last class of selected course */
+#copy-url, #last-class {
+  color: black;
+  /* width: 190px; */
+  cursor: pointer;
+  background-color: greenyellow;
+  border: 2px solid black;
+  border-radius: 20px;
+  font-size: 18px;
+  padding: 10px 15px;
+}
+#copy-url::before {
+  content: "Copy course class URL";
+}
+#copy-url:hover, #copy-url:focus,
+#last-class:hover, #last-class:focus {
+  background-color: var(--hover-color);
+}
+#copy-url:active::before {
+  cursor: none;
+  content: "Link copied";
+}
+
+/* Classes' slides */
+h1 {
+  margin: 0;
+  display: grid;
+  font-size: 5em;
+  cursor: pointer;
+  place-content: center; 
+}
+
+#clases {
+  --spacing: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+  position: relative;
+  background-color: rgb(33, 37, 41, .25);
+}
+/* #clases::after {
+  --grid-color: rgb(255, 255, 255, .045);
+  --pseudo-transparency: 1px;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: 30px 30px;
+  background-image:
+    repeating-linear-gradient(
+      var(--grid-color) 0 1px,
+      transparent var(--pseudo-transparency) 100%
+    ),
+    repeating-linear-gradient(
+      90deg, 
+      var(--grid-color) 0 1px, 
+      transparent var(--pseudo-transparency) 100%
+    );
+} */
+#clases * {
+  width: calc(50% - var(--spacing));
+}
+@media only screen and (max-width: 1000px) {
+  #clases * {
+    width: calc(100% - var(--spacing));
+  }
+  #cursos {
+    overflow: auto;
+  }
+  #inputs > div {
+    flex-direction: column;
+  }
+  h1 {
+    font-size: 50px;
+  }
+}

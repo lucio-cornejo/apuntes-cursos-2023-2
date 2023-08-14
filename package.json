@@ -1,0 +1,24 @@
+{
+  "name": "apuntes-cursos-2023-2",
+  "version": "1.0.0",
+  "description": "Notes from college classes in 2023's second semester",
+  "main": "src/main.js",
+  "scripts": {
+    "serve": "live-server",
+    "exportSlides": "Rscript ./custom-scripts/pass-slides-arguments.R",
+    "pdfSubset": "python ./custom-scripts/subset-pdf.py",
+    "prebuild": "python ./custom-scripts/create-available-classes.py",
+    "build": "git add . && git commit -m \"Updated json of available classes\" && git push",
+    "postbuild": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucio-cornejo/apuntes-cursos-2023-2.git"
+  },
+  "author": "Lucio Cornejo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucio-cornejo/apuntes-cursos-2023-2/issues"
+  },
+  "homepage": "https://2023-2-apuntes-cursos-pucp.netlify.app/"
+}

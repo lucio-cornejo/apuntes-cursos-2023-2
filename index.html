@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./src/main.js"></script>
+  <script defer src="./src/show-slides-via-URL.js"></script>
+  <script defer src="./src/copy-course-class-url.js"></script>
+  <script defer src="./src/change-class-via-slides.js"></script>
+  <script defer src="./src/show-last-class.js"></script>
+  <title>Apuntes</title>
+</head>
+<body>
+  <nav>
+    <ul id="cursos">
+      <li tabindex="0" class="selected">Functional Analysis</li>
+      <li tabindex="0">Geometry Topics</li>
+      <li tabindex="0">Probability 1</li>
+      <div id="inputs">
+        <div>
+          <div class="controls">
+            <p tabindex="0" class="control">-</p>
+            <p>1</p>
+            <p tabindex="0" class="control">+</p>
+          </div>
+          <input id="clase" type="range" min="1" max="30" value="1" step="1">
+          <p tabindex="0" id="copy-url" onclick="copyCourseClassURL()"></p>
+          <button id="last-class">Show last class</button>
+        </div>
+        <input type="button" value="ALL CLASSES">
+      </div>
+    </ul>
+
+  </nav>
+  <div id="clases">
+    <h1>CLASE 01</h1>
+    <img src="./_slides/probability-1/01/Page 1.webp">
+  </div>
+  </body>
+</html>
