@@ -1,6 +1,6 @@
 {
   "optimization": "Concavity and Optimization",
   "probability-2": "Probability and Statistics 2",
-  "partial-diff-eq": "Partial Differential Equations",
-  "stat-learning-1": "Statistical Learning 1"
+  "pde": "Partial Differential Equations",
+  "statistics-1": "Statistical Learning 1"
 }
