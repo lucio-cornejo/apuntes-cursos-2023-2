@@ -40,10 +40,34 @@ from PyPDF2 import PdfReader, PdfWriter
 reader = PdfReader(f"./{course_class_pdf}")
 pages = reader.pages
 
-# Subset from pages 1 to end (inclusive)
-start = 1 
-end = int(sys.argv[1])
+# Get page's width and height
+a, b = reader.pages[0].mediabox.width.as_integer_ratio()
+width = a/b
+
+a, b = reader.pages[0].mediabox.height.as_integer_ratio()
+height = a/b
+
+# Add blank page indicating class number
+from io import BytesIO
+from reportlab.pdfgen import canvas
+
+packet = BytesIO()
+can = canvas.Canvas(packet, pagesize = (width, height))
+can.setFont("Helvetica", 100)
+can.drawString(width/6, height/2, f"CLASE {course_class}")
+can.save()
+
+# Move to the beginning of the StringIO buffer
+packet.seek(0)
+
+# Add page with class number
 pdf_writer = PdfWriter()
+pdf_writer.add_page(PdfReader(packet).pages[0])
+
+# Subset from pages 1 to end (inclusive)
+start = 1
+end = int(sys.argv[1])
+
 while start <= end:
   pdf_writer.add_page(pages[start - 1])
   start += 1
