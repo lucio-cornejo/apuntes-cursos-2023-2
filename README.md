@@ -21,3 +21,7 @@ Execute `npm run new-class -- course_alias class_number` .
 ## Move course class notes and subset its pdf
 
 Execute `npm run save-class -- first_n_pages_to_keep` .
+
+## Merge classes' pdfs, for every course
+
+Execute `npm run merge-classes` .

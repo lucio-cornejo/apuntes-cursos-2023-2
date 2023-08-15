@@ -7,6 +7,7 @@
     "new-courses": "Rscript ./custom-scripts/create-courses-folders.R",
     "new-class": "Rscript ./custom-scripts/create-course-class.R",
     "save-class": "python ./custom-scripts/save-class-pdf.py",
+    "merge-classes": "Rscript ./custom-scripts/merge-pdfs.R",
 
     "prebuild": "python ./custom-scripts/create-available-classes.py",
     "build": "git add . && git commit -m \"Updated json of available classes\" && git push",
