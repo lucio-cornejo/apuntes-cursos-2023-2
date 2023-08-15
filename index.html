@@ -4,17 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <link rel="stylesheet" href="./styles.css">
+  <script src="./src/main.js"></script>
   <script src="./src/show-courses-names.js"></script>
-  <!-- 
-
-    <script defer src="./src/main.js"></script>
-    <script defer src="./src/show-slides-via-URL.js"></script>
-    <script defer src="./src/copy-course-class-url.js"></script>
-    <script defer src="./src/change-class-via-slides.js"></script>
-    <script defer src="./src/show-last-class.js"></script>
-  -->
-  <title>Apuntes</title>
+  <script src="./src/show-last-class.js"></script>
+  <script src="./src/copy-course-class-url.js"></script>
+  
+  <title>Apuntes 2023-2</title>
 </head>
 <body>
   <nav>
@@ -32,18 +29,18 @@
           </div>
           <input id="clase" type="range" min="1" max="30" value="1" step="1">
           <p tabindex="0" id="copy-url" onclick="copyCourseClassURL()"></p>
-          <button id="last-class">Show last class</button>
+          <button id="last-class" onclick="showLastClass()">Show last class</button>
         </div>
-        <input type="button" value="ALL CLASSES">
+        <input id="all-classes" type="button" value="ALL CLASSES">
       </div>
     </ul>
-
   </nav>
-  <!-- <div id="clases"> -->
-  <div>
-    <h1>CLASE 01</h1>
-    <object data="./blank-notes.pdf#page=1&view=Fit" type="application/pdf" style="min-height:100dvh; width:100%">
-    </object>
-  </div>
+
+  <embed 
+  id="pdf" class="pdf-container"
+  src="./blank-notes.pdf#page=1&view=Fit" type="application/pdf"
+  >
+
+  <script type="module" src="./src/show-slides-via-URL.js"></script>
   </body>
 </html>

@@ -11,6 +11,11 @@ body {
   padding: 0;
 }
 
+.pdf-container {
+  width: 100%; 
+  min-height: 100dvh;
+}
+
 #cursos {
   margin: 0;
   padding: 0;
@@ -105,55 +110,7 @@ input[type="button"]:hover {
   content: "Link copied";
 }
 
-/* Classes' slides */
-h1 {
-  margin: 0;
-  display: grid;
-  font-size: 5em;
-  cursor: pointer;
-  place-content: center; 
-}
-
-#clases {
-  --spacing: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing);
-  position: relative;
-  background-color: rgb(33, 37, 41, .25);
-}
-/* #clases::after {
-  --grid-color: rgb(255, 255, 255, .045);
-  --pseudo-transparency: 1px;
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-size: 30px 30px;
-  background-image:
-    repeating-linear-gradient(
-      var(--grid-color) 0 1px,
-      transparent var(--pseudo-transparency) 100%
-    ),
-    repeating-linear-gradient(
-      90deg, 
-      var(--grid-color) 0 1px, 
-      transparent var(--pseudo-transparency) 100%
-    );
-} */
-#clases * {
-  width: calc(50% - var(--spacing));
-}
 @media only screen and (max-width: 1000px) {
-  #clases * {
-    width: calc(100% - var(--spacing));
-  }
-  #cursos {
-    overflow: auto;
-  }
-  #inputs > div {
-    flex-direction: column;
-  }
-  h1 {
-    font-size: 50px;
-  }
+  #cursos { overflow: auto }
+  #inputs > div { flex-direction: column }
 }

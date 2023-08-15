@@ -29,6 +29,10 @@ course_class, course_path = (
     .split("#")
 )
 
+# Deal with class number smaller than 10
+if int(course_class) < 10:
+  course_class = "0" + course_class
+
 # Update pdf file name
 pdf_path = f"./courses/{course_path}/apuntes/clase-{course_class}.pdf"
 
@@ -54,7 +58,7 @@ from reportlab.pdfgen import canvas
 packet = BytesIO()
 can = canvas.Canvas(packet, pagesize = (width, height))
 can.setFont("Helvetica", 100)
-can.drawString(width/6, height/2, f"CLASE {course_class}")
+can.drawString(width/8, height/2, f"CLASE {course_class}")
 can.save()
 
 # Move to the beginning of the StringIO buffer

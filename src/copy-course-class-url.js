@@ -2,7 +2,7 @@ function copyTextArgument(text) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
 
-  globalThis["clases"].prepend(textArea);
+  document.body.prepend(textArea);
   textArea.focus();
   textArea.select();
 
@@ -15,9 +15,7 @@ function copyCourseClassURL() {
   // Get course class
   const coursePath = document
     .querySelector(".selected")
-    .innerText
-    .toLowerCase()
-    .replace(/\s/g, "-");
+    .dataset.path;
   
   const classNumberText = document
     .querySelector(".controls :not(.control)")
@@ -30,5 +28,6 @@ function copyCourseClassURL() {
 
   const courseClassURL = url + "?" + 
     coursePath + "&" + classNumberText;
+  
   copyTextArgument(courseClassURL);
 }
