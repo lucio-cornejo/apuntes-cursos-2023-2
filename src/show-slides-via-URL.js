@@ -17,7 +17,7 @@ await new Promise(r => setTimeout(r, 1000));
   const reference = url.split("?").at(-1).split("&");
   
   const coursePath = reference[0];
-  const courseClassPath = `./courses/${coursePath}/apuntes/clase-`;
+  const courseClassPath = `courses/${coursePath}/apuntes/clase-`;
   
   // Set selected course
   document.querySelectorAll("#cursos li").forEach(

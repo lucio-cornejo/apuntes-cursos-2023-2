@@ -59,7 +59,7 @@ function addCourseSelection() {
       //   alert("Selected class was not found.");
       //   return;
       // }
-      showPDF(`./courses/${coursePath}/apuntes/clase-${classNumberText}.pdf`);
+      showPDF(`courses/${coursePath}/apuntes/clase-${classNumberText}.pdf`);
     }
   )
 
@@ -92,7 +92,7 @@ function addCourseSelection() {
       .querySelector(".selected")
       .dataset.path;
       
-    showPDF(`./courses/${coursePath}/merged.pdf`)
+    showPDF(`courses/${coursePath}/merged.pdf`)
   }
 }
 
@@ -114,6 +114,17 @@ function showPDF(pdfPath) {
   newPDFContainer.classList.add("pdf-container");
   
   newPDFContainer.type = "application/pdf";
-  newPDFContainer.src = pdfPath + pdfSettings;
+
+  // If user is using a mobile device, 
+  // use Google Drive to visualize the pdf,
+  // in order to avoid downloading the pdf file.
+  const isMobile = navigator.userAgentData.mobile;
+  const googleViewURL = "https://docs.google.com/gview?embedded=true&url=";
+  const personalWebsiteURL = "https://2023-2-apuntes-cursos-pucp.netlify.app/";
+
+  newPDFContainer.src = !isMobile 
+    ? pdfPath + pdfSettings
+    : googleViewURL + personalWebsiteURL + pdfPath;
+
   document.body.appendChild(newPDFContainer);
 }
