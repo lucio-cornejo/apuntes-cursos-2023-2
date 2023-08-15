@@ -36,4 +36,4 @@ await new Promise(r => setTimeout(r, 1000));
   
   // Show referenced course class
   showPDF(courseClassPath + reference[1] + ".pdf");
-})();
+});
