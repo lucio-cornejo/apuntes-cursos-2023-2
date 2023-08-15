@@ -6,8 +6,9 @@ function showLastClass() {
 
   // Get last class
   const lastClassIndex = 
-    globalThis.availableClasses[coursePath]
-    .at(-1);
+    globalThis.availableClasses[coursePath].length 
+    ? globalThis.availableClasses[coursePath].at(-1) 
+    : "01";
 
   // Select last class
   const classNumber = document.querySelector("#clase");
