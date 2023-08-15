@@ -42,7 +42,7 @@ body {
 
 
 .missing-class {
-  background-color: magenta;
+  background-color: magenta !important;
 }
 
 
