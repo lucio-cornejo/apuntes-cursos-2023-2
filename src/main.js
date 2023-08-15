@@ -58,6 +58,7 @@ function addCourseSelection() {
           .includes(classNumberText)
       ) {
         classText.classList.add("missing-class");
+        globalThis["pdf"].src = "not-found.pdf";
         return;
       }
       
