@@ -45,20 +45,23 @@ function addCourseSelection() {
         .dataset.path;
 
       // Update text where class number is displayed
-      classNumber
+      const classText = classNumber
         .previousElementSibling
-        .querySelector("p:not(.control)")
-        .innerText = classNumberText;
+        .querySelector("p:not(.control)");
+      
+      classText.innerText = classNumberText;
       
       // Tell user if course class is not available
-      // if (
-      //   !globalThis
-      //     .availableClasses[coursePath]
-      //     .includes(classNumberText)
-      // ) {
-      //   alert("Selected class was not found.");
-      //   return;
-      // }
+      if (
+        !globalThis
+          .availableClasses[coursePath]
+          .includes(classNumberText)
+      ) {
+        classText.classList.add("missing-class");
+        return;
+      }
+      
+      classText.classList.remove("missing-class");
       showPDF(`courses/${coursePath}/apuntes/clase-${classNumberText}.pdf`);
     }
   )

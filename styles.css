@@ -40,6 +40,12 @@ body {
   background-color: var(--hover-color) 
 }
 
+
+.missing-class {
+  background-color: magenta;
+}
+
+
 #inputs {
   display: flex;
   flex-direction: column;
