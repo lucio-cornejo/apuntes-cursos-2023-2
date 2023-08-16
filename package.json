@@ -8,12 +8,11 @@
     "new-class": "Rscript ./custom-scripts/create-course-class.R",
     "save-class": "python ./custom-scripts/save-class-pdf.py",
     "merge-classes": "Rscript ./custom-scripts/merge-pdfs.R",
+    "serve": "live-server",
 
     "prebuild": "python ./custom-scripts/create-available-classes.py",
     "build": "git add . && git commit -m \"Updated json of available classes\" && git push",
-    "postbuild": "live-server",
-    
-    "serve": "live-server"
+    "postbuild": "live-server"
   },
   "repository": {
     "type": "git",
