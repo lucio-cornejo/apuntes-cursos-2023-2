@@ -112,7 +112,7 @@ function showPDF(pdfPath) {
 
   // Create new embed element
   const newPDFContainer = document.createElement("embed");
-  const pdfSettings = "#page=1&zooom=67"
+  const pdfSettings = "#page=1&zoom=67"
   // const pdfSettings = "#page=1&view=Fit"
 
   newPDFContainer.id = "pdf";
