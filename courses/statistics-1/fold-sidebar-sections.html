@@ -1,0 +1,18 @@
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>

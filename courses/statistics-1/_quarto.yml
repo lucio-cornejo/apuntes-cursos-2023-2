@@ -1,0 +1,25 @@
+project:
+  type: book
+
+book:
+  title: "Statistical Learning 1"
+  author: "Lucio Cornejo"
+  date: "2023/08/20"
+  chapters:
+    - index.qmd
+    - part: "Semana 1"
+      chapters: 
+        - apuntes/clase-01.qmd
+
+format:
+  html:
+    theme: cosmo
+    fontsize: 16pt
+    toc-title: Tabla de Contenidos
+    css: style.css
+    include-in-header: 
+      - sidebars-toggle.html
+      - fold-sidebar-sections.html
+
+execute:
+  freeze: true

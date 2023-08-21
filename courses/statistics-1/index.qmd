@@ -1,0 +1,6 @@
+# Sílabo {.unnumbered}
+
+<embed 
+  src="./syllabus.pdf" type="application/pdf"
+  style="width: 100%; min-height: 80dvh;"
+>

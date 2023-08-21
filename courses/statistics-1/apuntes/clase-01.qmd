@@ -1,0 +1,119 @@
+# Apuntes de clase {-}
+
+## Sobre el curso
+
+Casi toda la teoría del curso está contenida en ISLR, 
+libro principal de la bibliografía del curso.
+
+Las listas deben ir avanzándose, pues la entrega 
+oficial consistirá de modificaciones sobre algunos
+problemas de esas listas, con solo uno o dos días 
+de plazo para la entrega.
+
+Solo habrá, most likely, máximo tres tareas 
+académicas, pero ninguna se elimina. 
+
+Las tareas no son las que están actualmente en Paideia,
+pero se basarán en las listas ya subidas.
+
+Máximo grupos de 4 para los grupos de las tareas;
+aunque puede ser individual también.
+
+
+## Introducción
+
+- Main goal: 
+    - Predicción (no inferencia, eso se ve en otros cursos)
+    - From dataset, saber qué algoritmo
+    de aprendizaje estadístico escoger, además
+    de saber **comunicar** los hallazgos encontrados.
+
+- Hay más similitudes que diferencias entre *Statistical Learning*
+y Machine Learning (*Aprendizaje de Máquina*).
+
+### ¿Qué es Statistical Learning?
+
+- **Set of tools to understand data**.
+
+- Distinción principal: *Supervisado* vs *No Supervisado*
+
+- *Cadena* de stat. learning.:
+    modelo -> método -> algoritmo -> análisis -> interpretación
+
+- Objetivos principales:
+    - **Predecir**: *Qué va a pasar*
+    - **Inferencia**: *Cómo va a pasar* 
+
+- En Estadística, es muy importante considerar **de dónde vienen los datos**
+(muestreados under some probabilistic distribution).
+
+### Statistical Learning vs Data Science
+
+Data Science también busca obtener info a partir de datos, pero
+siempre require una **implementación**. Esto pues Data Science combina
+diversas disciplinas (math, CS, etc) para darles un enfoque **pragmático**.
+
+Este enfoque pragmático no es necesario en Statistical Learning.
+
+Ambos enfoques son importantes en la sociedad.
+
+
+## Aprendizaje Estadístico
+
+### ¿Qué es?
+
+Proceso de aprendizaje a partir de los datos.
+
+- A partir de la aplicación de modelos a un **conjunto de entrenamiento** podemos:
+    - *Extraer conclusiones* acerca de las relaciones entre las variables **inferencia**.
+    - *Encontrar una función predictiva* para nuevas observaciones **predicción**.
+
+### El problema del Aprendizaje Supervisado
+
+- Punto de partida:
+    - Medición del resultado $Y$ (variable dependiente/respuesta/objetivo)
+    - Vector de $p$ mediciones *predictoras* $X = (X_1, \cdots, X_p)$, 
+    también llamadas entradas/regresores/covariables/características o
+    variables independientes.
+    - En **problemas de regresión**, $Y$ es *cuantitativa*; 
+    en **problemas de clasificación**, $Y$ toma valores en un 
+    conjunto **finito y desordenado** de clases o atributos predefinidos.
+    - Tenemos *datos de entrenamiento* $(x_1, Y_1), \cdots, (x_n, Y_n)$.
+
+
+- A partir del training set, nos gustaría:
+    - *Predecir* **nuevos** casos de prueba.
+    - *Comprender* como se relacionan las variables.
+    - *Evaluar* la calidad de predicciones e inferencias.
+
+- La variable respuesta supervisa nuestro análisis.
+
+### El problema del Aprendizaje No Supervisado
+
+- **No hay variable respuesta**.
+- Se buscan patrones o agrupaciones (ocultas) en los datos,
+para obtener *información y comprensión*.
+- Hay más *subjetividad* al momento de comparar modelos;
+por ello importa mucho más el conocimiento sobre el área
+de aplicación (field experts).
+
+### Filosofía general
+
+- Los métodos más simples a menudo funcionan
+tan bien como los más complicados.
+
+### Statistical Learning vs Machine Learning
+
+- $\text{ML} \subset \text{AI}$ (algoritmos)
+- $\text{SL} \subset \text{Statistics}$ (modelos)
+
+- Presentan un mayor enfoque en:
+    - ML: **Precisión de la predicción** y **aplicaciones a gran escala**.
+    - SL: Modelos, su **interpretabilidad**, precisión e incertidumbre. 
+
+- **Método escalable**: Al añadir más datos o más variables, la precisión no se reduce.
+
+- SL y ML emplean casi las mismas técnicas.
+
+- Comparado a un curso de ML, en este curso nos enfocaremos más
+en comprender los modelos que usaremos, cómo funcionan.
