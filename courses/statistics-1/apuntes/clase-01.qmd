@@ -117,3 +117,7 @@ tan bien como los más complicados.
 
 - Comparado a un curso de ML, en este curso nos enfocaremos más
 en comprender los modelos que usaremos, cómo funcionan.
+
+## Lista de ejercicios
+
+[Lista 1](../ejercicios/lista-01.html)

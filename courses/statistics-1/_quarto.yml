@@ -17,7 +17,7 @@ format:
     fontsize: 16pt
     toc-title: Tabla de Contenidos
     css: style.css
-    include-in-header: 
+    include-in-header:
       - sidebars-toggle.html
       - fold-sidebar-sections.html
 

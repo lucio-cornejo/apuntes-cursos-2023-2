@@ -26,5 +26,12 @@
     "title": "Apuntes de clase",
     "section": "Aprendizaje Estadístico",
     "text": "Aprendizaje Estadístico\n\n¿Qué es?\nProceso de aprendizaje a partir de los datos.\n\nA partir de la aplicación de modelos a un conjunto de entrenamiento podemos:\n\nExtraer conclusiones acerca de las relaciones entre las variables inferencia.\nEncontrar una función predictiva para nuevas observaciones predicción.\n\n\n\n\nEl problema del Aprendizaje Supervisado\n\nPunto de partida:\n\nMedición del resultado \\(Y\\) (variable dependiente/respuesta/objetivo)\nVector de \\(p\\) mediciones predictoras \\(X = (X_1, \\cdots, X_p)\\), también llamadas entradas/regresores/covariables/características o variables independientes.\nEn problemas de regresión, \\(Y\\) es cuantitativa; en problemas de clasificación, \\(Y\\) toma valores en un conjunto finito y desordenado de clases o atributos predefinidos.\nTenemos datos de entrenamiento \\((x_1, Y_1), \\cdots, (x_n, Y_n)\\).\n\nA partir del training set, nos gustaría:\n\nPredecir nuevos casos de prueba.\nComprender como se relacionan las variables.\nEvaluar la calidad de predicciones e inferencias.\n\nLa variable respuesta supervisa nuestro análisis.\n\n\n\nEl problema del Aprendizaje No Supervisado\n\nNo hay variable respuesta.\nSe buscan patrones o agrupaciones (ocultas) en los datos, para obtener información y comprensión.\nHay más subjetividad al momento de comparar modelos; por ello importa mucho más el conocimiento sobre el área de aplicación (field experts).\n\n\n\nFilosofía general\n\nLos métodos más simples a menudo funcionan tan bien como los más complicados.\n\n\n\nStatistical Learning vs Machine Learning\n\n\\(\\text{ML} \\subset \\text{AI}\\) (algoritmos)\n\\(\\text{SL} \\subset \\text{Statistics}\\) (modelos)\nPresentan un mayor enfoque en:\n\nML: Precisión de la predicción y aplicaciones a gran escala.\nSL: Modelos, su interpretabilidad, precisión e incertidumbre.\n\nMétodo escalable: Al añadir más datos o más variables, la precisión no se reduce.\nSL y ML emplean casi las mismas técnicas.\nComparado a un curso de ML, en este curso nos enfocaremos más en comprender los modelos que usaremos, cómo funcionan."
+  },
+  {
+    "objectID": "apuntes/clase-01.html#lista-de-ejercicios",
+    "href": "apuntes/clase-01.html#lista-de-ejercicios",
+    "title": "Apuntes de clase",
+    "section": "Lista de ejercicios",
+    "text": "Lista de ejercicios\nLista 1"
   }
 ]
