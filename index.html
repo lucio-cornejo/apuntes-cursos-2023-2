@@ -10,6 +10,10 @@
   <script src="./src/show-courses-names.js"></script>
   <script src="./src/show-last-class.js"></script>
   <script src="./src/copy-course-class-url.js"></script>
+
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.min.js"></script>
+
   
   <title>Apuntes 2023-2</title>
 </head>
@@ -36,13 +40,86 @@
     </ul>
   </nav>
 
-  <embed 
+  <!-- <embed  
     id="pdf" class="pdf-container" type="application/pdf"
     src="./blank-notes.pdf#page=1&zoom=67" 
     >
+  -->
     <!-- src="./blank-notes.pdf#page=1&view=Fit"  -->
     <!-- src="https://docs.google.com/gview?embedded=true&url=https://2023-2-apuntes-cursos-pucp.netlify.app/courses/probability-2/apuntes/clase-01.pdf"  -->
-
   <script type="module" src="./src/show-slides-via-URL.js"></script>
+
+
+  <!-- test for mobile -->
+  <style>
+    body {
+      background-color: #535759;
+    }
+    #canvases canvas {
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
+  <div id="canvases"></div>
+
+  <script>
+    var url = './courses/probability-2/apuntes/clase-01.pdf';
+
+  var pdfjsLib = window['pdfjs-dist/build/pdf'];
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.worker.js';
+
+  var pdfDoc = null,
+      pageNum = 1,
+      pageRendering = false,
+      pageNumPending = null,
+      scale = 1.5;
+
+  function renderPage(num, canvas) {
+    var ctx = canvas.getContext('2d');
+    pageRendering = true;
+    // Using promise to fetch the page
+    pdfDoc.getPage(num).then(function(page) {
+      var viewport = page.getViewport({scale: scale});
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      // Render PDF page into canvas context
+      var renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+      var renderTask = page.render(renderContext);
+
+      // Wait for rendering to finish
+      renderTask.promise.then(function() {
+        pageRendering = false;
+        if (pageNumPending !== null) {
+          // New page rendering is pending
+          renderPage(pageNumPending);
+          pageNumPending = null;
+        }
+      });
+    });
+  }
+
+  pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+    pdfDoc = pdfDoc_;
+
+    const pages = parseInt(pdfDoc.numPages);
+
+    var canvasHtml = '';
+    for (var i = 0; i < pages; i++) {
+      canvasHtml += '<canvas id="canvas_' + i + '"></canvas>';
+    }
+
+    document.getElementById('canvases').innerHTML = canvasHtml;
+
+    for (var i = 0; i < pages; i++) {
+      var canvas = document.getElementById('canvas_' + i);
+      renderPage(i+1, canvas);
+    }
+  });
+  </script>
+
   </body>
 </html>
