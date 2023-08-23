@@ -4,13 +4,19 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <link rel="stylesheet" href="./styles.css">
+
+  <!-- PDF for mobile 
+    Source: https://github.com/ankur2194/custom-html5-pdf-viewer-mobile-compatible/tree/master
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.min.js"></script>
+  <script type="module" src="./src/pdf-mobile-viewer.mjs"></script>
+
   <script src="./src/main.js"></script>
   <script src="./src/show-courses-names.js"></script>
   <script src="./src/show-last-class.js"></script>
   <script src="./src/copy-course-class-url.js"></script>
-  
+
   <title>Apuntes 2023-2</title>
 </head>
 <body>
@@ -36,19 +42,8 @@
     </ul>
   </nav>
 
-  <embed  
-    id="pdf" class="pdf-container" type="application/pdf"
-    src="./blank-notes.pdf#page=1&zoom=67" 
-    >
-    <!-- src="./blank-notes.pdf#page=1&view=Fit"  -->
-    <!-- src="https://docs.google.com/gview?embedded=true&url=https://2023-2-apuntes-cursos-pucp.netlify.app/courses/probability-2/apuntes/clase-01.pdf"  -->
-  <script type="module" src="./src/show-slides-via-URL.mjs"></script>
+  <div id="canvases"></div>
 
-  <!-- PDF for mobile 
-    Source: https://github.com/ankur2194/custom-html5-pdf-viewer-mobile-compatible/tree/master
-    <div id="canvases"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.min.js"></script>
-    <script type="module" src="./src/pdf-mobile-viewer.mjs"></script>
-  -->
-  </body>
+  <script type="module" src="./src/show-slides-via-URL.mjs"></script>
+</body>
 </html>
