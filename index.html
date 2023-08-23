@@ -51,15 +51,6 @@
 
 
   <!-- test for mobile -->
-  <style>
-    body {
-      background-color: #535759;
-    }
-    #canvases canvas {
-      margin: 20px auto;
-      display: block;
-    }
-  </style>
   <div id="canvases"></div>
 
   <script>
@@ -80,8 +71,9 @@
     // Using promise to fetch the page
     pdfDoc.getPage(num).then(function(page) {
       var viewport = page.getViewport({scale: scale});
-      canvas.height = viewport.height;
+
       canvas.width = viewport.width;
+      canvas.height = viewport.height;
 
       // Render PDF page into canvas context
       var renderContext = {

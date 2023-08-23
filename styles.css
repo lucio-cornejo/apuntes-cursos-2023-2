@@ -120,3 +120,20 @@ input[type="button"]:hover {
   #cursos { overflow: auto }
   #inputs > div { flex-direction: column }
 }
+
+
+/* PDF viewer compatible for mobile */
+:root {
+  --spacing: 2.5px;
+}
+#canvases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px var(--spacing);
+  background-color: #535759;
+}
+#canvases canvas {
+  width: 1px;
+  display: flex;
+  flex-basis: calc(50% - var(--spacing));
+}
