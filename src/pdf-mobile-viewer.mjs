@@ -1,5 +1,3 @@
-var url = './courses/probability-2/apuntes/clase-01.pdf';
-
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.worker.js';
 
@@ -38,7 +36,7 @@ function renderPage(num, canvas) {
   });
 }
 
-pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+function renderPDF(pdfDoc_) {
   pdfDoc = pdfDoc_;
 
   const pages = parseInt(pdfDoc.numPages);
@@ -54,4 +52,11 @@ pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
     var canvas = document.getElementById('canvas_' + i);
     renderPage(i+1, canvas);
   }
-});
+}
+
+globalThis.showPDF = function(url) {
+  pdfjsLib.getDocument(url).promise.then(renderPDF);
+}
+
+var url = './courses/optimization/apuntes/clase-01.pdf';
+showPDF(url);

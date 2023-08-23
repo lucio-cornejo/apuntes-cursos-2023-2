@@ -104,32 +104,3 @@ function addCourseSelection() {
 function numberToText(num) {
   return num < 10 ? `0${num}` : `${num}`;
 }
-
-
-function showPDF(pdfPath) {
-  const pdfContainer = document.querySelector("#pdf");
-  pdfContainer.remove();
-
-  // Create new embed element
-  const newPDFContainer = document.createElement("embed");
-  const pdfSettings = "#page=1&zoom=67"
-  // const pdfSettings = "#page=1&view=Fit"
-
-  newPDFContainer.id = "pdf";
-  newPDFContainer.classList.add("pdf-container");
-  
-  newPDFContainer.type = "application/pdf";
-
-  // If user is using a mobile device, 
-  // use Google Drive to visualize the pdf,
-  // in order to avoid downloading the pdf file.
-  const isMobile = navigator.userAgentData.mobile;
-  const googleViewURL = "https://docs.google.com/gview?embedded=true&url=";
-  const personalWebsiteURL = "https://2023-2-apuntes-cursos-pucp.netlify.app/";
-
-  newPDFContainer.src = !isMobile 
-    ? pdfPath + pdfSettings
-    : googleViewURL + personalWebsiteURL + pdfPath;
-
-  document.body.appendChild(newPDFContainer);
-}
