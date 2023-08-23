@@ -123,17 +123,16 @@ input[type="button"]:hover {
 
 
 /* PDF viewer compatible for mobile */
-:root {
-  --spacing: 2.5px;
-}
 #canvases {
   display: flex;
+  gap: 5px 2.5px;
   flex-wrap: wrap;
-  gap: 5px var(--spacing);
+  justify-content: center;
   background-color: #535759;
 }
 #canvases canvas {
-  width: 1px;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-basis: calc(50% - var(--spacing));
+  flex-basis: content;
 }
