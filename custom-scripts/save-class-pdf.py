@@ -34,11 +34,12 @@ if int(course_class) < 10:
   course_class = "0" + course_class
 
 # Update pdf file name
-pdf_path = f"./courses/{course_path}/apuntes/clase-{course_class}.pdf"
+import sys
 
+folder = "ejercicios" if len(sys.argv) > 2 else "apuntes"
+pdf_path = f"./courses/{course_path}/{folder}/clase-{course_class}.pdf"
 
 # Extract first n pages from course class pdf
-import sys
 from PyPDF2 import PdfReader, PdfWriter
 
 reader = PdfReader(f"./{course_class_pdf}")
