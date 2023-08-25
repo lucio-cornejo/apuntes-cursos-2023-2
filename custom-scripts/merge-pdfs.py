@@ -25,3 +25,4 @@ def merge_course_pdfs(course_notes_path):
 
 for course_notes_path in courses_notes_path:
   merge_course_pdfs(course_notes_path)
+  print(course_notes_path)
