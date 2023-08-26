@@ -30,8 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../apuntes/clase-02.html" rel="next">
-<link href="../index.html" rel="prev">
+<link href="../apuntes/clase-01.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -137,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-01.html">Semana 1</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-01.html">Apuntes de clase</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-02.html">Semana 2</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-02.html">Apuntes de clase</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -179,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link active">
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Apuntes de clase</span></a>
   </div>
 </li>
@@ -196,7 +195,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Apuntes de clase</span></a>
   </div>
 </li>
@@ -212,21 +211,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de Contenidos</h2>
    
   <ul>
-  <li><a href="#sobre-el-curso" id="toc-sobre-el-curso" class="nav-link active" data-scroll-target="#sobre-el-curso">Sobre el curso</a></li>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a>
+  <li><a href="#objetivo-de-statistical-learning" id="toc-objetivo-de-statistical-learning" class="nav-link active" data-scroll-target="#objetivo-de-statistical-learning">Objetivo de Statistical Learning</a>
   <ul class="collapse">
-  <li><a href="#qué-es-statistical-learning" id="toc-qué-es-statistical-learning" class="nav-link" data-scroll-target="#qué-es-statistical-learning">¿Qué es Statistical Learning?</a></li>
-  <li><a href="#statistical-learning-vs-data-science" id="toc-statistical-learning-vs-data-science" class="nav-link" data-scroll-target="#statistical-learning-vs-data-science">Statistical Learning vs Data Science</a></li>
+  <li><a href="#motivo-1-predicción" id="toc-motivo-1-predicción" class="nav-link" data-scroll-target="#motivo-1-predicción">Motivo 1: Predicción</a></li>
+  <li><a href="#motivo-2-inferencia" id="toc-motivo-2-inferencia" class="nav-link" data-scroll-target="#motivo-2-inferencia">Motivo 2: Inferencia</a></li>
   </ul></li>
-  <li><a href="#aprendizaje-estadístico" id="toc-aprendizaje-estadístico" class="nav-link" data-scroll-target="#aprendizaje-estadístico">Aprendizaje Estadístico</a>
+  <li><a href="#regresión-y-clasificación" id="toc-regresión-y-clasificación" class="nav-link" data-scroll-target="#regresión-y-clasificación">Regresión y Clasificación</a></li>
+  <li><a href="#estimación-de-f" id="toc-estimación-de-f" class="nav-link" data-scroll-target="#estimación-de-f">Estimación de <span class="math inline">\(f\)</span></a>
   <ul class="collapse">
-  <li><a href="#qué-es" id="toc-qué-es" class="nav-link" data-scroll-target="#qué-es">¿Qué es?</a></li>
-  <li><a href="#el-problema-del-aprendizaje-supervisado" id="toc-el-problema-del-aprendizaje-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-supervisado">El problema del Aprendizaje Supervisado</a></li>
-  <li><a href="#el-problema-del-aprendizaje-no-supervisado" id="toc-el-problema-del-aprendizaje-no-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-no-supervisado">El problema del Aprendizaje No Supervisado</a></li>
-  <li><a href="#filosofía-general" id="toc-filosofía-general" class="nav-link" data-scroll-target="#filosofía-general">Filosofía general</a></li>
-  <li><a href="#statistical-learning-vs-machine-learning" id="toc-statistical-learning-vs-machine-learning" class="nav-link" data-scroll-target="#statistical-learning-vs-machine-learning">Statistical Learning vs Machine Learning</a></li>
+  <li><a href="#métodos-paramétricos" id="toc-métodos-paramétricos" class="nav-link" data-scroll-target="#métodos-paramétricos">Métodos paramétricos</a></li>
+  <li><a href="#métodos-no-paramétricos" id="toc-métodos-no-paramétricos" class="nav-link" data-scroll-target="#métodos-no-paramétricos">Métodos no paramétricos</a></li>
+  <li><a href="#param.-vs-no-param." id="toc-param.-vs-no-param." class="nav-link" data-scroll-target="#param.-vs-no-param.">Param. vs No param.</a></li>
   </ul></li>
-  <li><a href="#lista-de-ejercicios" id="toc-lista-de-ejercicios" class="nav-link" data-scroll-target="#lista-de-ejercicios">Lista de ejercicios</a></li>
+  <li><a href="#prediction-accuracy-vs-interpretabilidad" id="toc-prediction-accuracy-vs-interpretabilidad" class="nav-link" data-scroll-target="#prediction-accuracy-vs-interpretabilidad">Prediction accuracy vs Interpretabilidad</a></li>
+  <li><a href="#ejercicio" id="toc-ejercicio" class="nav-link" data-scroll-target="#ejercicio">EJERCICIO</a></li>
+  <li><a href="#evaluación-de-la-precisión-del-modelo" id="toc-evaluación-de-la-precisión-del-modelo" class="nav-link" data-scroll-target="#evaluación-de-la-precisión-del-modelo">Evaluación de la precisión del modelo</a>
+  <ul class="collapse">
+  <li><a href="#función-pérdida" id="toc-función-pérdida" class="nav-link" data-scroll-target="#función-pérdida">Función pérdida</a></li>
+  <li><a href="#mse-de-entrenamiento" id="toc-mse-de-entrenamiento" class="nav-link" data-scroll-target="#mse-de-entrenamiento">MSE de entrenamiento</a></li>
+  <li><a href="#mse-de-prueba" id="toc-mse-de-prueba" class="nav-link" data-scroll-target="#mse-de-prueba">MSE de prueba</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -250,112 +254,161 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="sobre-el-curso" class="level2">
-<h2 class="anchored" data-anchor-id="sobre-el-curso">Sobre el curso</h2>
-<p>Casi toda la teoría del curso está contenida en ISLR, libro principal de la bibliografía del curso.</p>
-<p>Las listas deben ir avanzándose, pues la entrega oficial consistirá de modificaciones sobre algunos problemas de esas listas, con solo uno o dos días de plazo para la entrega.</p>
-<p>Solo habrá, most likely, máximo tres tareas académicas, pero ninguna se elimina.</p>
-<p>Las tareas no son las que están actualmente en Paideia, pero se basarán en las listas ya subidas.</p>
-<p>Máximo grupos de 4 para los grupos de las tareas; aunque puede ser individual también.</p>
-</section>
-<section id="introducción" class="level2">
-<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<section id="objetivo-de-statistical-learning" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo-de-statistical-learning">Objetivo de Statistical Learning</h2>
 <ul>
-<li>Main goal:
+<li><p>Suposiciones:</p>
 <ul>
-<li>Predicción (no inferencia, eso se ve en otros cursos)</li>
-<li>From dataset, saber qué algoritmo de aprendizaje estadístico escoger, además de saber <strong>comunicar</strong> los hallazgos encontrados.</li>
+<li>Se observa una <strong>variable respuesta</strong> <em>cuantitativa</em> <span class="math inline">\(Y\)</span> .</li>
+<li>Se cuentan con <span class="math inline">\(p\)</span> predictores <span class="math inline">\(x_1, \dots, x_n\)</span> .</li>
+<li>Existe una función <span class="math inline">\(f\)</span> tal que <span class="math inline">\(Y = f(x) + \epsilon\)</span> .</li>
+<li>Donde <span class="math inline">\(\epsilon\)</span>, aleatorio, es <strong>independiente</strong> de <span class="math inline">\(X\)</span>, y tiene <strong>media</strong> cero.</li>
 </ul></li>
-<li>Hay más similitudes que diferencias entre <em>Statistical Learning</em> y Machine Learning (<em>Aprendizaje de Máquina</em>).</li>
+<li><p>El término <span class="math inline">\(\epsilon\)</span> nos permite hacer <strong>inferencia</strong> … las predicciones tienen un <em>intervalo de confianza</em>.</p></li>
+<li><p><strong>OBJETIVO</strong>: Estimar <span class="math inline">\(f\)</span> .</p></li>
+<li><p>Respecto a la <strong>inferencia</strong> posible tras estimar <span class="math inline">\(f\)</span>, se refieren a generalizar estadísiticamente la relación entre los predictors y la response (ejemplo: analizar los coeficientes tras regresión lineal); decir si los atributos son <strong>estadísticamente significativos</strong>.</p></li>
 </ul>
-<section id="qué-es-statistical-learning" class="level3">
-<h3 class="anchored" data-anchor-id="qué-es-statistical-learning">¿Qué es Statistical Learning?</h3>
+<section id="motivo-1-predicción" class="level3">
+<h3 class="anchored" data-anchor-id="motivo-1-predicción">Motivo 1: Predicción</h3>
 <ul>
-<li><p><strong>Set of tools to understand data</strong>.</p></li>
-<li><p>Distinción principal: <em>Supervisado</em> vs <em>No Supervisado</em></p></li>
-<li><p><em>Cadena</em> de stat. learning.: modelo -&gt; método -&gt; algoritmo -&gt; análisis -&gt; interpretación</p></li>
-<li><p>Objetivos principales:</p>
+<li><strong>Objetivo</strong>: Predecir, con la mayor precisión posible, la respuesta <span class="math inline">\(Y\)</span>, dadas nuevas observaciones <span class="math inline">\(x\)</span> de las covariables.</li>
+</ul>
+<p><span class="math display">\[
+\hat{Y} = \hat{f}(x)
+\]</span></p>
 <ul>
-<li><strong>Predecir</strong>: <em>Qué va a pasar</em></li>
-<li><strong>Inferencia</strong>: <em>Cómo va a pasar</em></li>
+<li><p>Para predicción, <strong>no requerimos la forma exacta de <span class="math inline">\(\hat{f}\)</span></strong> .</p></li>
+<li><p>Existen dos términos que influyen en la <strong>precisión</strong> de <span class="math inline">\(\hat{Y}\)</span>, como prediccion de <span class="math inline">\(\hat{Y}\)</span> :</p>
+<ul>
+<li><strong>Error reducible</strong>: Proviene de nuestra estimación <span class="math inline">\(\hat{f}\)</span> de <span class="math inline">\(f\)</span> .</li>
+<li><strong>Error ireducible</strong>: Proviene del término del error <span class="math inline">\(\epsilon\)</span> y no puede reducirse mejorando <span class="math inline">\(\hat{f}\)</span> .</li>
 </ul></li>
-<li><p>En Estadística, es muy importante considerar <strong>de dónde vienen los datos</strong> (muestreados under some probabilistic distribution).</p></li>
+<li><p>Fijada la estimación <span class="math inline">\(\hat{f}\)</span>, respeto a la respuesta <span class="math inline">\(Y\)</span> y un conjunto de predictores <span class="math inline">\(X\)</span>, se cumple</p></li>
 </ul>
+<p><span class="math display">\[
+E \left[ \left( Y - \hat{Y} \right)^2\right] =
+\underbrace{E\left[\left( f(X) - \hat{f}(X) \right)^2\right]}_{\text{error reducible}}
++ \underbrace{\text{var}(\epsilon)}_{\text{error irreducible}}
+\]</span></p>
 </section>
-<section id="statistical-learning-vs-data-science" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-learning-vs-data-science">Statistical Learning vs Data Science</h3>
-<p>Data Science también busca obtener info a partir de datos, pero siempre require una <strong>implementación</strong>. Esto pues Data Science combina diversas disciplinas (math, CS, etc) para darles un enfoque <strong>pragmático</strong>.</p>
-<p>Este enfoque pragmático no es necesario en Statistical Learning.</p>
-<p>Ambos enfoques son importantes en la sociedad.</p>
-</section>
-</section>
-<section id="aprendizaje-estadístico" class="level2">
-<h2 class="anchored" data-anchor-id="aprendizaje-estadístico">Aprendizaje Estadístico</h2>
-<section id="qué-es" class="level3">
-<h3 class="anchored" data-anchor-id="qué-es">¿Qué es?</h3>
-<p>Proceso de aprendizaje a partir de los datos.</p>
+<section id="motivo-2-inferencia" class="level3">
+<h3 class="anchored" data-anchor-id="motivo-2-inferencia">Motivo 2: Inferencia</h3>
 <ul>
-<li>A partir de la aplicación de modelos a un <strong>conjunto de entrenamiento</strong> podemos:
+<li><p><strong>Objetivo</strong>: <em>Comprender</em> cómo la variable respuesta se ve afectada por los diversos predictores (<em>covariables</em>).</p></li>
+<li><p><strong>Requerimos la forma exacta de <span class="math inline">\(\hat{f}\)</span></strong>:</p>
 <ul>
-<li><em>Extraer conclusiones</em> acerca de las relaciones entre las variables <strong>inferencia</strong>.</li>
-<li><em>Encontrar una función predictiva</em> para nuevas observaciones <strong>predicción</strong>.</li>
+<li>¿Qué predictores están asociados con la respuesta?</li>
+<li>¿Cuál es la relación entre la respuesta y cada predictor?</li>
+<li>¿La relación puede ser lineal, o se requiere un modelo más complejo?</li>
 </ul></li>
 </ul>
 </section>
-<section id="el-problema-del-aprendizaje-supervisado" class="level3">
-<h3 class="anchored" data-anchor-id="el-problema-del-aprendizaje-supervisado">El problema del Aprendizaje Supervisado</h3>
+</section>
+<section id="regresión-y-clasificación" class="level2">
+<h2 class="anchored" data-anchor-id="regresión-y-clasificación">Regresión y Clasificación</h2>
 <ul>
-<li>Punto de partida:
+<li><strong>Regresión</strong>: Cuando la variable respuesta es <em>numérica</em>.</li>
+<li><strong>Clasificación</strong> Cuando la variable respuesta es <em>categórica</em>.</li>
+</ul>
+</section>
+<section id="estimación-de-f" class="level2">
+<h2 class="anchored" data-anchor-id="estimación-de-f">Estimación de <span class="math inline">\(f\)</span></h2>
 <ul>
-<li>Medición del resultado <span class="math inline">\(Y\)</span> (variable dependiente/respuesta/objetivo)</li>
-<li>Vector de <span class="math inline">\(p\)</span> mediciones <em>predictoras</em> <span class="math inline">\(X = (X_1, \cdots, X_p)\)</span>, también llamadas entradas/regresores/covariables/características o variables independientes.</li>
-<li>En <strong>problemas de regresión</strong>, <span class="math inline">\(Y\)</span> es <em>cuantitativa</em>; en <strong>problemas de clasificación</strong>, <span class="math inline">\(Y\)</span> toma valores en un conjunto <strong>finito y desordenado</strong> de clases o atributos predefinidos.</li>
-<li>Tenemos <em>datos de entrenamiento</em> <span class="math inline">\((x_1, Y_1), \cdots, (x_n, Y_n)\)</span>.</li>
+<li><p>Main idea:</p>
+<ul>
+<li>Usar un conjunto de <strong>datos de entrenamiento</strong> <span class="math inline">\(\left( x_1, y_1 \right), \dots, \left( x_n, y_n \right)\)</span> para hallar una estimación <span class="math inline">\(\hat{f}\)</span>, tal que <span class="math inline">\(\hat{f}(X) \approx Y\)</span>, para cada <span class="math inline">\(\left( X, Y \right)\)</span></li>
 </ul></li>
-<li>A partir del training set, nos gustaría:
+<li><p>Para <strong>predicción</strong>, NUNCA evaluar la estimación <span class="math inline">\(\hat{f}\)</span> en una observación de entrenamiento <span class="math inline">\(X\)</span> .</p></li>
+<li><p>Presenta dos enfoques principales: Param. y No param. .</p></li>
+</ul>
+<section id="métodos-paramétricos" class="level3">
+<h3 class="anchored" data-anchor-id="métodos-paramétricos">Métodos paramétricos</h3>
 <ul>
-<li><em>Predecir</em> <strong>nuevos</strong> casos de prueba.</li>
-<li><em>Comprender</em> como se relacionan las variables.</li>
-<li><em>Evaluar</em> la calidad de predicciones e inferencias.</li>
+<li>Steps:
+<ol type="1">
+<li><strong>Fijar</strong> una forma para <span class="math inline">\(f\)</span> . 1 <strong>Estimar los parámetros</strong> desconocidos de <span class="math inline">\(f\)</span>, unsando el conjunto de entrenamiento.</li>
+</ol></li>
+</ul>
+</section>
+<section id="métodos-no-paramétricos" class="level3">
+<h3 class="anchored" data-anchor-id="métodos-no-paramétricos">Métodos no paramétricos</h3>
+<ul>
+<li><p>Buscan una estimación de <span class="math inline">\(f\)</span>, sin hacer suposiciones explícitas de la función <span class="math inline">\(f\)</span> .</p></li>
+<li><p>En cierto sentido, se consideran <em>infinitos</em> parámetros.</p></li>
+<li><p>Ejemplo: Algoritmo de los <span class="math inline">\(K\)</span>-vecinos.</p></li>
+<li><p><strong>Parámetro</strong>: Constante del modelo, que se <strong>estima</strong>.</p></li>
+<li><p><strong>Hiperparámetro</strong>: Constante del modelo, que se <strong>escoge</strong> libremente. Por ejemplo, el valor <span class="math inline">\(K\)</span> en el algoritmo de <span class="math inline">\(K\)</span>-means.</p></li>
+<li><p>Los hiperparámetros se pueden <strong>calibrar</strong> para obtener un nivel de adecuado de flexibilidad para el modelo.</p></li>
+</ul>
+</section>
+<section id="param.-vs-no-param." class="level3">
+<h3 class="anchored" data-anchor-id="param.-vs-no-param.">Param. vs No param.</h3>
+<ul>
+<li><p>Suelen ser de <strong>mayor interpretabilidad</strong>: Paramétrico.</p></li>
+<li><p>Tienden a ser <strong>más flexibles</strong>: No paramétricos.</p></li>
+<li><p>Suelen tener <strong>mayor complejidad computacional</strong>: No paramétricos.</p></li>
+<li><p>Suele requerir una mayor cantidad de datos: No paramétricos.</p></li>
+<li><p>No necesariamente un método no paramétrico siempre produce predicciones más precisas, comparado a un método paramétrico.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../media/param-vs-no-param.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Comparación</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="prediction-accuracy-vs-interpretabilidad" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-accuracy-vs-interpretabilidad">Prediction accuracy vs Interpretabilidad</h2>
+<ul>
+<li><p>Métodos <strong>inflexibles</strong> (o <em>rígidos</em>), son aquellos que tienen <strong>fuerte</strong> restricciones sobre la forma de <span class="math inline">\(f\)</span> .</p></li>
+<li><p>La elección de un método flexible o inflexible depende del objetivo en mente:</p>
+<ul>
+<li>If goal is <strong>inferencia</strong>, then se prefiere métodos <strong>inflexibles</strong></li>
+<li>If goal is <strong>predicción</strong>, then se prefiere métodos <strong>flexibles</strong>.</li>
 </ul></li>
-<li>La variable respuesta supervisa nuestro análisis.</li>
+<li><p><strong>Sobreajuste</strong>: Ocurre cuando <span class="math inline">\(\hat{f}\)</span> se ajusta demasiado a los datos observados.</p></li>
+<li><p><strong>Subajuste</strong>: Ocurre cuando <span class="math inline">\(\hat{f}\)</span> es demasiado rígida para capturar la estructura subyacente de los datos.</p></li>
 </ul>
 </section>
-<section id="el-problema-del-aprendizaje-no-supervisado" class="level3">
-<h3 class="anchored" data-anchor-id="el-problema-del-aprendizaje-no-supervisado">El problema del Aprendizaje No Supervisado</h3>
+<section id="ejercicio" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicio">EJERCICIO</h2>
+<p>Resolver la lista 1 publicada en Paideia.</p>
+</section>
+<section id="evaluación-de-la-precisión-del-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="evaluación-de-la-precisión-del-modelo">Evaluación de la precisión del modelo</h2>
 <ul>
-<li><strong>No hay variable respuesta</strong>.</li>
-<li>Se buscan patrones o agrupaciones (ocultas) en los datos, para obtener <em>información y comprensión</em>.</li>
-<li>Hay más <em>subjetividad</em> al momento de comparar modelos; por ello importa mucho más el conocimiento sobre el área de aplicación (field experts).</li>
+<li><strong>Ningún método</strong> domina a todos los demás sobre todos conjuntos de datos posibles.</li>
+</ul>
+<section id="función-pérdida" class="level3">
+<h3 class="anchored" data-anchor-id="función-pérdida">Función pérdida</h3>
+<ul>
+<li><p>Para variable respuesta numérica, las métricas <span class="math inline">\(L1\)</span> y <span class="math inline">\(L2\)</span> suelen usarse.</p></li>
+<li><p>Para response categórica, se puede usar la asignación 0 (si <span class="math inline">\(\hat{y}_i = y_i\)</span> ); y, 1, caso contrario.</p></li>
+<li><p>En problemas de regresión, suele emplearse la <strong>pérdida cuadrática</strong> (<span class="math inline">\(L2\)</span>).</p></li>
 </ul>
 </section>
-<section id="filosofía-general" class="level3">
-<h3 class="anchored" data-anchor-id="filosofía-general">Filosofía general</h3>
+<section id="mse-de-entrenamiento" class="level3">
+<h3 class="anchored" data-anchor-id="mse-de-entrenamiento">MSE de entrenamiento</h3>
 <ul>
-<li>Los métodos más simples a menudo funcionan tan bien como los más complicados.</li>
+<li><p>Notación: <span class="math inline">\(\text{MSE}_{\text{train}} = \dfrac{1}{n} \displaystyle{ \sum_{i=1}^{n}\left( y_i - \hat{f}(x_i) \right)^2}\)</span></p></li>
+<li><p>Cuando se evalúa <span class="math inline">\(\hat{f}\)</span> en una observación de entrenamiento, no es posible saber si la predicción fue precisa debido a que el modelo aprendió o porque para el modelo se empleó el valor observado para la response variable (<em>caso modelo plagió</em>).</p></li>
 </ul>
 </section>
-<section id="statistical-learning-vs-machine-learning" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-learning-vs-machine-learning">Statistical Learning vs Machine Learning</h3>
+<section id="mse-de-prueba" class="level3">
+<h3 class="anchored" data-anchor-id="mse-de-prueba">MSE de prueba</h3>
 <ul>
-<li><p><span class="math inline">\(\text{ML} \subset \text{AI}\)</span> (algoritmos)</p></li>
-<li><p><span class="math inline">\(\text{SL} \subset \text{Statistics}\)</span> (modelos)</p></li>
-<li><p>Presentan un mayor enfoque en:</p>
-<ul>
-<li>ML: <strong>Precisión de la predicción</strong> y <strong>aplicaciones a gran escala</strong>.</li>
-<li>SL: Modelos, su <strong>interpretabilidad</strong>, precisión e incertidumbre.</li>
-</ul></li>
-<li><p><strong>Método escalable</strong>: Al añadir más datos o más variables, la precisión no se reduce.</p></li>
-<li><p>SL y ML emplean casi las mismas técnicas.</p></li>
-<li><p>Comparado a un curso de ML, en este curso nos enfocaremos más en comprender los modelos que usaremos, cómo funcionan.</p></li>
+<li><p>Evaluamos el modelo con una muestra de observaciones que no fue usada para entrenar al modelo. Esta muestra se denomina <strong>datos de prueba (test)</strong>.</p></li>
+<li><p>Para un conjunto de <span class="math inline">\(n_0\)</span> observaciones de prueba <span class="math inline">\(\left( x_{0j}, y_{0j} \right)\)</span>, se define:</p></li>
 </ul>
-</section>
-</section>
-<section id="lista-de-ejercicios" class="level2">
-<h2 class="anchored" data-anchor-id="lista-de-ejercicios">Lista de ejercicios</h2>
-<p><a href="../ejercicios/lista-01.html">Lista 1</a></p>
+<p><span class="math inline">\(\text{MSE}_{\text{test}} = \dfrac{1}{n_0} \displaystyle{ \sum_{j=1}^{n_0}\left( y_{0j} - \hat{f}(x_{0j}) \right)^2}\)</span></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -594,14 +647,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Sílabo</span>
+      <a href="../apuntes/clase-01.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../apuntes/clase-02.html" class="pagination-link">
-        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

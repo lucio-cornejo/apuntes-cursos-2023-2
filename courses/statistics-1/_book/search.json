@@ -33,5 +33,47 @@
     "title": "Apuntes de clase",
     "section": "Lista de ejercicios",
     "text": "Lista de ejercicios\nLista 1"
+  },
+  {
+    "objectID": "apuntes/clase-02.html#objetivo-de-statistical-learning",
+    "href": "apuntes/clase-02.html#objetivo-de-statistical-learning",
+    "title": "Apuntes de clase",
+    "section": "Objetivo de Statistical Learning",
+    "text": "Objetivo de Statistical Learning\n\nSuposiciones:\n\nSe observa una variable respuesta cuantitativa \\(Y\\) .\nSe cuentan con \\(p\\) predictores \\(x_1, \\dots, x_n\\) .\nExiste una función \\(f\\) tal que \\(Y = f(x) + \\epsilon\\) .\nDonde \\(\\epsilon\\), aleatorio, es independiente de \\(X\\), y tiene media cero.\n\nEl término \\(\\epsilon\\) nos permite hacer inferencia … las predicciones tienen un intervalo de confianza.\nOBJETIVO: Estimar \\(f\\) .\nRespecto a la inferencia posible tras estimar \\(f\\), se refieren a generalizar estadísiticamente la relación entre los predictors y la response (ejemplo: analizar los coeficientes tras regresión lineal); decir si los atributos son estadísticamente significativos.\n\n\nMotivo 1: Predicción\n\nObjetivo: Predecir, con la mayor precisión posible, la respuesta \\(Y\\), dadas nuevas observaciones \\(x\\) de las covariables.\n\n\\[\n\\hat{Y} = \\hat{f}(x)\n\\]\n\nPara predicción, no requerimos la forma exacta de \\(\\hat{f}\\) .\nExisten dos términos que influyen en la precisión de \\(\\hat{Y}\\), como prediccion de \\(\\hat{Y}\\) :\n\nError reducible: Proviene de nuestra estimación \\(\\hat{f}\\) de \\(f\\) .\nError ireducible: Proviene del término del error \\(\\epsilon\\) y no puede reducirse mejorando \\(\\hat{f}\\) .\n\nFijada la estimación \\(\\hat{f}\\), respeto a la respuesta \\(Y\\) y un conjunto de predictores \\(X\\), se cumple\n\n\\[\nE \\left[ \\left( Y - \\hat{Y} \\right)^2\\right] =\n\\underbrace{E\\left[\\left( f(X) - \\hat{f}(X) \\right)^2\\right]}_{\\text{error reducible}}\n+ \\underbrace{\\text{var}(\\epsilon)}_{\\text{error irreducible}}\n\\]\n\n\nMotivo 2: Inferencia\n\nObjetivo: Comprender cómo la variable respuesta se ve afectada por los diversos predictores (covariables).\nRequerimos la forma exacta de \\(\\hat{f}\\):\n\n¿Qué predictores están asociados con la respuesta?\n¿Cuál es la relación entre la respuesta y cada predictor?\n¿La relación puede ser lineal, o se requiere un modelo más complejo?"
+  },
+  {
+    "objectID": "apuntes/clase-02.html#regresión-y-clasificación",
+    "href": "apuntes/clase-02.html#regresión-y-clasificación",
+    "title": "Apuntes de clase",
+    "section": "Regresión y Clasificación",
+    "text": "Regresión y Clasificación\n\nRegresión: Cuando la variable respuesta es numérica.\nClasificación Cuando la variable respuesta es categórica."
+  },
+  {
+    "objectID": "apuntes/clase-02.html#estimación-de-f",
+    "href": "apuntes/clase-02.html#estimación-de-f",
+    "title": "Apuntes de clase",
+    "section": "Estimación de \\(f\\)",
+    "text": "Estimación de \\(f\\)\n\nMain idea:\n\nUsar un conjunto de datos de entrenamiento \\(\\left( x_1, y_1 \\right), \\dots, \\left( x_n, y_n \\right)\\) para hallar una estimación \\(\\hat{f}\\), tal que \\(\\hat{f}(X) \\approx Y\\), para cada \\(\\left( X, Y \\right)\\)\n\nPara predicción, NUNCA evaluar la estimación \\(\\hat{f}\\) en una observación de entrenamiento \\(X\\) .\nPresenta dos enfoques principales: Param. y No param. .\n\n\nMétodos paramétricos\n\nSteps:\n\nFijar una forma para \\(f\\) . 1 Estimar los parámetros desconocidos de \\(f\\), unsando el conjunto de entrenamiento.\n\n\n\n\nMétodos no paramétricos\n\nBuscan una estimación de \\(f\\), sin hacer suposiciones explícitas de la función \\(f\\) .\nEn cierto sentido, se consideran infinitos parámetros.\nEjemplo: Algoritmo de los \\(K\\)-vecinos.\nParámetro: Constante del modelo, que se estima.\nHiperparámetro: Constante del modelo, que se escoge libremente. Por ejemplo, el valor \\(K\\) en el algoritmo de \\(K\\)-means.\nLos hiperparámetros se pueden calibrar para obtener un nivel de adecuado de flexibilidad para el modelo.\n\n\n\nParam. vs No param.\n\nSuelen ser de mayor interpretabilidad: Paramétrico.\nTienden a ser más flexibles: No paramétricos.\nSuelen tener mayor complejidad computacional: No paramétricos.\nSuele requerir una mayor cantidad de datos: No paramétricos.\nNo necesariamente un método no paramétrico siempre produce predicciones más precisas, comparado a un método paramétrico.\n\n\n\n\n\n\nComparación"
+  },
+  {
+    "objectID": "apuntes/clase-02.html#prediction-accuracy-vs-interpretabilidad",
+    "href": "apuntes/clase-02.html#prediction-accuracy-vs-interpretabilidad",
+    "title": "Apuntes de clase",
+    "section": "Prediction accuracy vs Interpretabilidad",
+    "text": "Prediction accuracy vs Interpretabilidad\n\nMétodos inflexibles (o rígidos), son aquellos que tienen fuerte restricciones sobre la forma de \\(f\\) .\nLa elección de un método flexible o inflexible depende del objetivo en mente:\n\nIf goal is inferencia, then se prefiere métodos inflexibles\nIf goal is predicción, then se prefiere métodos flexibles.\n\nSobreajuste: Ocurre cuando \\(\\hat{f}\\) se ajusta demasiado a los datos observados.\nSubajuste: Ocurre cuando \\(\\hat{f}\\) es demasiado rígida para capturar la estructura subyacente de los datos."
+  },
+  {
+    "objectID": "apuntes/clase-02.html#ejercicio",
+    "href": "apuntes/clase-02.html#ejercicio",
+    "title": "Apuntes de clase",
+    "section": "EJERCICIO",
+    "text": "EJERCICIO\nResolver la lista 1 publicada en Paideia."
+  },
+  {
+    "objectID": "apuntes/clase-02.html#evaluación-de-la-precisión-del-modelo",
+    "href": "apuntes/clase-02.html#evaluación-de-la-precisión-del-modelo",
+    "title": "Apuntes de clase",
+    "section": "Evaluación de la precisión del modelo",
+    "text": "Evaluación de la precisión del modelo\n\nNingún método domina a todos los demás sobre todos conjuntos de datos posibles.\n\n\nFunción pérdida\n\nPara variable respuesta numérica, las métricas \\(L1\\) y \\(L2\\) suelen usarse.\nPara response categórica, se puede usar la asignación 0 (si \\(\\hat{y}_i = y_i\\) ); y, 1, caso contrario.\nEn problemas de regresión, suele emplearse la pérdida cuadrática (\\(L2\\)).\n\n\n\nMSE de entrenamiento\n\nNotación: \\(\\text{MSE}_{\\text{train}} = \\dfrac{1}{n} \\displaystyle{ \\sum_{i=1}^{n}\\left( y_i - \\hat{f}(x_i) \\right)^2}\\)\nCuando se evalúa \\(\\hat{f}\\) en una observación de entrenamiento, no es posible saber si la predicción fue precisa debido a que el modelo aprendió o porque para el modelo se empleó el valor observado para la response variable (caso modelo plagió).\n\n\n\nMSE de prueba\n\nEvaluamos el modelo con una muestra de observaciones que no fue usada para entrenar al modelo. Esta muestra se denomina datos de prueba (test).\nPara un conjunto de \\(n_0\\) observaciones de prueba \\(\\left( x_{0j}, y_{0j} \\right)\\), se define:\n\n\\(\\text{MSE}_{\\text{test}} = \\dfrac{1}{n_0} \\displaystyle{ \\sum_{j=1}^{n_0}\\left( y_{0j} - \\hat{f}(x_{0j}) \\right)^2}\\)"
   }
 ]

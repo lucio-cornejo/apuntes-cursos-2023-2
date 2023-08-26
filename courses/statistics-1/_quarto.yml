@@ -10,6 +10,9 @@ book:
     - part: "Semana 1"
       chapters: 
         - apuntes/clase-01.qmd
+    - part: "Semana 2"
+      chapters: 
+        - apuntes/clase-02.qmd
 
 format:
   html:
