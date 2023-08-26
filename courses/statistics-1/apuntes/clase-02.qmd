@@ -129,7 +129,8 @@ para capturar la estructura subyacente de los datos.
 
 ## EJERCICIO
 
-Resolver la lista 1 publicada en Paideia.
+Resolver la lista 1 publicada en Paideia,
+al menos hasta el item c (no included).
 
 
 ## Evaluación de la precisión del modelo
