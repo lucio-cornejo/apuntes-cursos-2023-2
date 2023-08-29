@@ -6,7 +6,6 @@ courses = load(courses).keys()
 
 # Retrieve courses' notes' path
 courses_notes_path = ["./courses/" + x + "/apuntes/" for x in courses]
-courses_notes_path = ["./courses/" + "pde" + "/apuntes/"]
 
 from os import listdir
 from PyPDF2 import PdfMerger
