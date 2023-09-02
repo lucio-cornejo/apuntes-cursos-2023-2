@@ -30,8 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../apuntes/clase-02.html" rel="next">
-<link href="../index.html" rel="prev">
+<link href="../apuntes/clase-02.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -137,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-01.html">Semana 1</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-01.html">Apuntes de clase</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-03.html">Semana 3</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-03.html">Apuntes de clase</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -179,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link active">
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Apuntes de clase</span></a>
   </div>
 </li>
@@ -213,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Apuntes de clase</span></a>
   </div>
 </li>
@@ -229,21 +228,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de Contenidos</h2>
    
   <ul>
-  <li><a href="#sobre-el-curso" id="toc-sobre-el-curso" class="nav-link active" data-scroll-target="#sobre-el-curso">Sobre el curso</a></li>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a>
+  <li><a href="#bias-variance-tradeoff" id="toc-bias-variance-tradeoff" class="nav-link active" data-scroll-target="#bias-variance-tradeoff">Bias-variance tradeoff</a></li>
+  <li><a href="#clasificación" id="toc-clasificación" class="nav-link" data-scroll-target="#clasificación">Clasificación</a>
   <ul class="collapse">
-  <li><a href="#qué-es-statistical-learning" id="toc-qué-es-statistical-learning" class="nav-link" data-scroll-target="#qué-es-statistical-learning">¿Qué es Statistical Learning?</a></li>
-  <li><a href="#statistical-learning-vs-data-science" id="toc-statistical-learning-vs-data-science" class="nav-link" data-scroll-target="#statistical-learning-vs-data-science">Statistical Learning vs Data Science</a></li>
+  <li><a href="#qué-es-clasificación" id="toc-qué-es-clasificación" class="nav-link" data-scroll-target="#qué-es-clasificación">¿Qué es clasificación?</a></li>
+  <li><a href="#configuración-de-la-clasifiación-general" id="toc-configuración-de-la-clasifiación-general" class="nav-link" data-scroll-target="#configuración-de-la-clasifiación-general">Configuración de la clasifiación general</a></li>
+  <li><a href="#métodos-estadísticos-tradicionales-para-clasificación" id="toc-métodos-estadísticos-tradicionales-para-clasificación" class="nav-link" data-scroll-target="#métodos-estadísticos-tradicionales-para-clasificación">Métodos Estadísticos Tradicionales para Clasificación</a></li>
+  <li><a href="#predicción-con-el-modelo-logit" id="toc-predicción-con-el-modelo-logit" class="nav-link" data-scroll-target="#predicción-con-el-modelo-logit">Predicción con el modelo logit</a></li>
+  <li><a href="#regresión-lineal-para-una-clasificación-binaria" id="toc-regresión-lineal-para-una-clasificación-binaria" class="nav-link" data-scroll-target="#regresión-lineal-para-una-clasificación-binaria">¿Regresión lineal para una clasificación binaria?</a></li>
+  <li><a href="#regresión-logística-binaria" id="toc-regresión-logística-binaria" class="nav-link" data-scroll-target="#regresión-logística-binaria">Regresión logística binaria</a></li>
   </ul></li>
-  <li><a href="#aprendizaje-estadístico" id="toc-aprendizaje-estadístico" class="nav-link" data-scroll-target="#aprendizaje-estadístico">Aprendizaje Estadístico</a>
-  <ul class="collapse">
-  <li><a href="#qué-es" id="toc-qué-es" class="nav-link" data-scroll-target="#qué-es">¿Qué es?</a></li>
-  <li><a href="#el-problema-del-aprendizaje-supervisado" id="toc-el-problema-del-aprendizaje-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-supervisado">El problema del Aprendizaje Supervisado</a></li>
-  <li><a href="#el-problema-del-aprendizaje-no-supervisado" id="toc-el-problema-del-aprendizaje-no-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-no-supervisado">El problema del Aprendizaje No Supervisado</a></li>
-  <li><a href="#filosofía-general" id="toc-filosofía-general" class="nav-link" data-scroll-target="#filosofía-general">Filosofía general</a></li>
-  <li><a href="#statistical-learning-vs-machine-learning" id="toc-statistical-learning-vs-machine-learning" class="nav-link" data-scroll-target="#statistical-learning-vs-machine-learning">Statistical Learning vs Machine Learning</a></li>
-  </ul></li>
-  <li><a href="#lista-de-ejercicios" id="toc-lista-de-ejercicios" class="nav-link" data-scroll-target="#lista-de-ejercicios">Lista de ejercicios</a></li>
   </ul>
 </nav>
     </div>
@@ -267,112 +261,161 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="sobre-el-curso" class="level2">
-<h2 class="anchored" data-anchor-id="sobre-el-curso">Sobre el curso</h2>
-<p>Casi toda la teoría del curso está contenida en ISLR, libro principal de la bibliografía del curso.</p>
-<p>Las listas deben ir avanzándose, pues la entrega oficial consistirá de modificaciones sobre algunos problemas de esas listas, con solo uno o dos días de plazo para la entrega.</p>
-<p>Solo habrá, most likely, máximo tres tareas académicas, pero ninguna se elimina.</p>
-<p>Las tareas no son las que están actualmente en Paideia, pero se basarán en las listas ya subidas.</p>
-<p>Máximo grupos de 4 para los grupos de las tareas; aunque puede ser individual también.</p>
-</section>
-<section id="introducción" class="level2">
-<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<section id="bias-variance-tradeoff" class="level2">
+<h2 class="anchored" data-anchor-id="bias-variance-tradeoff">Bias-variance tradeoff</h2>
+<p>Fijando un valor <span class="math inline">\(x_0\)</span> para los predictores, y considerando una familia de <em>training datasets</em>, cada uno de esos training sets produce una estimación <span class="math inline">\(\hat{f}\)</span> de la función <span class="math inline">\(f\)</span>.</p>
+<p>Ahora, considere el siguiente resultado:</p>
+<div id="thm-bias-variance" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1 </strong></span><span class="math display">\[
+E \left[\left( Y - \hat{f}\left( x_o \right) \right)^2\right]
+= \text{ Var}\left( \epsilon \right) +
+\text{ Var}\left( \hat{f}\left( x_0 \right) \right) +
+\left[\text{ Bias}\left( \hat{f}\left( x_0 \right) \right)\right]^2
+\]</span></p>
+</div>
+<p>El <strong>sesgo</strong> consiste en cómo se aleja el valor real de la variable, en comparacion con el promedio de las estimaciones.</p>
+<p>Modelos que suelen tenor <strong>menor sesgo</strong>, suelen tener <strong>mayor varianza</strong>, <strong>y viceversa</strong>.</p>
+<div id="prp-regla-general" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 </strong></span>Para modelos más flexibles, la varianza se <em>incrementa</em> y el sesgo <em>disminuye</em>. (not <strong>aaalways</strong> true).</p>
+</div>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 </strong></span>Resulta que el punto donde el <span class="math inline">\(\text{ MSE }_{test}\)</span> alcanza un mínimo (en el eje Y, siendo el eje X el nivel de flexibilidad), a vecese coincide con el punto donde se intersectan el <em>bias</em> y <em>varianza</em> de la estimación <span class="math inline">\(\hat{f}\)</span></p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../media/bias-variance-tradeoff.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Bias-variance tradeoff</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <ul>
-<li>Main goal:
+<li>Resumen:
 <ul>
-<li>Predicción (no inferencia, eso se ve en otros cursos)</li>
-<li>From dataset, saber qué algoritmo de aprendizaje estadístico escoger, además de saber <strong>comunicar</strong> los hallazgos encontrados.</li>
-</ul></li>
-<li>Hay más similitudes que diferencias entre <em>Statistical Learning</em> y Machine Learning (<em>Aprendizaje de Máquina</em>).</li>
-</ul>
-<section id="qué-es-statistical-learning" class="level3">
-<h3 class="anchored" data-anchor-id="qué-es-statistical-learning">¿Qué es Statistical Learning?</h3>
-<ul>
-<li><p><strong>Set of tools to understand data</strong>.</p></li>
-<li><p>Distinción principal: <em>Supervisado</em> vs <em>No Supervisado</em></p></li>
-<li><p><em>Cadena</em> de stat. learning.: modelo -&gt; método -&gt; algoritmo -&gt; análisis -&gt; interpretación</p></li>
-<li><p>Objetivos principales:</p>
-<ul>
-<li><strong>Predecir</strong>: <em>Qué va a pasar</em></li>
-<li><strong>Inferencia</strong>: <em>Cómo va a pasar</em></li>
-</ul></li>
-<li><p>En Estadística, es muy importante considerar <strong>de dónde vienen los datos</strong> (muestreados under some probabilistic distribution).</p></li>
-</ul>
-</section>
-<section id="statistical-learning-vs-data-science" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-learning-vs-data-science">Statistical Learning vs Data Science</h3>
-<p>Data Science también busca obtener info a partir de datos, pero siempre require una <strong>implementación</strong>. Esto pues Data Science combina diversas disciplinas (math, CS, etc) para darles un enfoque <strong>pragmático</strong>.</p>
-<p>Este enfoque pragmático no es necesario en Statistical Learning.</p>
-<p>Ambos enfoques son importantes en la sociedad.</p>
-</section>
-</section>
-<section id="aprendizaje-estadístico" class="level2">
-<h2 class="anchored" data-anchor-id="aprendizaje-estadístico">Aprendizaje Estadístico</h2>
-<section id="qué-es" class="level3">
-<h3 class="anchored" data-anchor-id="qué-es">¿Qué es?</h3>
-<p>Proceso de aprendizaje a partir de los datos.</p>
-<ul>
-<li>A partir de la aplicación de modelos a un <strong>conjunto de entrenamiento</strong> podemos:
-<ul>
-<li><em>Extraer conclusiones</em> acerca de las relaciones entre las variables <strong>inferencia</strong>.</li>
-<li><em>Encontrar una función predictiva</em> para nuevas observaciones <strong>predicción</strong>.</li>
+<li>A medida que aumenta la complejidad (y, por tanto la flexibilidad) de un modelo, el modelo se vuelve más adaptable a estructuras subyacentes y cae el error de entrenaminto (<em>sobreajuste</em>)</li>
+<li>El error de prueba es el error de predicción sobre una muestra de prueba.</li>
+<li>Los modelos inflexibles (con parámetros para ajustarse) son fáciles de calcular pero pueden producir subajuste (alto sesgo).</li>
+<li>Los modelos flexibles pueden producir sobreajuste.</li>
 </ul></li>
 </ul>
 </section>
-<section id="el-problema-del-aprendizaje-supervisado" class="level3">
-<h3 class="anchored" data-anchor-id="el-problema-del-aprendizaje-supervisado">El problema del Aprendizaje Supervisado</h3>
+<section id="clasificación" class="level2">
+<h2 class="anchored" data-anchor-id="clasificación">Clasificación</h2>
+<section id="qué-es-clasificación" class="level3">
+<h3 class="anchored" data-anchor-id="qué-es-clasificación">¿Qué es clasificación?</h3>
 <ul>
-<li>Punto de partida:
+<li><p><strong>Modelo politómico</strong>: Cuando la variable respuesta cuenta con <em>más de dos</em> categorías.</p></li>
+<li><p>Cuando el objetivo es predecir, no suele tomarse en cuenta la <strong>jerarquía</strong> (en caso exista) entre las categorías de la variable respuesta. Por ejemplo, en caso <span class="math inline">\(Y\)</span> sea una variable <em>ordinal</em>.</p></li>
+<li><p>Usualmente construimos modelos que <strong>predigan las probabilidades de categorías</strong>, dadas ciertas covariables <span class="math inline">\(X\)</span>.</p></li>
+<li><p>No siempre los modelos de clasificación te danla clase y probabilidad de pertenencia a la clase. Los modelos por lo general dan solo la <strong>probabilidad de pertenencia</strong> a las clases. Por ejemplo:</p>
 <ul>
-<li>Medición del resultado <span class="math inline">\(Y\)</span> (variable dependiente/respuesta/objetivo)</li>
-<li>Vector de <span class="math inline">\(p\)</span> mediciones <em>predictoras</em> <span class="math inline">\(X = (X_1, \cdots, X_p)\)</span>, también llamadas entradas/regresores/covariables/características o variables independientes.</li>
-<li>En <strong>problemas de regresión</strong>, <span class="math inline">\(Y\)</span> es <em>cuantitativa</em>; en <strong>problemas de clasificación</strong>, <span class="math inline">\(Y\)</span> toma valores en un conjunto <strong>finito y desordenado</strong> de clases o atributos predefinidos.</li>
-<li>Tenemos <em>datos de entrenamiento</em> <span class="math inline">\((x_1, Y_1), \cdots, (x_n, Y_n)\)</span>.</li>
+<li>Regresión logística solo te da la probabilidad de pertenencia a la clase. Sin mbargo, ni en el caso binario basta la regla “probabilidad mayor de 50%” para asignar una clase a una nueva observación.</li>
+<li>Árboles de decisión te da la clase, pero no la probabilidad de pertenencia.</li>
 </ul></li>
-<li>A partir del training set, nos gustaría:
+</ul>
+</section>
+<section id="configuración-de-la-clasifiación-general" class="level3">
+<h3 class="anchored" data-anchor-id="configuración-de-la-clasifiación-general">Configuración de la clasifiación general</h3>
 <ul>
-<li><em>Predecir</em> <strong>nuevos</strong> casos de prueba.</li>
-<li><em>Comprender</em> como se relacionan las variables.</li>
-<li><em>Evaluar</em> la calidad de predicciones e inferencias.</li>
+<li><strong>Contexto</strong>:
+<ul>
+<li>La variable respuesta cuenta con una cantidad <strong>finita</strong> de valores posibles … categorías.</li>
+<li>La variable respuesta <span class="math inline">\(Y\)</span> es <strong>cualitativa</strong>.</li>
 </ul></li>
-<li>La variable respuesta supervisa nuestro análisis.</li>
-</ul>
-</section>
-<section id="el-problema-del-aprendizaje-no-supervisado" class="level3">
-<h3 class="anchored" data-anchor-id="el-problema-del-aprendizaje-no-supervisado">El problema del Aprendizaje No Supervisado</h3>
+<li><strong>Objetivo</strong>:
 <ul>
-<li><strong>No hay variable respuesta</strong>.</li>
-<li>Se buscan patrones o agrupaciones (ocultas) en los datos, para obtener <em>información y comprensión</em>.</li>
-<li>Hay más <em>subjetividad</em> al momento de comparar modelos; por ello importa mucho más el conocimiento sobre el área de aplicación (field experts).</li>
-</ul>
-</section>
-<section id="filosofía-general" class="level3">
-<h3 class="anchored" data-anchor-id="filosofía-general">Filosofía general</h3>
-<ul>
-<li>Los métodos más simples a menudo funcionan tan bien como los más complicados.</li>
-</ul>
-</section>
-<section id="statistical-learning-vs-machine-learning" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-learning-vs-machine-learning">Statistical Learning vs Machine Learning</h3>
-<ul>
-<li><p><span class="math inline">\(\text{ML} \subset \text{AI}\)</span> (algoritmos)</p></li>
-<li><p><span class="math inline">\(\text{SL} \subset \text{Statistics}\)</span> (modelos)</p></li>
-<li><p>Presentan un mayor enfoque en:</p>
-<ul>
-<li>ML: <strong>Precisión de la predicción</strong> y <strong>aplicaciones a gran escala</strong>.</li>
-<li>SL: Modelos, su <strong>interpretabilidad</strong>, precisión e incertidumbre.</li>
+<li>Construir un clasificador que <strong>asigne una etiqueta</strong> de clasificación a una observación futura sin etiquetar, además de evaluar la <strong>incertidumbre</strong> en esta clasificación.</li>
 </ul></li>
-<li><p><strong>Método escalable</strong>: Al añadir más datos o más variables, la precisión no se reduce.</p></li>
-<li><p>SL y ML emplean casi las mismas técnicas.</p></li>
-<li><p>Comparado a un curso de ML, en este curso nos enfocaremos más en comprender los modelos que usaremos, cómo funcionan.</p></li>
+<li><strong>Medidas de rendimiento</strong>
+<ul>
+<li>La más popular es la tasa de error de clasificación érronea (versión de entrenamiento y prueba).</li>
+</ul></li>
+<li><strong>Pérdida 0/1</strong>:
+<ul>
+<li>Las clasificaciones erróneas reciben la pérdida 1; y las clasificaciones correctas, pérdida 0.</li>
+<li>No se emplea pérdida cuadrática para la clasificación.</li>
+</ul></li>
 </ul>
 </section>
+<section id="métodos-estadísticos-tradicionales-para-clasificación" class="level3">
+<h3 class="anchored" data-anchor-id="métodos-estadísticos-tradicionales-para-clasificación">Métodos Estadísticos Tradicionales para Clasificación</h3>
+<ul>
+<li>Tres métodos comúnmente usados para clasificación:
+<ul>
+<li>Regresión Logística</li>
+<li>Análisis Discrimante Lineal (LDA)</li>
+<li>Análisis Discrimante Cuadrático (QDA)</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../media/glm-01.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Generalized Linear Models</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../media/glm-02.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Generalized Linear Models</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>La <strong>exponential family</strong> es una familia de distribuciones, tales como la Normal, Gamma, Binomial, etc.</p></li>
+<li><p>La función <span class="math inline">\(g\)</span> se denomina <strong>función de enlace</strong> y debe satisfacer tener inversa, <span class="math inline">\(g^{-1}\)</span>, la cual se denomina <strong>función de respuesta</strong>.</p></li>
+</ul>
 </section>
-<section id="lista-de-ejercicios" class="level2">
-<h2 class="anchored" data-anchor-id="lista-de-ejercicios">Lista de ejercicios</h2>
-<p><a href="../ejercicios/lista-01.html">Lista 1</a></p>
+<section id="predicción-con-el-modelo-logit" class="level3">
+<h3 class="anchored" data-anchor-id="predicción-con-el-modelo-logit">Predicción con el modelo logit</h3>
+<ul>
+<li><p>Se denomina modelo logit al modelo de regresión logística binaria.</p></li>
+<li><p>Es un modelo <strong>ideal para interpretar</strong>.</p></li>
+<li><p>No es un modelo ideal para predecir, en especial si se tienen <strong>clases desbalanceadas</strong>.</p></li>
+<li><p>Recuerde que desbalanceado no implica difícil de predecir. Además, <em>clases desbalanceadas</em> <strong>no es un problema de los datos</strong>.</p></li>
+<li><p>Predicción</p>
+<ol type="1">
+<li><span class="math inline">\(\hat{p}_i = \dfrac{1}{1 + e^{-\eta_i}}\)</span> = <span class="math inline">\(\dfrac{1}{1 + e^{-\left( \hat{\beta}_0 + \hat{\beta}_ 1 x_{1i} + \dots + \hat{\beta}_p x_{pi}\right)}}\)</span></li>
+<li><span class="math display">\[
+  \begin{equation}
+    \hat{Y}_i =
+    \begin{cases*}
+1 &amp; si $\hat{p}_i \geq c$ \\
+0 &amp; si $\hat{p}_i &lt; c$
+    \end{cases*}
+  \end{equation}
+  \]</span> donde <span class="math inline">\(c\)</span> se denomina punto de corte (umbral).<br>
+Usualmente se utiliza <span class="math inline">\(c = 0.50\)</span> .</li>
+</ol></li>
+</ul>
+<div id="thm-" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 2 </strong></span>Se puede demostrar (es complicado) que con la elección de umbral <span class="math inline">\(c = 0.50\)</span> se minimiza el error de clasificación; además de ser el único umbral que minimiza tal error.</p>
+</div>
+</section>
+<section id="regresión-lineal-para-una-clasificación-binaria" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-lineal-para-una-clasificación-binaria">¿Regresión lineal para una clasificación binaria?</h3>
+<ul>
+<li>La regresión lineal puede producir probabilidades menores que cero o mayores que uno.</li>
+</ul>
+</section>
+<section id="regresión-logística-binaria" class="level3">
+<h3 class="anchored" data-anchor-id="regresión-logística-binaria">Regresión logística binaria</h3>
+<ul>
+<li><p>La response presenta solo dos categorías posibles.</p></li>
+<li><p>Se modela entonces <span class="math inline">\(Y_i \sim Bernoulli(p_i)\)</span> .</p></li>
+<li><p><strong>Objetivo</strong>: Estimar <span class="math inline">\(p_i = P\left( Y_i = 1 \mid X_1, \dots, X_p \right)\)</span></p></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -611,14 +654,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Sílabo</span>
+      <a href="../apuntes/clase-02.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../apuntes/clase-02.html" class="pagination-link">
-        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
