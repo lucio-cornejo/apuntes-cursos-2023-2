@@ -9,8 +9,8 @@ coursesPaths
 final_json = {}
 for course in coursesPaths:
   # Assume the /apuntes/ folder only 
-  # contains pdfs, and those are of the 
-  # form "clase-number.pdf" .
+  # contains files of the form
+  # form "clase-number.someExtension"
   final_json[course] = listdir(coursesPath + course + "/apuntes")
 
   if final_json[course]:
@@ -21,4 +21,4 @@ for course in coursesPaths:
 # Save dictionary as JSON
 import json
 with open('available-classes.json', 'w') as fp:
-  json.dump(final_json, fp)
+  json.dump(final_json, fp, indent = 2)
