@@ -135,4 +135,5 @@ input[type="button"]:hover {
   padding: 0;
   display: flex;
   flex-basis: content;
+  width: -webkit-fill-available;
 }
