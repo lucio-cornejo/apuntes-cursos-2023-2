@@ -8,6 +8,7 @@
     "new-class": "Rscript ./custom-scripts/create-course-class.R",
     "save-class": "python ./custom-scripts/save-class-pdf.py",
     "merge-pdfs": "python ./custom-scripts/merge-pdfs.py",
+    "compress-pdfs": "python ./custom-scripts/compress-pdfs.py",
     "serve": "live-server",
 
     "prebuild": "python ./custom-scripts/create-available-classes.py",
