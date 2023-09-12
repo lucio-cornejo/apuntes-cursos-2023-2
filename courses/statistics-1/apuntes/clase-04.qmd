@@ -1,0 +1,348 @@
+# Apuntes de clase {-}
+
+## Ejemplo práctico
+
+
+```{r}
+library(ISLR2)
+data(Default)
+
+# Default$default <- as.numeric(Default$default) - 1
+glm_default <- glm(
+  default ~ balance, 
+  data = Default, family = 'binomial'
+)
+
+summary(glm_default)$coef
+```
+
+$$
+  \log \left( \dfrac{\hat{p}_i}{1- \hat{p}_i} \right)  = \hat{n}_i = -10.6513 + 0.0055*\text{balance}_i
+$$ 
+
+
+```{r}
+glm_default_2 <- glm(
+  default ~ balance + income + student, 
+  data = Default, family = 'binomial'
+)
+
+eta <- summary(glm_default_2)$coef[,1] %*% c(1, 2000, 40000, 1)
+1 / (1 + exp(-eta))
+```
+
+
+## Clasificador de Bayes
+
+- El clasificador de Bayes asigna una observación
+a la **clase más probable**, dado los valores de los predictores.
+
+### Propiedades
+
+- Tiene la **tasa de error de prueba más pequeña**.
+
+- Por lo general, no conocemos la verdadera distribución
+condicional $Pr(Y| X)$ para datos reales.
+
+- *Función pérdida*: A las clasificaciones erróneas
+se les asigna la pérdida $1$; y, a las clasificaciones
+correctas, $0$ . Esta es conocida como **pérdida-0/1**.
+
+### Tasas de error
+
+- **Tasa de error de entrenamiento**:
+
+$$
+\dfrac{1}{n} \sum_{i=1}^{n}I\left( y_i \ne \hat{y}_i \right)
+$$
+
+
+- **Tasa de error de prueba**:
+
+$$
+Average \left( I \left( y_i \ne \hat{y}_i \right) \right)
+$$
+
+- Suponemos que un *buen clasificador* es aquel
+que tiene un *error de prueba bajo*.
+
+## Dos paradigmas
+
+- **Paradigma de diagnóstico:**
+    - Se estima **directamente** la 
+    **distribución a posteriori** para las clases:
+    $Pr(Y = k \mid X = x)$ 
+    - Ejemplos: Regresión logística, Clasificación KNN
+
+- **Paradigma de muestreo**:
+    - Enfoque **indirecto**:
+        - Modele la distribución condicional de predictores,
+        para cada clase: $f_k (x) = Pr(X = x \mid Y = k)$ 
+        - Considere las **probabilidades a priori**:
+        $\pi_k = Pr(Y = k)$ 
+    - Clasificar en la clase con el producto máximo $pi_k f_k (x)$ 
+
+    - ¿Cómo obtenemos $Pr(Y 0= k \mid X = x_0)$? \
+    **Teorema de Bayes:**
+    $$
+      p_k (X) = Pr(Y = k \mid X = x) = 
+      \dfrac{Pr(X = x \cap Y = k)}{f(x)} =
+      \dfrac{f_k (x) \pi_k}{\sum_{l=1}^{k}f_l (x) \pi_l}
+    $$
+    
+
+::: {#prp-}
+
+No es recomendable usar los mismos datos de test
+para comparar modelos. Esto puesto que un modelo
+podría presentar menor test-error que otro,
+para un mismo test dataset, debido al azar.
+
+:::
+
+## Análisis Discriminante
+
+- El enfoque es modelar la distribución de $X$ 
+en cada una de las clases por separado, y, 
+luego usar el teorema de Bayes para obtener
+$Pr(Y \mid X)$.
+
+## Ejemplo práctico LDA
+
+```{r}
+diabetes = read.csv(
+  "../datos/DiabetesTrain.csv",
+  stringsAsFactors = TRUE
+)
+
+head(diabetes)
+```
+
+### Análisis descriptivo
+
+```{r}
+library(psych)
+
+describeBy(diabetes[,-4], diabetes$class)
+pairs.panels(
+  diabetes[,1:3],
+  bg = c("red","yellow","blue")[diabetes$class],
+  pch = 21
+)
+
+par(mfrow = c(2,2))
+boxplot(glucose ~ class, data = diabetes, main = "glucose")
+boxplot(insulin ~ class, data = diabetes, main = "insulin")
+boxplot(sspg ~ class, data = diabetes, main = "sspg")
+par(mfrow = c(1,1))
+```
+
+### Análisis Discriminante Lineal
+
+```{r}
+# Estimación
+library(MASS)
+
+lda1 = lda(class ~., data = diabetes)
+lda1
+
+# Predicción
+plda1 = predict(lda1, diabetes)$class
+
+# Matriz de confusion (entrenamiento)
+table(plda1, diabetes$class)
+
+# Error (entrenamiento)
+error1 = mean(plda1 != diabetes$class)
+error1
+
+caret::confusionMatrix(
+  data = plda1, reference = diabetes$class
+)
+```
+
+### Selección de Variables 
+
+```{r}
+library(klaR)
+
+greedy.wilks(class ~., data = diabetes)
+
+# Validación Cruzada
+set.seed(666)
+stepclass(
+  diabetes[,-4], diabetes$class, 
+  method = "lda", criterion = "AC",
+  # Consideramos una mejora significativa 
+  # como de 10%, pero esta es una elección arbitraria
+  improvement = 0.10
+)
+```
+
+### Estimación
+
+```{r}
+lda2 = lda(class ~ glucose + insulin, data = diabetes)
+
+# Predicción (entrenamiento)
+plda2 = predict(lda2, diabetes[-4])$class
+
+# Matriz de confusion (entrenamiento)
+caret::confusionMatrix(plda2, diabetes$class)
+
+# Error
+error2 = mean(plda2 != diabetes$class)
+error2
+
+partimat(
+  class ~., data = diabetes, 
+  method = "lda", nplots.vert = 2
+)
+```
+
+### Datos de Test
+
+```{r}
+diabetes_test = read.csv(
+  "../datos/DiabetesTest.csv", stringsAsFactors = TRUE
+)
+head(diabetes_test)
+```
+
+
+```{r}
+# Evaluación en el conjunto de test
+predlda = predict(lda2, diabetes_test)$class
+caret::confusionMatrix(predlda, diabetes_test$class)
+```
+
+
+## Ejemplo práctico QDA
+
+```{r}
+# Estimación
+qda1 = qda(class ~., data = diabetes)
+
+# Predicción
+pqda1 = predict(qda1, diabetes[-4])$class
+
+# Matriz de confusion (entrenamiento)
+caret::confusionMatrix(pqda1, diabetes$class)
+
+# Error (entrenamiento)
+error1 = mean(pqda1 != diabetes$class)
+error1
+```
+
+### Selección de variables
+
+```{r}
+set.seed(666)
+stepclass(
+  diabetes[,-4], diabetes$class,
+  method = "qda", criterion = "AC",
+  improvement = 0.03
+)
+```
+
+```{r}
+# Estimación
+qda2 = qda(class ~ glucose + insulin, data = diabetes)
+
+# Predicción (entrenamiento)
+pqda2 = predict(qda2, diabetes[-4])$class
+
+# Matriz de confusion
+caret::confusionMatrix(pqda2, diabetes$class)
+
+# Error (entrenamiento)
+error1 = mean(pqda2 != diabetes$class)
+error1
+
+partimat(
+  class ~.,data = diabetes, 
+  method="qda", nplots.vert=2
+)
+```
+
+### Evaluación
+
+```{r}
+# Evaluación en el conjunto de test
+predqda = predict(qda2, diabetes_test)$class
+caret::confusionMatrix(predqda, diabetes_test$class)
+```
+
+
+## Análisis Discriminante Regularizado
+
+
+
+## Ejemplo práctico
+
+```{r}
+rda(class ~., data = diabetes)
+rda1 = rda(class ~., data = diabetes)
+rda1 
+
+# Predicción (entrenamiento)
+prda1 = predict(rda1, diabetes[-4])$class
+
+# Matriz de confusion (entrenamiento)
+caret::confusionMatrix(prda1, diabetes$class)
+
+# Error (entrenamiento)
+error1 = mean(prda1 != diabetes$class)
+error1
+```
+
+### Selección de variables
+
+```{r}
+# Selección de Variables (validación cruzada)
+stepclass(
+  diabetes[,-4], diabetes$class,
+  method = "rda", criterion = "AC",
+  improvement = 0.03
+)
+```
+
+### Modelo final
+
+```{r}
+rda2 = rda(class ~ glucose + insulin, data = diabetes)
+rda2
+
+# Predicción
+prda2 = predict(rda2, diabetes[-4])$class
+# Matriz de confusion
+caret::confusionMatrix(prda2, diabetes$class)
+
+# Error
+error1 = mean(prda2 != diabetes$class)
+error1
+
+# Evaluación en el conjunto de test
+predrda = predict(rda2, diabetes_test)$class
+caret::confusionMatrix(diabetes_test$class, predrda)
+```
+
+
+## Naive Bayes
+
+- Método popular cuando se tiene una **gran cantidad de predictores**.
+- Suponemos que **en cada clase, los predictores son independientes**,
+(supuesto de **independencia condicional dentro de clases**).
+- Es un **método escalable**, es decir, no pierde eficiencia cuando
+se aumenta la cantidad de predictores (más columnas).
+- **Rápidamente** genera predicciones de clasificaciones, 
+comparado a otros modelos.
+- No es tan útil para **inferencia**.
+
+- Cuando las distribuciones marginales son respecto a una
+un **predictor numérico continuo, se supone** que tal predictor
+sigue una **distribución normal univariada**.
+
+## Ejercicio
+
+Ir avanzando la lista 2.

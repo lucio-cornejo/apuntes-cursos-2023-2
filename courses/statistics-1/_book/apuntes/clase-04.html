@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Learning 1 - Apuntes de clase</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-03.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script type="module">
+  // When keyboard's 's' key is pressed, 
+  // hide both sidebars (tables of contents)
+  document.addEventListener(
+    "keydown", 
+    function (evt) {
+      // Avoid keydown event repetition due to holding key
+      if (evt.repeat) return;
+
+      if ('s' === event.key.toLowerCase()) {
+        const quartoContent = document.querySelector("#quarto-content");
+        
+        if (window.getComputedStyle(quartoContent).display === 'grid') {
+          // Remove grid display
+          quartoContent.style.display = "block";
+          
+          // Hide every HTML element, except for main content
+          quartoContent
+            .querySelectorAll(":scope > :not(.content, script)")
+            .forEach(e => e.style.display = "none");
+  
+          // Change content margin for desktop view
+          quartoContent
+            .querySelector("main.content")
+            .style.margin = "20px 100px";
+        } else {
+          // Try to restore Quarto's initial style
+          quartoContent.style.display = "grid";
+
+          quartoContent
+            .querySelectorAll(":scope > :not(.content, script)")
+            .forEach(e => e.style.display = "flex");
+
+          quartoContent
+            .querySelector("main.content")
+            .style.margin = "21px 0";
+        }
+      }
+    }
+  );
+</script> 
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-04.html">Semana 4</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-04.html">Apuntes de clase</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Learning 1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sílabo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Semana 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Semana 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Semana 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Semana 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-04.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de Contenidos</h2>
+   
+  <ul>
+  <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link active" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a></li>
+  <li><a href="#clasificador-de-bayes" id="toc-clasificador-de-bayes" class="nav-link" data-scroll-target="#clasificador-de-bayes">Clasificador de Bayes</a>
+  <ul class="collapse">
+  <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades">Propiedades</a></li>
+  <li><a href="#tasas-de-error" id="toc-tasas-de-error" class="nav-link" data-scroll-target="#tasas-de-error">Tasas de error</a></li>
+  </ul></li>
+  <li><a href="#dos-paradigmas" id="toc-dos-paradigmas" class="nav-link" data-scroll-target="#dos-paradigmas">Dos paradigmas</a></li>
+  <li><a href="#análisis-discriminante" id="toc-análisis-discriminante" class="nav-link" data-scroll-target="#análisis-discriminante">Análisis Discriminante</a></li>
+  <li><a href="#ejemplo-práctico-lda" id="toc-ejemplo-práctico-lda" class="nav-link" data-scroll-target="#ejemplo-práctico-lda">Ejemplo práctico LDA</a>
+  <ul class="collapse">
+  <li><a href="#análisis-descriptivo" id="toc-análisis-descriptivo" class="nav-link" data-scroll-target="#análisis-descriptivo">Análisis descriptivo</a></li>
+  <li><a href="#análisis-discriminante-lineal" id="toc-análisis-discriminante-lineal" class="nav-link" data-scroll-target="#análisis-discriminante-lineal">Análisis Discriminante Lineal</a></li>
+  <li><a href="#selección-de-variables" id="toc-selección-de-variables" class="nav-link" data-scroll-target="#selección-de-variables">Selección de Variables</a></li>
+  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación">Estimación</a></li>
+  <li><a href="#datos-de-test" id="toc-datos-de-test" class="nav-link" data-scroll-target="#datos-de-test">Datos de Test</a></li>
+  </ul></li>
+  <li><a href="#ejemplo-práctico-qda" id="toc-ejemplo-práctico-qda" class="nav-link" data-scroll-target="#ejemplo-práctico-qda">Ejemplo práctico QDA</a>
+  <ul class="collapse">
+  <li><a href="#selección-de-variables-1" id="toc-selección-de-variables-1" class="nav-link" data-scroll-target="#selección-de-variables-1">Selección de variables</a></li>
+  <li><a href="#evaluación" id="toc-evaluación" class="nav-link" data-scroll-target="#evaluación">Evaluación</a></li>
+  </ul></li>
+  <li><a href="#análisis-discriminante-regularizado" id="toc-análisis-discriminante-regularizado" class="nav-link" data-scroll-target="#análisis-discriminante-regularizado">Análisis Discriminante Regularizado</a></li>
+  <li><a href="#ejemplo-práctico-1" id="toc-ejemplo-práctico-1" class="nav-link" data-scroll-target="#ejemplo-práctico-1">Ejemplo práctico</a>
+  <ul class="collapse">
+  <li><a href="#selección-de-variables-2" id="toc-selección-de-variables-2" class="nav-link" data-scroll-target="#selección-de-variables-2">Selección de variables</a></li>
+  <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final">Modelo final</a></li>
+  </ul></li>
+  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes">Naive Bayes</a></li>
+  <li><a href="#ejercicio" id="toc-ejercicio" class="nav-link" data-scroll-target="#ejercicio">Ejercicio</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Apuntes de clase</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="ejemplo-práctico" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico">Ejemplo práctico</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ISLR2' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Default)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Default$default &lt;- as.numeric(Default$default) - 1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>glm_default <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  default <span class="sc">~</span> balance, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> Default, <span class="at">family =</span> <span class="st">'binomial'</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_default)<span class="sc">$</span>coef</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Estimate   Std. Error   z value      Pr(&gt;|z|)
+(Intercept) -10.651330614 0.3611573721 -29.49221 3.623124e-191
+balance       0.005498917 0.0002203702  24.95309 1.976602e-137</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+  \log \left( \dfrac{\hat{p}_i}{1- \hat{p}_i} \right)  = \hat{n}_i = -10.6513 + 0.0055*\text{balance}_i
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>glm_default_2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  default <span class="sc">~</span> balance <span class="sc">+</span> income <span class="sc">+</span> student, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> Default, <span class="at">family =</span> <span class="st">'binomial'</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>eta <span class="ot">&lt;-</span> <span class="fu">summary</span>(glm_default_2)<span class="sc">$</span>coef[,<span class="dv">1</span>] <span class="sc">%*%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2000</span>, <span class="dv">40000</span>, <span class="dv">1</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>eta))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+[1,] 0.5196218</code></pre>
+</div>
+</div>
+</section>
+<section id="clasificador-de-bayes" class="level2">
+<h2 class="anchored" data-anchor-id="clasificador-de-bayes">Clasificador de Bayes</h2>
+<ul>
+<li>El clasificador de Bayes asigna una observación a la <strong>clase más probable</strong>, dado los valores de los predictores.</li>
+</ul>
+<section id="propiedades" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades">Propiedades</h3>
+<ul>
+<li><p>Tiene la <strong>tasa de error de prueba más pequeña</strong>.</p></li>
+<li><p>Por lo general, no conocemos la verdadera distribución condicional <span class="math inline">\(Pr(Y| X)\)</span> para datos reales.</p></li>
+<li><p><em>Función pérdida</em>: A las clasificaciones erróneas se les asigna la pérdida <span class="math inline">\(1\)</span>; y, a las clasificaciones correctas, <span class="math inline">\(0\)</span> . Esta es conocida como <strong>pérdida-0/1</strong>.</p></li>
+</ul>
+</section>
+<section id="tasas-de-error" class="level3">
+<h3 class="anchored" data-anchor-id="tasas-de-error">Tasas de error</h3>
+<ul>
+<li><strong>Tasa de error de entrenamiento</strong>:</li>
+</ul>
+<p><span class="math display">\[
+\dfrac{1}{n} \sum_{i=1}^{n}I\left( y_i \ne \hat{y}_i \right)
+\]</span></p>
+<ul>
+<li><strong>Tasa de error de prueba</strong>:</li>
+</ul>
+<p><span class="math display">\[
+Average \left( I \left( y_i \ne \hat{y}_i \right) \right)
+\]</span></p>
+<ul>
+<li>Suponemos que un <em>buen clasificador</em> es aquel que tiene un <em>error de prueba bajo</em>.</li>
+</ul>
+</section>
+</section>
+<section id="dos-paradigmas" class="level2">
+<h2 class="anchored" data-anchor-id="dos-paradigmas">Dos paradigmas</h2>
+<ul>
+<li><strong>Paradigma de diagnóstico:</strong>
+<ul>
+<li>Se estima <strong>directamente</strong> la <strong>distribución a posteriori</strong> para las clases: <span class="math inline">\(Pr(Y = k \mid X = x)\)</span></li>
+<li>Ejemplos: Regresión logística, Clasificación KNN</li>
+</ul></li>
+<li><strong>Paradigma de muestreo</strong>:
+<ul>
+<li><p>Enfoque <strong>indirecto</strong>:</p>
+<ul>
+<li>Modele la distribución condicional de predictores, para cada clase: <span class="math inline">\(f_k (x) = Pr(X = x \mid Y = k)\)</span></li>
+<li>Considere las <strong>probabilidades a priori</strong>: <span class="math inline">\(\pi_k = Pr(Y = k)\)</span></li>
+</ul></li>
+<li><p>Clasificar en la clase con el producto máximo <span class="math inline">\(pi_k f_k (x)\)</span></p></li>
+<li><p>¿Cómo obtenemos <span class="math inline">\(Pr(Y 0= k \mid X = x_0)\)</span>?<br>
+<strong>Teorema de Bayes:</strong> <span class="math display">\[
+p_k (X) = Pr(Y = k \mid X = x) =
+\dfrac{Pr(X = x \cap Y = k)}{f(x)} =
+\dfrac{f_k (x) \pi_k}{\sum_{l=1}^{k}f_l (x) \pi_l}
+  \]</span></p></li>
+</ul></li>
+</ul>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 </strong></span>No es recomendable usar los mismos datos de test para comparar modelos. Esto puesto que un modelo podría presentar menor test-error que otro, para un mismo test dataset, debido al azar.</p>
+</div>
+</section>
+<section id="análisis-discriminante" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-discriminante">Análisis Discriminante</h2>
+<ul>
+<li>El enfoque es modelar la distribución de <span class="math inline">\(X\)</span> en cada una de las clases por separado, y, luego usar el teorema de Bayes para obtener <span class="math inline">\(Pr(Y \mid X)\)</span>.</li>
+</ul>
+</section>
+<section id="ejemplo-práctico-lda" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-lda">Ejemplo práctico LDA</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">=</span> <span class="fu">read.csv</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../datos/DiabetesTrain.csv"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  glucose insulin sspg  class
+1      97     289  117 normal
+2     105     319  143 normal
+3      90     356  199 normal
+4      90     323  240 normal
+5      86     381  157 normal
+6     100     350  221 normal</code></pre>
+</div>
+</div>
+<section id="análisis-descriptivo" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-descriptivo">Análisis descriptivo</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">describeBy</span>(diabetes[,<span class="sc">-</span><span class="dv">4</span>], diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: chemical
+        vars  n   mean     sd median trimmed    mad min max range skew kurtosis
+glucose    1 26  99.46   8.81   98.5   99.32   9.64  85 114    29 0.24    -1.28
+insulin    2 26 504.12  60.06  497.5  500.77  63.75 423 643   220 0.37    -0.89
+sspg       3 26 291.77 177.65  222.5  272.14 120.83 109 748   639 1.08    -0.01
+           se
+glucose  1.73
+insulin 11.78
+sspg    34.84
+------------------------------------------------------------ 
+group: normal
+        vars  n   mean    sd median trimmed   mad min max range  skew kurtosis
+glucose    1 66  91.98  8.16   91.5   92.00  8.15  70 112    42 -0.05     0.10
+insulin    2 66 351.21 37.70  354.5  351.46 46.70 269 426   157 -0.09    -0.93
+sspg       3 66 169.02 65.49  156.5  163.39 51.89  73 490   417  1.86     6.76
+          se
+glucose 1.00
+insulin 4.64
+sspg    8.06
+------------------------------------------------------------ 
+group: overt
+        vars  n    mean     sd median trimmed    mad min  max range skew
+glucose    1 23  207.17  71.84    203  202.79  96.37 120  339   219 0.35
+insulin    2 23 1002.96 315.85    972  998.21 382.51 538 1520   982 0.16
+sspg       3 23  112.61 106.57     87   94.37  65.23  10  460   450 1.72
+        kurtosis    se
+glucose    -1.28 14.98
+insulin    -1.34 65.86
+sspg        2.72 22.22</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs.panels</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bg =</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"yellow"</span>,<span class="st">"blue"</span>)[diabetes<span class="sc">$</span>class],</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">21</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-04_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(glucose <span class="sc">~</span> class, <span class="at">data =</span> diabetes, <span class="at">main =</span> <span class="st">"glucose"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(insulin <span class="sc">~</span> class, <span class="at">data =</span> diabetes, <span class="at">main =</span> <span class="st">"insulin"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(sspg <span class="sc">~</span> class, <span class="at">data =</span> diabetes, <span class="at">main =</span> <span class="st">"sspg"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-04_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="análisis-discriminante-lineal" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-discriminante-lineal">Análisis Discriminante Lineal</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'MASS' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ISLR2':
+
+    Boston</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lda1 <span class="ot">=</span> <span class="fu">lda</span>(class <span class="sc">~</span>., <span class="at">data =</span> diabetes)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lda1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+lda(class ~ ., data = diabetes)
+
+Prior probabilities of groups:
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+Group means:
+           glucose   insulin     sspg
+chemical  99.46154  504.1154 291.7692
+normal    91.98485  351.2121 169.0152
+overt    207.17391 1002.9565 112.6087
+
+Coefficients of linear discriminants:
+                 LD1          LD2
+glucose -0.035130542 -0.056150421
+insulin  0.013748266  0.009876402
+sspg     0.001344232  0.005489825
+
+Proportion of trace:
+   LD1    LD2 
+0.8526 0.1474 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>plda1 <span class="ot">=</span> <span class="fu">predict</span>(lda1, diabetes)<span class="sc">$</span>class</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion (entrenamiento)</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(plda1, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          
+plda1      chemical normal overt
+  chemical       19      1     5
+  normal          7     65     2
+  overt           0      0    16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error (entrenamiento)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>error1 <span class="ot">=</span> <span class="fu">mean</span>(plda1 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>error1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1304348</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> plda1, <span class="at">reference =</span> diabetes<span class="sc">$</span>class</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       19      1     5
+  normal          7     65     2
+  overt           0      0    16
+
+Overall Statistics
+                                         
+               Accuracy : 0.8696         
+                 95% CI : (0.794, 0.9251)
+    No Information Rate : 0.5739         
+    P-Value [Acc &gt; NIR] : 6.334e-12      
+                                         
+                  Kappa : 0.7644         
+                                         
+ Mcnemar's Test P-Value : 0.009308       
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.7308        0.9848       0.6957
+Specificity                   0.9326        0.8163       1.0000
+Pos Pred Value                0.7600        0.8784       1.0000
+Neg Pred Value                0.9222        0.9756       0.9293
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1652        0.5652       0.1391
+Detection Prevalence          0.2174        0.6435       0.1391
+Balanced Accuracy             0.8317        0.9006       0.8478</code></pre>
+</div>
+</div>
+</section>
+<section id="selección-de-variables" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-variables">Selección de Variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(klaR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'klaR' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">greedy.wilks</span>(class <span class="sc">~</span>., <span class="at">data =</span> diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formula containing included variables: 
+
+class ~ insulin + glucose + sspg
+&lt;environment: 0x000000002e63c008&gt;
+
+
+Values calculated in each step of the selection procedure: 
+
+     vars Wilks.lambda F.statistics.overall p.value.overall F.statistics.diff
+1 insulin    0.2469409            170.77488    9.665240e-35        170.774879
+2 glucose    0.1532280             86.28294    4.190502e-44         33.943348
+3    sspg    0.1311418             64.58470    7.641367e-46          9.262795
+  p.value.diff
+1 9.665240e-35
+2 2.994049e-12
+3 1.904104e-04</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validación Cruzada</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">666</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stepclass</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  diabetes[,<span class="sc">-</span><span class="dv">4</span>], diabetes<span class="sc">$</span>class, </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"lda"</span>, <span class="at">criterion =</span> <span class="st">"AC"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Consideramos una mejora significativa </span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># como de 10%, pero esta es una elección arbitraria</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">improvement =</span> <span class="fl">0.10</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code> `stepwise classification', using 10-fold cross-validated accuracy of method lda'.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>115 observations of 3 variables in 3 classes; direction: both</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stop criterion: improvement less than 10%.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy: 0.49254;  in: "insulin";  variables (1): insulin 
+accuracy: 0.7221;  in: "glucose";  variables (2): insulin, glucose 
+
+ hr.elapsed min.elapsed sec.elapsed 
+       0.00        0.00        0.38 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>method      : lda 
+final model : diabetes$class ~ glucose + insulin
+&lt;environment: 0x000000002ede17a0&gt;
+
+accuracy = 0.7221 </code></pre>
+</div>
+</div>
+</section>
+<section id="estimación" class="level3">
+<h3 class="anchored" data-anchor-id="estimación">Estimación</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>lda2 <span class="ot">=</span> <span class="fu">lda</span>(class <span class="sc">~</span> glucose <span class="sc">+</span> insulin, <span class="at">data =</span> diabetes)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción (entrenamiento)</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>plda2 <span class="ot">=</span> <span class="fu">predict</span>(lda2, diabetes[<span class="sc">-</span><span class="dv">4</span>])<span class="sc">$</span>class</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion (entrenamiento)</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(plda2, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       23      3     4
+  normal          3     63     3
+  overt           0      0    16
+
+Overall Statistics
+                                          
+               Accuracy : 0.887           
+                 95% CI : (0.8145, 0.9384)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 2.26e-13        
+                                          
+                  Kappa : 0.8013          
+                                          
+ Mcnemar's Test P-Value : 0.0719          
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8846        0.9545       0.6957
+Specificity                   0.9213        0.8776       1.0000
+Pos Pred Value                0.7667        0.9130       1.0000
+Neg Pred Value                0.9647        0.9348       0.9293
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.2000        0.5478       0.1391
+Detection Prevalence          0.2609        0.6000       0.1391
+Balanced Accuracy             0.9030        0.9160       0.8478</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>error2 <span class="ot">=</span> <span class="fu">mean</span>(plda2 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>error2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1130435</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">partimat</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  class <span class="sc">~</span>., <span class="at">data =</span> diabetes, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"lda"</span>, <span class="at">nplots.vert =</span> <span class="dv">2</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-04_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="datos-de-test" class="level3">
+<h3 class="anchored" data-anchor-id="datos-de-test">Datos de Test</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">=</span> <span class="fu">read.csv</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../datos/DiabetesTest.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  glucose insulin sspg    class
+1      89     472  162 chemical
+2      96     465  237 chemical
+3     112     503  408 chemical
+4     110     477  124 chemical
+5      90     413  344 chemical
+6     102     472  297 chemical</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluación en el conjunto de test</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>predlda <span class="ot">=</span> <span class="fu">predict</span>(lda2, diabetes_test)<span class="sc">$</span>class</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predlda, diabetes_test<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical        3      1     0
+  normal          7      9     0
+  overt           0      0    10
+
+Overall Statistics
+                                          
+               Accuracy : 0.7333          
+                 95% CI : (0.5411, 0.8772)
+    No Information Rate : 0.3333          
+    P-Value [Acc &gt; NIR] : 8.752e-06       
+                                          
+                  Kappa : 0.6             
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.3000        0.9000       1.0000
+Specificity                   0.9500        0.6500       1.0000
+Pos Pred Value                0.7500        0.5625       1.0000
+Neg Pred Value                0.7308        0.9286       1.0000
+Prevalence                    0.3333        0.3333       0.3333
+Detection Rate                0.1000        0.3000       0.3333
+Detection Prevalence          0.1333        0.5333       0.3333
+Balanced Accuracy             0.6250        0.7750       1.0000</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="ejemplo-práctico-qda" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-qda">Ejemplo práctico QDA</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>qda1 <span class="ot">=</span> <span class="fu">qda</span>(class <span class="sc">~</span>., <span class="at">data =</span> diabetes)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>pqda1 <span class="ot">=</span> <span class="fu">predict</span>(qda1, diabetes[<span class="sc">-</span><span class="dv">4</span>])<span class="sc">$</span>class</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion (entrenamiento)</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pqda1, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       22      1     2
+  normal          3     65     0
+  overt           1      0    21
+
+Overall Statistics
+                                          
+               Accuracy : 0.9391          
+                 95% CI : (0.8786, 0.9752)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.8938          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8462        0.9848       0.9130
+Specificity                   0.9663        0.9388       0.9891
+Pos Pred Value                0.8800        0.9559       0.9545
+Neg Pred Value                0.9556        0.9787       0.9785
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1913        0.5652       0.1826
+Detection Prevalence          0.2174        0.5913       0.1913
+Balanced Accuracy             0.9062        0.9618       0.9511</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error (entrenamiento)</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>error1 <span class="ot">=</span> <span class="fu">mean</span>(pqda1 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>error1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06086957</code></pre>
+</div>
+</div>
+<section id="selección-de-variables-1" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-variables-1">Selección de variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">666</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stepclass</span>(</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  diabetes[,<span class="sc">-</span><span class="dv">4</span>], diabetes<span class="sc">$</span>class,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"qda"</span>, <span class="at">criterion =</span> <span class="st">"AC"</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">improvement =</span> <span class="fl">0.03</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code> `stepwise classification', using 10-fold cross-validated accuracy of method qda'.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>115 observations of 3 variables in 3 classes; direction: both</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stop criterion: improvement less than 3%.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy: 0.82819;  in: "insulin";  variables (1): insulin 
+accuracy: 0.86379;  in: "glucose";  variables (2): insulin, glucose 
+
+ hr.elapsed min.elapsed sec.elapsed 
+       0.00        0.00        0.25 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>method      : qda 
+final model : diabetes$class ~ glucose + insulin
+&lt;environment: 0x0000000027e19278&gt;
+
+accuracy = 0.8638 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>qda2 <span class="ot">=</span> <span class="fu">qda</span>(class <span class="sc">~</span> glucose <span class="sc">+</span> insulin, <span class="at">data =</span> diabetes)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción (entrenamiento)</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>pqda2 <span class="ot">=</span> <span class="fu">predict</span>(qda2, diabetes[<span class="sc">-</span><span class="dv">4</span>])<span class="sc">$</span>class</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pqda2, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       25      1     1
+  normal          1     65     0
+  overt           0      0    22
+
+Overall Statistics
+                                          
+               Accuracy : 0.9739          
+                 95% CI : (0.9257, 0.9946)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.955           
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.9615        0.9848       0.9565
+Specificity                   0.9775        0.9796       1.0000
+Pos Pred Value                0.9259        0.9848       1.0000
+Neg Pred Value                0.9886        0.9796       0.9892
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.2174        0.5652       0.1913
+Detection Prevalence          0.2348        0.5739       0.1913
+Balanced Accuracy             0.9695        0.9822       0.9783</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error (entrenamiento)</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>error1 <span class="ot">=</span> <span class="fu">mean</span>(pqda2 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>error1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02608696</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">partimat</span>(</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  class <span class="sc">~</span>.,<span class="at">data =</span> diabetes, </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method=</span><span class="st">"qda"</span>, <span class="at">nplots.vert=</span><span class="dv">2</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-04_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="evaluación" class="level3">
+<h3 class="anchored" data-anchor-id="evaluación">Evaluación</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluación en el conjunto de test</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>predqda <span class="ot">=</span> <span class="fu">predict</span>(qda2, diabetes_test)<span class="sc">$</span>class</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predqda, diabetes_test<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical        7      0     0
+  normal          2     10     0
+  overt           1      0    10
+
+Overall Statistics
+                                          
+               Accuracy : 0.9             
+                 95% CI : (0.7347, 0.9789)
+    No Information Rate : 0.3333          
+    P-Value [Acc &gt; NIR] : 1.665e-10       
+                                          
+                  Kappa : 0.85            
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.7000        1.0000       1.0000
+Specificity                   1.0000        0.9000       0.9500
+Pos Pred Value                1.0000        0.8333       0.9091
+Neg Pred Value                0.8696        1.0000       1.0000
+Prevalence                    0.3333        0.3333       0.3333
+Detection Rate                0.2333        0.3333       0.3333
+Detection Prevalence          0.2333        0.4000       0.3667
+Balanced Accuracy             0.8500        0.9500       0.9750</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="análisis-discriminante-regularizado" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-discriminante-regularizado">Análisis Discriminante Regularizado</h2>
+</section>
+<section id="ejemplo-práctico-1" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-1">Ejemplo práctico</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rda</span>(class <span class="sc">~</span>., <span class="at">data =</span> diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call: 
+rda(formula = class ~ ., data = diabetes)
+
+Regularization parameters: 
+       gamma       lambda 
+6.350887e-04 6.026917e-10 
+
+Prior probabilities of groups: 
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+Misclassification rate: 
+       apparent: 6.087 %
+cross-validated: 7.725 %</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>rda1 <span class="ot">=</span> <span class="fu">rda</span>(class <span class="sc">~</span>., <span class="at">data =</span> diabetes)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>rda1 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call: 
+rda(formula = class ~ ., data = diabetes)
+
+Regularization parameters: 
+       gamma       lambda 
+1.942273e-05 3.392599e-01 
+
+Prior probabilities of groups: 
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+Misclassification rate: 
+       apparent: 9.565 %
+cross-validated: 12.828 %</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción (entrenamiento)</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>prda1 <span class="ot">=</span> <span class="fu">predict</span>(rda1, diabetes[<span class="sc">-</span><span class="dv">4</span>])<span class="sc">$</span>class</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion (entrenamiento)</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(prda1, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       21      1     3
+  normal          5     65     2
+  overt           0      0    18
+
+Overall Statistics
+                                          
+               Accuracy : 0.9043          
+                 95% CI : (0.8353, 0.9513)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 5.776e-15       
+                                          
+                  Kappa : 0.8293          
+                                          
+ Mcnemar's Test P-Value : 0.05343         
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8077        0.9848       0.7826
+Specificity                   0.9551        0.8571       1.0000
+Pos Pred Value                0.8400        0.9028       1.0000
+Neg Pred Value                0.9444        0.9767       0.9485
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1826        0.5652       0.1565
+Detection Prevalence          0.2174        0.6261       0.1565
+Balanced Accuracy             0.8814        0.9210       0.8913</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error (entrenamiento)</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>error1 <span class="ot">=</span> <span class="fu">mean</span>(prda1 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>error1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.09565217</code></pre>
+</div>
+</div>
+<section id="selección-de-variables-2" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-variables-2">Selección de variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selección de Variables (validación cruzada)</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stepclass</span>(</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  diabetes[,<span class="sc">-</span><span class="dv">4</span>], diabetes<span class="sc">$</span>class,</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rda"</span>, <span class="at">criterion =</span> <span class="st">"AC"</span>,</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">improvement =</span> <span class="fl">0.03</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code> `stepwise classification', using 10-fold cross-validated accuracy of method rda'.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>115 observations of 3 variables in 3 classes; direction: both</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stop criterion: improvement less than 3%.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy: 0.81469;  in: "insulin";  variables (1): insulin 
+accuracy: 0.85865;  in: "glucose";  variables (2): insulin, glucose 
+
+ hr.elapsed min.elapsed sec.elapsed 
+       0.00        0.00       17.97 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>method      : rda 
+final model : diabetes$class ~ glucose + insulin
+&lt;environment: 0x00000000246baea8&gt;
+
+accuracy = 0.8587 </code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-final" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-final">Modelo final</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>rda2 <span class="ot">=</span> <span class="fu">rda</span>(class <span class="sc">~</span> glucose <span class="sc">+</span> insulin, <span class="at">data =</span> diabetes)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>rda2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call: 
+rda(formula = class ~ glucose + insulin, data = diabetes)
+
+Regularization parameters: 
+     gamma     lambda 
+0.96120286 0.06374861 
+
+Prior probabilities of groups: 
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+Misclassification rate: 
+       apparent: 6.087 %
+cross-validated: 7.101 %</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>prda2 <span class="ot">=</span> <span class="fu">predict</span>(rda2, diabetes[<span class="sc">-</span><span class="dv">4</span>])<span class="sc">$</span>class</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusion</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(prda2, diabetes<span class="sc">$</span>class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       23      0     4
+  normal          3     66     0
+  overt           0      0    19
+
+Overall Statistics
+                                          
+               Accuracy : 0.9391          
+                 95% CI : (0.8786, 0.9752)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.8931          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8846        1.0000       0.8261
+Specificity                   0.9551        0.9388       1.0000
+Pos Pred Value                0.8519        0.9565       1.0000
+Neg Pred Value                0.9659        1.0000       0.9583
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.2000        0.5739       0.1652
+Detection Prevalence          0.2348        0.6000       0.1652
+Balanced Accuracy             0.9198        0.9694       0.9130</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Error</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>error1 <span class="ot">=</span> <span class="fu">mean</span>(prda2 <span class="sc">!=</span> diabetes<span class="sc">$</span>class)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>error1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06086957</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluación en el conjunto de test</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>predrda <span class="ot">=</span> <span class="fu">predict</span>(rda2, diabetes_test)<span class="sc">$</span>class</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(diabetes_test<span class="sc">$</span>class, predrda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical        7      2     1
+  normal          0     10     0
+  overt           0      0    10
+
+Overall Statistics
+                                          
+               Accuracy : 0.9             
+                 95% CI : (0.7347, 0.9789)
+    No Information Rate : 0.4             
+    P-Value [Acc &gt; NIR] : 1.698e-08       
+                                          
+                  Kappa : 0.85            
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   1.0000        0.8333       0.9091
+Specificity                   0.8696        1.0000       1.0000
+Pos Pred Value                0.7000        1.0000       1.0000
+Neg Pred Value                1.0000        0.9000       0.9500
+Prevalence                    0.2333        0.4000       0.3667
+Detection Rate                0.2333        0.3333       0.3333
+Detection Prevalence          0.3333        0.3333       0.3333
+Balanced Accuracy             0.9348        0.9167       0.9545</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="naive-bayes" class="level2">
+<h2 class="anchored" data-anchor-id="naive-bayes">Naive Bayes</h2>
+<ul>
+<li><p>Método popular cuando se tiene una <strong>gran cantidad de predictores</strong>.</p></li>
+<li><p>Suponemos que <strong>en cada clase, los predictores son independientes</strong>, (supuesto de <strong>independencia condicional dentro de clases</strong>).</p></li>
+<li><p>Es un <strong>método escalable</strong>, es decir, no pierde eficiencia cuando se aumenta la cantidad de predictores (más columnas).</p></li>
+<li><p><strong>Rápidamente</strong> genera predicciones de clasificaciones, comparado a otros modelos.</p></li>
+<li><p>No es tan útil para <strong>inferencia</strong>.</p></li>
+<li><p>Cuando las distribuciones marginales son respecto a una un <strong>predictor numérico continuo, se supone</strong> que tal predictor sigue una <strong>distribución normal univariada</strong>.</p></li>
+</ul>
+</section>
+<section id="ejercicio" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicio">Ejercicio</h2>
+<p>Ir avanzando la lista 2.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../apuntes/clase-03.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
