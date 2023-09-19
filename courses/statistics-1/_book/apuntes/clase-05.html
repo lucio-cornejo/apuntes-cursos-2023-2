@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Learning 1 - Apuntes de clase</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-04.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script type="module">
+  // When keyboard's 's' key is pressed, 
+  // hide both sidebars (tables of contents)
+  document.addEventListener(
+    "keydown", 
+    function (evt) {
+      // Avoid keydown event repetition due to holding key
+      if (evt.repeat) return;
+
+      if ('s' === event.key.toLowerCase()) {
+        const quartoContent = document.querySelector("#quarto-content");
+        
+        if (window.getComputedStyle(quartoContent).display === 'grid') {
+          // Remove grid display
+          quartoContent.style.display = "block";
+          
+          // Hide every HTML element, except for main content
+          quartoContent
+            .querySelectorAll(":scope > :not(.content, script)")
+            .forEach(e => e.style.display = "none");
+  
+          // Change content margin for desktop view
+          quartoContent
+            .querySelector("main.content")
+            .style.margin = "20px 100px";
+        } else {
+          // Try to restore Quarto's initial style
+          quartoContent.style.display = "grid";
+
+          quartoContent
+            .querySelectorAll(":scope > :not(.content, script)")
+            .forEach(e => e.style.display = "flex");
+
+          quartoContent
+            .querySelector("main.content")
+            .style.margin = "21px 0";
+        }
+      }
+    }
+  );
+</script> 
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-05.html">Semana 5</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-05.html">Apuntes de clase</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Learning 1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sílabo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Semana 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Semana 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Semana 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Semana 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Semana 5</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-05.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de Contenidos</h2>
+   
+  <ul>
+  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link active" data-scroll-target="#naive-bayes">Naive Bayes</a>
+  <ul class="collapse">
+  <li><a href="#cálculo-de-probabilidades-condicionales" id="toc-cálculo-de-probabilidades-condicionales" class="nav-link" data-scroll-target="#cálculo-de-probabilidades-condicionales">Cálculo de probabilidades condicionales</a></li>
+  <li><a href="#estimador-naive-bayes" id="toc-estimador-naive-bayes" class="nav-link" data-scroll-target="#estimador-naive-bayes">Estimador Naive Bayes</a></li>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
+  </ul></li>
+  <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a>
+  <ul class="collapse">
+  <li><a href="#sin-discretizar-y-asumiendo-normalidad" id="toc-sin-discretizar-y-asumiendo-normalidad" class="nav-link" data-scroll-target="#sin-discretizar-y-asumiendo-normalidad">Sin discretizar y asumiendo normalidad</a></li>
+  <li><a href="#sin-discretizar-ni-asumir-normalidad" id="toc-sin-discretizar-ni-asumir-normalidad" class="nav-link" data-scroll-target="#sin-discretizar-ni-asumir-normalidad">Sin discretizar ni asumir normalidad</a></li>
+  <li><a href="#discretizar-usando-chi-merge" id="toc-discretizar-usando-chi-merge" class="nav-link" data-scroll-target="#discretizar-usando-chi-merge">Discretizar usando Chi-Merge</a></li>
+  <li><a href="#testing-data" id="toc-testing-data" class="nav-link" data-scroll-target="#testing-data">Testing data</a></li>
+  </ul></li>
+  <li><a href="#k-vecinos-más-cercanos-knn" id="toc-k-vecinos-más-cercanos-knn" class="nav-link" data-scroll-target="#k-vecinos-más-cercanos-knn">K-vecinos más cercanos (KNN)</a>
+  <ul class="collapse">
+  <li><a href="#pasos" id="toc-pasos" class="nav-link" data-scroll-target="#pasos">Pasos</a></li>
+  <li><a href="#cómo-elegir-k" id="toc-cómo-elegir-k" class="nav-link" data-scroll-target="#cómo-elegir-k">¿Cómo elegir K?</a></li>
+  </ul></li>
+  <li><a href="#ejemplo-práctico-1" id="toc-ejemplo-práctico-1" class="nav-link" data-scroll-target="#ejemplo-práctico-1">Ejemplo práctico</a>
+  <ul class="collapse">
+  <li><a href="#testing-data-1" id="toc-testing-data-1" class="nav-link" data-scroll-target="#testing-data-1">Testing data</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Apuntes de clase</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="naive-bayes" class="level2">
+<h2 class="anchored" data-anchor-id="naive-bayes">Naive Bayes</h2>
+<ul>
+<li><p>Es un modelo <strong>no paramétrico</strong>, donde, entre sus parámetros está la estimación, via frecuencia relativa, de los parámetros <span class="math inline">\(Pr[Y=k]\)</span> de la población.</p></li>
+<li><p><strong>No es un modelo interpetable</strong> … no se usa para entender cómo afectan los predictores a la respuesta.</p></li>
+<li><p>No nos permite conocer la verdadera distribución condicional de <span class="math inline">\(Pr(Y\mid X)\)</span> para datos reales.</p></li>
+<li><p>El supuesto de normalidad multivariada casi nunca se cumple en la vida real, por lo que el modelo <strong>Naive Bayes</strong> propone, en parte, una <strong>menor restricción sobre la distribución de los predictores</strong>.</p></li>
+</ul>
+<section id="cálculo-de-probabilidades-condicionales" class="level3">
+<h3 class="anchored" data-anchor-id="cálculo-de-probabilidades-condicionales">Cálculo de probabilidades condicionales</h3>
+<ul>
+<li>El clasificador Naive Bayes puede ser aplicado también cuando hay <strong>predictors continuos</strong>. Alternativas:
+<ul>
+<li><p><strong>Discretización</strong>.<br>
+Discretizar variables numéricas <strong>no</strong> siempre es una <em>pérdida de información</em>. Más bien, la discretización puede ser una buena alternativa para <strong>remover ruido de los datos</strong>, <strong>lidiar con</strong> el hecho que las variables numéricas presentan <strong>distintas escalas (min max)</strong>.</p></li>
+<li><p><a href="https://www.researchgate.net/publication/43185083_Nonparametric_and_Semiparametric_Models">Estimación no paramétrica</a> de la densidad del kernel.</p></li>
+<li><p>Supone una distribución para cada predictora, por lo general Gaussiana, con media y varianza estimada de los datos.</p></li>
+</ul></li>
+</ul>
+<p>Si simplemente asumes normalidad, es parecido (no totalmente) al caso estudiado en Análisis Discriminante.</p>
+</section>
+<section id="estimador-naive-bayes" class="level3">
+<h3 class="anchored" data-anchor-id="estimador-naive-bayes">Estimador Naive Bayes</h3>
+<ul>
+<li>Es importante <strong>evitar</strong> que haya alguna <strong>probabilidad igual a cero</strong>, respecto a alguna de las clases.
+<ul>
+<li>En ese tipo de casos, se puede usar una <a href="https://dials.tidymodels.org/reference/Laplace.html">correción de Laplace</a>.</li>
+<li><strong>No existe un corrector Laplaciano mejor que todos</strong>, pero por lo general suele usarse el valor 1.</li>
+<li>Aún así, puede tratarse el corrector Laplaciano como un <strong>hiperparámetro</strong> del modelo.</li>
+</ul></li>
+</ul>
+</section>
+<section id="predicción" class="level3">
+<h3 class="anchored" data-anchor-id="predicción">Predicción</h3>
+<ul>
+<li><p>Para predecir la clase a la cual pertenece <span class="math inline">\(X\)</span>, <span class="math inline">\(Pr[Y = k]Pr[X \mid Y = k]\)</span> es evaluado para cada clase <span class="math inline">\(k\)</span> .</p></li>
+<li><p>El clasificador predecirá que los valores de <span class="math inline">\(X\)</span> pertenecen a la clase <span class="math inline">\(i\)</span> si y solo si: <span class="math display">\[
+\begin{gather}
+Pr[Y = i]Pr[X \mid Y = i] &gt; Pr[Y = j]Pr[X \mid Y = j], \\
+\; \forall 1\leq j\leq m, \; j \ne i
+\end{gather}
+\]</span></p></li>
+</ul>
+</section>
+</section>
+<section id="ejemplo-práctico" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico">Ejemplo práctico</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">=</span> <span class="fu">read.csv</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../datos/DiabetesTrain.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  glucose insulin sspg  class
+1      97     289  117 normal
+2     105     319  143 normal
+3      90     356  199 normal
+4      90     323  240 normal
+5      86     381  157 normal
+6     100     350  221 normal</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ¿Hay normalidad?</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>diabetes<span class="sc">$</span>glucose <span class="sc">|&gt;</span> <span class="fu">hist</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-05_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="sin-discretizar-y-asumiendo-normalidad" class="level3">
+<h3 class="anchored" data-anchor-id="sin-discretizar-y-asumiendo-normalidad">Sin discretizar y asumiendo normalidad</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'e1071' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(class <span class="sc">~</span> .,<span class="at">data =</span> diabetes)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Naive Bayes Classifier for Discrete Predictors
+
+Call:
+naiveBayes.default(x = X, y = Y, laplace = laplace)
+
+A-priori probabilities:
+Y
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+Conditional probabilities:
+          glucose
+Y               [,1]      [,2]
+  chemical  99.46154  8.805593
+  normal    91.98485  8.164637
+  overt    207.17391 71.837982
+
+          insulin
+Y               [,1]      [,2]
+  chemical  504.1154  60.05819
+  normal    351.2121  37.69861
+  overt    1002.9565 315.85288
+
+          sspg
+Y              [,1]      [,2]
+  chemical 291.7692 177.65479
+  normal   169.0152  65.48952
+  overt    112.6087 106.57253</code></pre>
+</div>
+</div>
+<p><strong>Esta librería asume que las variables numéricas usadas siguen una distriubución normal marginal</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">=</span> <span class="fu">predict</span>(a, diabetes[,<span class="sc">-</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"raw"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            chemical        normal        overt
+  [1,]  5.295056e-04  9.990214e-01 4.491287e-04
+  [2,]  2.339643e-03  9.971217e-01 5.386942e-04
+  [3,]  2.275912e-03  9.976460e-01 7.807859e-05
+  [4,]  1.180417e-03  9.987288e-01 9.074437e-05
+  [5,]  4.361057e-03  9.954717e-01 1.672017e-04
+  [6,]  6.386586e-03  9.934653e-01 1.481366e-04
+  [7,]  2.183812e-04  9.996164e-01 1.652600e-04
+  [8,]  1.109668e-02  9.886942e-01 2.091171e-04
+  [9,]  5.561492e-04  9.991428e-01 3.010012e-04
+ [10,]  2.860365e-03  9.970620e-01 7.768089e-05
+ [11,]  2.737109e-04  9.995964e-01 1.298984e-04
+ [12,]  9.429950e-05  9.990956e-01 8.101451e-04
+ [13,]  4.685303e-03  9.952171e-01 9.757051e-05
+ [14,]  7.145331e-03  9.924505e-01 4.041340e-04
+ [15,]  2.577827e-03  9.973178e-01 1.043346e-04
+ [16,]  5.755875e-03  9.941035e-01 1.405755e-04
+ [17,]  1.940953e-04  9.994795e-01 3.264158e-04
+ [18,]  1.206339e-03  9.986771e-01 1.165314e-04
+ [19,]  5.334159e-03  9.945073e-01 1.585289e-04
+ [20,]  2.698566e-04  9.995533e-01 1.768468e-04
+ [21,]  7.047837e-04  9.992159e-01 7.928524e-05
+ [22,]  5.066611e-02  9.491241e-01 2.098169e-04
+ [23,]  6.040562e-03  9.937900e-01 1.694724e-04
+ [24,]  4.388028e-03  9.954543e-01 1.577203e-04
+ [25,]  4.236783e-04  9.994793e-01 9.706961e-05
+ [26,]  1.851161e-03  9.980173e-01 1.315720e-04
+ [27,]  5.266643e-04  9.969041e-01 2.569231e-03
+ [28,]  2.002639e-03  9.978337e-01 1.636298e-04
+ [29,]  4.942068e-04  9.990224e-01 4.834124e-04
+ [30,]  5.673222e-03  9.942287e-01 9.806927e-05
+ [31,]  2.769180e-03  9.970957e-01 1.351083e-04
+ [32,]  1.196466e-02  9.877739e-01 2.614334e-04
+ [33,]  9.187795e-03  9.906305e-01 1.816555e-04
+ [34,]  6.866383e-04  9.990540e-01 2.593738e-04
+ [35,]  8.178601e-02  9.165555e-01 1.658472e-03
+ [36,]  1.860864e-02  9.810572e-01 3.341775e-04
+ [37,]  1.232439e-02  9.875490e-01 1.266344e-04
+ [38,]  4.917400e-04  9.990449e-01 4.633993e-04
+ [39,]  9.000279e-05  9.982301e-01 1.679900e-03
+ [40,]  1.080090e-03  9.986026e-01 3.173065e-04
+ [41,]  3.708905e-03  9.961129e-01 1.782156e-04
+ [42,]  2.054200e-04  9.995771e-01 2.174545e-04
+ [43,]  7.433120e-04  9.991504e-01 1.063132e-04
+ [44,]  7.221347e-04  9.991566e-01 1.212746e-04
+ [45,]  3.258039e-04  9.995439e-01 1.303026e-04
+ [46,]  1.254320e-03  9.986309e-01 1.147530e-04
+ [47,]  3.679488e-04  9.995214e-01 1.106108e-04
+ [48,]  8.575833e-04  9.988566e-01 2.858096e-04
+ [49,]  1.275039e-03  9.983903e-01 3.346247e-04
+ [50,]  9.521719e-01  4.412351e-02 3.704616e-03
+ [51,]  4.828539e-02  9.510608e-01 6.537688e-04
+ [52,]  5.440347e-01  4.450488e-01 1.091648e-02
+ [53,]  2.667509e-01  7.317704e-01 1.478681e-03
+ [54,]  3.289868e-04  9.994252e-01 2.458509e-04
+ [55,]  2.113070e-01  7.871383e-01 1.554676e-03
+ [56,]  1.067948e-01  8.923053e-01 8.998199e-04
+ [57,]  1.784725e-02  9.818881e-01 2.646238e-04
+ [58,]  3.200394e-02  9.671740e-01 8.220511e-04
+ [59,]  2.527538e-02  9.744571e-01 2.675100e-04
+ [60,]  9.727327e-03  9.899078e-01 3.649193e-04
+ [61,]  7.682488e-03  9.922034e-01 1.141017e-04
+ [62,]  3.744839e-01  6.238293e-01 1.686796e-03
+ [63,]  7.721793e-01  2.230828e-01 4.737862e-03
+ [64,]  2.003020e-01  7.989477e-01 7.503410e-04
+ [65,]  3.440964e-03  9.964530e-01 1.060147e-04
+ [66,]  2.381242e-02  9.760112e-01 1.763595e-04
+ [67,]  2.275912e-03  9.976460e-01 7.807859e-05
+ [68,]  6.761531e-02  9.312615e-01 1.123204e-03
+ [69,]  9.994407e-01  5.208362e-04 3.847674e-05
+ [70,]  6.424901e-02  9.345319e-01 1.219088e-03
+ [71,]  7.408047e-04  9.989515e-01 3.077439e-04
+ [72,]  1.000000e+00  2.338103e-22 9.485134e-09
+ [73,]  9.786212e-01  5.814184e-06 2.137299e-02
+ [74,]  9.999997e-01  5.502353e-11 3.409691e-07
+ [75,]  9.850467e-01  1.231466e-07 1.495318e-02
+ [76,]  9.999758e-01  1.838167e-09 2.423367e-05
+ [77,]  9.999997e-01  7.331410e-15 3.136628e-07
+ [78,]  9.803726e-01  1.880635e-02 8.210894e-04
+ [79,]  9.932796e-01  2.821303e-09 6.720425e-03
+ [80,]  9.810128e-01  1.852270e-02 4.645416e-04
+ [81,]  9.999985e-01  3.314769e-11 1.488563e-06
+ [82,]  9.987065e-01  4.618651e-06 1.288886e-03
+ [83,]  9.999115e-01  3.207163e-05 5.645985e-05
+ [84,]  9.602919e-01  3.594148e-02 3.766582e-03
+ [85,]  3.592417e-01  6.378324e-01 2.925914e-03
+ [86,]  9.990254e-01  5.759318e-06 9.688743e-04
+ [87,]  9.821413e-01  4.745440e-07 1.785827e-02
+ [88,]  9.777282e-01  2.132689e-02 9.449512e-04
+ [89,]  9.678721e-01  5.272532e-07 3.212741e-02
+ [90,]  1.012043e-01  8.981187e-01 6.769971e-04
+ [91,]  6.472607e-01  1.473760e-12 3.527393e-01
+ [92,]  9.923048e-01  6.191171e-05 7.633263e-03
+ [93,] 6.897663e-173  0.000000e+00 1.000000e+00
+ [94,]  4.976878e-03  2.580640e-21 9.950231e-01
+ [95,] 2.477275e-146 1.702646e-304 1.000000e+00
+ [96,]  7.133953e-60 2.662460e-137 1.000000e+00
+ [97,]  1.166381e-35  1.111443e-88 1.000000e+00
+ [98,] 1.851074e-159 5.163499e-300 1.000000e+00
+ [99,]  5.174439e-21  5.308143e-55 1.000000e+00
+[100,]  2.488687e-42  2.626983e-96 1.000000e+00
+[101,]  3.141734e-04  1.022311e-15 9.996858e-01
+[102,] 7.579262e-131 5.081788e-267 1.000000e+00
+[103,]  2.659830e-95 1.653866e-183 1.000000e+00
+[104,]  3.774942e-77 5.127724e-169 1.000000e+00
+[105,]  1.938547e-12  2.930057e-45 1.000000e+00
+[106,]  9.973924e-01  1.162370e-10 2.607642e-03
+[107,]  1.467368e-50 3.974579e-111 1.000000e+00
+[108,] 2.314463e-209  0.000000e+00 1.000000e+00
+[109,]  6.664180e-01  1.305333e-07 3.335819e-01
+[110,]  2.259447e-03  1.233813e-18 9.977406e-01
+[111,]  8.066183e-01  1.579498e-13 1.933817e-01
+[112,]  2.863917e-06  7.337970e-28 9.999971e-01
+[113,]  7.552413e-34  1.074422e-84 1.000000e+00
+[114,] 8.805182e-203  0.000000e+00 1.000000e+00
+[115,]  4.892801e-52 4.067389e-116 1.000000e+00</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pred1 <span class="ot">=</span> <span class="fu">factor</span>(<span class="fu">max.col</span>(pred), <span class="at">labels =</span> <span class="fu">levels</span>(diabetes<span class="sc">$</span>class))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pred1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] normal   normal   normal   normal   normal   normal   normal   normal  
+  [9] normal   normal   normal   normal   normal   normal   normal   normal  
+ [17] normal   normal   normal   normal   normal   normal   normal   normal  
+ [25] normal   normal   normal   normal   normal   normal   normal   normal  
+ [33] normal   normal   normal   normal   normal   normal   normal   normal  
+ [41] normal   normal   normal   normal   normal   normal   normal   normal  
+ [49] normal   chemical normal   chemical normal   normal   normal   normal  
+ [57] normal   normal   normal   normal   normal   normal   chemical normal  
+ [65] normal   normal   normal   normal   chemical normal   normal   chemical
+ [73] chemical chemical chemical chemical chemical chemical chemical chemical
+ [81] chemical chemical chemical chemical normal   chemical chemical chemical
+ [89] chemical normal   chemical chemical overt    overt    overt    overt   
+ [97] overt    overt    overt    overt    overt    overt    overt    overt   
+[105] overt    chemical overt    overt    chemical overt    chemical overt   
+[113] overt    overt    overt   
+Levels: chemical normal overt</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pred1 <span class="ot">=</span> <span class="fu">predict</span>(a, diabetes[,<span class="sc">-</span><span class="dv">4</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pred1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] normal   normal   normal   normal   normal   normal   normal   normal  
+  [9] normal   normal   normal   normal   normal   normal   normal   normal  
+ [17] normal   normal   normal   normal   normal   normal   normal   normal  
+ [25] normal   normal   normal   normal   normal   normal   normal   normal  
+ [33] normal   normal   normal   normal   normal   normal   normal   normal  
+ [41] normal   normal   normal   normal   normal   normal   normal   normal  
+ [49] normal   chemical normal   chemical normal   normal   normal   normal  
+ [57] normal   normal   normal   normal   normal   normal   chemical normal  
+ [65] normal   normal   normal   normal   chemical normal   normal   chemical
+ [73] chemical chemical chemical chemical chemical chemical chemical chemical
+ [81] chemical chemical chemical chemical normal   chemical chemical chemical
+ [89] chemical normal   chemical chemical overt    overt    overt    overt   
+ [97] overt    overt    overt    overt    overt    overt    overt    overt   
+[105] overt    chemical overt    overt    chemical overt    chemical overt   
+[113] overt    overt    overt   
+Levels: chemical normal overt</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pred1, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       20      3     3
+  normal          6     63     0
+  overt           0      0    20
+
+Overall Statistics
+                                          
+               Accuracy : 0.8957          
+                 95% CI : (0.8248, 0.9449)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 3.778e-14       
+                                          
+                  Kappa : 0.8169          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.7692        0.9545       0.8696
+Specificity                   0.9326        0.8776       1.0000
+Pos Pred Value                0.7692        0.9130       1.0000
+Neg Pred Value                0.9326        0.9348       0.9684
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1739        0.5478       0.1739
+Detection Prevalence          0.2261        0.6000       0.1739
+Balanced Accuracy             0.8509        0.9160       0.9348</code></pre>
+</div>
+</div>
+</section>
+<section id="sin-discretizar-ni-asumir-normalidad" class="level3">
+<h3 class="anchored" data-anchor-id="sin-discretizar-ni-asumir-normalidad">Sin discretizar ni asumir normalidad</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naivebayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'naivebayes' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>naivebayes 0.9.7 loaded</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(class <span class="sc">~</span> ., <span class="at">data =</span> diabetes)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+================================== Naive Bayes ================================== 
+ 
+ Call: 
+naive_bayes.formula(formula = class ~ ., data = diabetes)
+
+--------------------------------------------------------------------------------- 
+ 
+Laplace smoothing: 0
+
+--------------------------------------------------------------------------------- 
+ 
+ A priori probabilities: 
+
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+--------------------------------------------------------------------------------- 
+ 
+ Tables: 
+
+--------------------------------------------------------------------------------- 
+ ::: glucose (Gaussian) 
+--------------------------------------------------------------------------------- 
+       
+glucose   chemical     normal      overt
+   mean  99.461538  91.984848 207.173913
+   sd     8.805593   8.164637  71.837982
+
+--------------------------------------------------------------------------------- 
+ ::: insulin (Gaussian) 
+--------------------------------------------------------------------------------- 
+       
+insulin   chemical     normal      overt
+   mean  504.11538  351.21212 1002.95652
+   sd     60.05819   37.69861  315.85288
+
+--------------------------------------------------------------------------------- 
+ ::: sspg (Gaussian) 
+--------------------------------------------------------------------------------- 
+      
+sspg    chemical    normal     overt
+  mean 291.76923 169.01515 112.60870
+  sd   177.65479  65.48952 106.57253
+
+---------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p><strong>Por default, se asumió normalidad marginal, debido al valor <code>FALSE</code> del parámetro <code>usekernel</code> de <code>naive_bayes</code></strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">=</span> <span class="fu">predict</span>(a, diabetes[,<span class="sc">-</span><span class="dv">4</span>])</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] normal   normal   normal   normal   normal   normal   normal   normal  
+  [9] normal   normal   normal   normal   normal   normal   normal   normal  
+ [17] normal   normal   normal   normal   normal   normal   normal   normal  
+ [25] normal   normal   normal   normal   normal   normal   normal   normal  
+ [33] normal   normal   normal   normal   normal   normal   normal   normal  
+ [41] normal   normal   normal   normal   normal   normal   normal   normal  
+ [49] normal   chemical normal   chemical normal   normal   normal   normal  
+ [57] normal   normal   normal   normal   normal   normal   chemical normal  
+ [65] normal   normal   normal   normal   chemical normal   normal   chemical
+ [73] chemical chemical chemical chemical chemical chemical chemical chemical
+ [81] chemical chemical chemical chemical normal   chemical chemical chemical
+ [89] chemical normal   chemical chemical overt    overt    overt    overt   
+ [97] overt    overt    overt    overt    overt    overt    overt    overt   
+[105] overt    chemical overt    overt    chemical overt    chemical overt   
+[113] overt    overt    overt   
+Levels: chemical normal overt</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pred,diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       20      3     3
+  normal          6     63     0
+  overt           0      0    20
+
+Overall Statistics
+                                          
+               Accuracy : 0.8957          
+                 95% CI : (0.8248, 0.9449)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 3.778e-14       
+                                          
+                  Kappa : 0.8169          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.7692        0.9545       0.8696
+Specificity                   0.9326        0.8776       1.0000
+Pos Pred Value                0.7692        0.9130       1.0000
+Neg Pred Value                0.9326        0.9348       0.9684
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1739        0.5478       0.1739
+Detection Prevalence          0.2261        0.6000       0.1739
+Balanced Accuracy             0.8509        0.9160       0.9348</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(a, diabetes[,<span class="sc">-</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"prob"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            chemical        normal        overt
+  [1,]  5.295056e-04  9.990214e-01 4.491287e-04
+  [2,]  2.339643e-03  9.971217e-01 5.386942e-04
+  [3,]  2.275912e-03  9.976460e-01 7.807859e-05
+  [4,]  1.180417e-03  9.987288e-01 9.074437e-05
+  [5,]  4.361057e-03  9.954717e-01 1.672017e-04
+  [6,]  6.386586e-03  9.934653e-01 1.481366e-04
+  [7,]  2.183812e-04  9.996164e-01 1.652600e-04
+  [8,]  1.109668e-02  9.886942e-01 2.091171e-04
+  [9,]  5.561492e-04  9.991428e-01 3.010012e-04
+ [10,]  2.860365e-03  9.970620e-01 7.768089e-05
+ [11,]  2.737109e-04  9.995964e-01 1.298984e-04
+ [12,]  9.429950e-05  9.990956e-01 8.101451e-04
+ [13,]  4.685303e-03  9.952171e-01 9.757051e-05
+ [14,]  7.145331e-03  9.924505e-01 4.041340e-04
+ [15,]  2.577827e-03  9.973178e-01 1.043346e-04
+ [16,]  5.755875e-03  9.941035e-01 1.405755e-04
+ [17,]  1.940953e-04  9.994795e-01 3.264158e-04
+ [18,]  1.206339e-03  9.986771e-01 1.165314e-04
+ [19,]  5.334159e-03  9.945073e-01 1.585289e-04
+ [20,]  2.698566e-04  9.995533e-01 1.768468e-04
+ [21,]  7.047837e-04  9.992159e-01 7.928524e-05
+ [22,]  5.066611e-02  9.491241e-01 2.098169e-04
+ [23,]  6.040562e-03  9.937900e-01 1.694724e-04
+ [24,]  4.388028e-03  9.954543e-01 1.577203e-04
+ [25,]  4.236783e-04  9.994793e-01 9.706961e-05
+ [26,]  1.851161e-03  9.980173e-01 1.315720e-04
+ [27,]  5.266643e-04  9.969041e-01 2.569231e-03
+ [28,]  2.002639e-03  9.978337e-01 1.636298e-04
+ [29,]  4.942068e-04  9.990224e-01 4.834124e-04
+ [30,]  5.673222e-03  9.942287e-01 9.806927e-05
+ [31,]  2.769180e-03  9.970957e-01 1.351083e-04
+ [32,]  1.196466e-02  9.877739e-01 2.614334e-04
+ [33,]  9.187795e-03  9.906305e-01 1.816555e-04
+ [34,]  6.866383e-04  9.990540e-01 2.593738e-04
+ [35,]  8.178601e-02  9.165555e-01 1.658472e-03
+ [36,]  1.860864e-02  9.810572e-01 3.341775e-04
+ [37,]  1.232439e-02  9.875490e-01 1.266344e-04
+ [38,]  4.917400e-04  9.990449e-01 4.633993e-04
+ [39,]  9.000279e-05  9.982301e-01 1.679900e-03
+ [40,]  1.080090e-03  9.986026e-01 3.173065e-04
+ [41,]  3.708905e-03  9.961129e-01 1.782156e-04
+ [42,]  2.054200e-04  9.995771e-01 2.174545e-04
+ [43,]  7.433120e-04  9.991504e-01 1.063132e-04
+ [44,]  7.221347e-04  9.991566e-01 1.212746e-04
+ [45,]  3.258039e-04  9.995439e-01 1.303026e-04
+ [46,]  1.254320e-03  9.986309e-01 1.147530e-04
+ [47,]  3.679488e-04  9.995214e-01 1.106108e-04
+ [48,]  8.575833e-04  9.988566e-01 2.858096e-04
+ [49,]  1.275039e-03  9.983903e-01 3.346247e-04
+ [50,]  9.521719e-01  4.412351e-02 3.704616e-03
+ [51,]  4.828539e-02  9.510608e-01 6.537688e-04
+ [52,]  5.440347e-01  4.450488e-01 1.091648e-02
+ [53,]  2.667509e-01  7.317704e-01 1.478681e-03
+ [54,]  3.289868e-04  9.994252e-01 2.458509e-04
+ [55,]  2.113070e-01  7.871383e-01 1.554676e-03
+ [56,]  1.067948e-01  8.923053e-01 8.998199e-04
+ [57,]  1.784725e-02  9.818881e-01 2.646238e-04
+ [58,]  3.200394e-02  9.671740e-01 8.220511e-04
+ [59,]  2.527538e-02  9.744571e-01 2.675100e-04
+ [60,]  9.727327e-03  9.899078e-01 3.649193e-04
+ [61,]  7.682488e-03  9.922034e-01 1.141017e-04
+ [62,]  3.744839e-01  6.238293e-01 1.686796e-03
+ [63,]  7.721793e-01  2.230828e-01 4.737862e-03
+ [64,]  2.003020e-01  7.989477e-01 7.503410e-04
+ [65,]  3.440964e-03  9.964530e-01 1.060147e-04
+ [66,]  2.381242e-02  9.760112e-01 1.763595e-04
+ [67,]  2.275912e-03  9.976460e-01 7.807859e-05
+ [68,]  6.761531e-02  9.312615e-01 1.123204e-03
+ [69,]  9.994407e-01  5.208362e-04 3.847674e-05
+ [70,]  6.424901e-02  9.345319e-01 1.219088e-03
+ [71,]  7.408047e-04  9.989515e-01 3.077439e-04
+ [72,]  1.000000e+00  2.338103e-22 9.485134e-09
+ [73,]  9.786212e-01  5.814184e-06 2.137299e-02
+ [74,]  9.999997e-01  5.502353e-11 3.409691e-07
+ [75,]  9.850467e-01  1.231466e-07 1.495318e-02
+ [76,]  9.999758e-01  1.838167e-09 2.423367e-05
+ [77,]  9.999997e-01  7.331410e-15 3.136628e-07
+ [78,]  9.803726e-01  1.880635e-02 8.210894e-04
+ [79,]  9.932796e-01  2.821303e-09 6.720425e-03
+ [80,]  9.810128e-01  1.852270e-02 4.645416e-04
+ [81,]  9.999985e-01  3.314769e-11 1.488563e-06
+ [82,]  9.987065e-01  4.618651e-06 1.288886e-03
+ [83,]  9.999115e-01  3.207163e-05 5.645985e-05
+ [84,]  9.602919e-01  3.594148e-02 3.766582e-03
+ [85,]  3.592417e-01  6.378324e-01 2.925914e-03
+ [86,]  9.990254e-01  5.759318e-06 9.688743e-04
+ [87,]  9.821413e-01  4.745440e-07 1.785827e-02
+ [88,]  9.777282e-01  2.132689e-02 9.449512e-04
+ [89,]  9.678721e-01  5.272532e-07 3.212741e-02
+ [90,]  1.012043e-01  8.981187e-01 6.769971e-04
+ [91,]  6.472607e-01  1.473760e-12 3.527393e-01
+ [92,]  9.923048e-01  6.191171e-05 7.633263e-03
+ [93,] 6.897663e-173  0.000000e+00 1.000000e+00
+ [94,]  4.976878e-03  2.580640e-21 9.950231e-01
+ [95,] 2.477275e-146 1.702646e-304 1.000000e+00
+ [96,]  7.133953e-60 2.662460e-137 1.000000e+00
+ [97,]  1.166381e-35  1.111443e-88 1.000000e+00
+ [98,] 1.851074e-159 5.163499e-300 1.000000e+00
+ [99,]  5.174439e-21  5.308143e-55 1.000000e+00
+[100,]  2.488687e-42  2.626983e-96 1.000000e+00
+[101,]  3.141734e-04  1.022311e-15 9.996858e-01
+[102,] 7.579262e-131 5.081788e-267 1.000000e+00
+[103,]  2.659830e-95 1.653866e-183 1.000000e+00
+[104,]  3.774942e-77 5.127724e-169 1.000000e+00
+[105,]  1.938547e-12  2.930057e-45 1.000000e+00
+[106,]  9.973924e-01  1.162370e-10 2.607642e-03
+[107,]  1.467368e-50 3.974579e-111 1.000000e+00
+[108,] 2.314463e-209  0.000000e+00 1.000000e+00
+[109,]  6.664180e-01  1.305333e-07 3.335819e-01
+[110,]  2.259447e-03  1.233813e-18 9.977406e-01
+[111,]  8.066183e-01  1.579498e-13 1.933817e-01
+[112,]  2.863917e-06  7.337970e-28 9.999971e-01
+[113,]  7.552413e-34  1.074422e-84 1.000000e+00
+[114,] 8.805182e-203  0.000000e+00 1.000000e+00
+[115,]  4.892801e-52 4.067389e-116 1.000000e+00</code></pre>
+</div>
+</div>
+<p><strong>Ahora no asumiremos normalidad marginal</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(class <span class="sc">~</span> ., <span class="at">data =</span> diabetes, <span class="at">usekernel =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+================================== Naive Bayes ================================== 
+ 
+ Call: 
+naive_bayes.formula(formula = class ~ ., data = diabetes, usekernel = TRUE)
+
+--------------------------------------------------------------------------------- 
+ 
+Laplace smoothing: 0
+
+--------------------------------------------------------------------------------- 
+ 
+ A priori probabilities: 
+
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+--------------------------------------------------------------------------------- 
+ 
+ Tables: 
+
+--------------------------------------------------------------------------------- 
+ ::: glucose::chemical (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (26 obs.);  Bandwidth 'bw' = 4.131
+
+       x                y            
+ Min.   : 72.61   Min.   :4.949e-05  
+ 1st Qu.: 86.05   1st Qu.:3.464e-03  
+ Median : 99.50   Median :2.127e-02  
+ Mean   : 99.50   Mean   :1.857e-02  
+ 3rd Qu.:112.95   3rd Qu.:3.093e-02  
+ Max.   :126.39   Max.   :3.998e-02  
+
+--------------------------------------------------------------------------------- 
+ ::: glucose::normal (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (66 obs.);  Bandwidth 'bw' = 3.179
+
+       x                y            
+ Min.   : 60.46   Min.   :2.145e-05  
+ 1st Qu.: 75.73   1st Qu.:2.132e-03  
+ Median : 91.00   Median :8.905e-03  
+ Mean   : 91.00   Mean   :1.636e-02  
+ 3rd Qu.:106.27   3rd Qu.:3.114e-02  
+ Max.   :121.54   Max.   :4.846e-02  
+
+--------------------------------------------------------------------------------- 
+ ::: glucose::overt (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (23 obs.);  Bandwidth 'bw' = 34.53
+
+       x               y            
+ Min.   : 16.4   Min.   :8.447e-06  
+ 1st Qu.:122.9   1st Qu.:5.362e-04  
+ Median :229.5   Median :2.638e-03  
+ Mean   :229.5   Mean   :2.343e-03  
+ 3rd Qu.:336.1   3rd Qu.:3.926e-03  
+ Max.   :442.6   Max.   :4.754e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: insulin::chemical (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (26 obs.);  Bandwidth 'bw' = 28.17
+
+       x               y            
+ Min.   :338.5   Min.   :6.131e-06  
+ 1st Qu.:435.7   1st Qu.:4.410e-04  
+ Median :533.0   Median :2.180e-03  
+ Mean   :533.0   Mean   :2.567e-03  
+ 3rd Qu.:630.3   3rd Qu.:4.770e-03  
+ Max.   :727.5   Max.   :5.687e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: insulin::normal (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (66 obs.);  Bandwidth 'bw' = 14.68
+
+       x               y            
+ Min.   :225.0   Min.   :4.725e-06  
+ 1st Qu.:286.2   1st Qu.:5.085e-04  
+ Median :347.5   Median :3.890e-03  
+ Mean   :347.5   Mean   :4.076e-03  
+ 3rd Qu.:408.8   3rd Qu.:7.314e-03  
+ Max.   :470.0   Max.   :9.098e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: insulin::overt (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (23 obs.);  Bandwidth 'bw' = 151.8
+
+       x                 y            
+ Min.   :  82.48   Min.   :2.495e-06  
+ 1st Qu.: 555.74   1st Qu.:1.141e-04  
+ Median :1029.00   Median :6.280e-04  
+ Mean   :1029.00   Mean   :5.276e-04  
+ 3rd Qu.:1502.26   3rd Qu.:8.772e-04  
+ Max.   :1975.52   Max.   :1.019e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: sspg::chemical (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (26 obs.);  Bandwidth 'bw' = 60.82
+
+       x                y            
+ Min.   :-73.47   Min.   :2.835e-06  
+ 1st Qu.:177.52   1st Qu.:2.706e-04  
+ Median :428.50   Median :6.522e-04  
+ Mean   :428.50   Mean   :9.949e-04  
+ 3rd Qu.:679.48   3rd Qu.:1.536e-03  
+ Max.   :930.47   Max.   :3.155e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: sspg::normal (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (66 obs.);  Bandwidth 'bw' = 19.76
+
+       x                y            
+ Min.   : 13.73   Min.   :1.000e-09  
+ 1st Qu.:147.61   1st Qu.:2.739e-05  
+ Median :281.50   Median :3.686e-04  
+ Mean   :281.50   Mean   :1.865e-03  
+ 3rd Qu.:415.39   3rd Qu.:2.967e-03  
+ Max.   :549.27   Max.   :7.958e-03  
+
+--------------------------------------------------------------------------------- 
+ ::: sspg::overt (KDE)
+--------------------------------------------------------------------------------- 
+
+Call:
+    density.default(x = x, na.rm = TRUE)
+
+Data: x (23 obs.);  Bandwidth 'bw' = 31.39
+
+       x                y            
+ Min.   :-84.17   Min.   :6.215e-06  
+ 1st Qu.: 75.41   1st Qu.:2.632e-04  
+ Median :235.00   Median :5.806e-04  
+ Mean   :235.00   Mean   :1.565e-03  
+ 3rd Qu.:394.59   3rd Qu.:2.299e-03  
+ Max.   :554.17   Max.   :5.651e-03  
+
+---------------------------------------------------------------------------------</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-05_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="clase-05_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="clase-05_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">=</span> <span class="fu">predict</span>(a, diabetes[,<span class="sc">-</span><span class="dv">4</span>])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] normal   normal   normal   normal   normal   normal   normal   normal  
+  [9] normal   normal   normal   normal   normal   normal   normal   normal  
+ [17] normal   normal   normal   normal   normal   normal   normal   normal  
+ [25] normal   normal   normal   normal   normal   normal   normal   normal  
+ [33] normal   normal   normal   normal   normal   normal   normal   normal  
+ [41] normal   normal   normal   normal   normal   normal   normal   normal  
+ [49] normal   chemical normal   chemical chemical normal   normal   normal  
+ [57] normal   normal   normal   normal   normal   normal   chemical normal  
+ [65] normal   normal   normal   normal   normal   normal   normal   chemical
+ [73] chemical chemical chemical chemical chemical chemical chemical chemical
+ [81] chemical chemical chemical chemical chemical chemical chemical chemical
+ [89] chemical normal   chemical chemical overt    overt    overt    overt   
+ [97] overt    overt    overt    overt    overt    overt    overt    overt   
+[105] overt    chemical overt    overt    chemical overt    chemical overt   
+[113] overt    overt    overt   
+Levels: chemical normal overt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pred, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       22      2     3
+  normal          4     64     0
+  overt           0      0    20
+
+Overall Statistics
+                                          
+               Accuracy : 0.9217          
+                 95% CI : (0.8566, 0.9636)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.8634          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8462        0.9697       0.8696
+Specificity                   0.9438        0.9184       1.0000
+Pos Pred Value                0.8148        0.9412       1.0000
+Neg Pred Value                0.9545        0.9574       0.9684
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1913        0.5565       0.1739
+Detection Prevalence          0.2348        0.5913       0.1739
+Balanced Accuracy             0.8950        0.9440       0.9348</code></pre>
+</div>
+</div>
+</section>
+<section id="discretizar-usando-chi-merge" class="level3">
+<h3 class="anchored" data-anchor-id="discretizar-usando-chi-merge">Discretizar usando Chi-Merge</h3>
+<ul>
+<li><p>Una <strong>discretización no supervisada</strong> no toma en cuenta los valores de la response, al momento de discretizar uno o más predictores.</p></li>
+<li><p>Por otro lado, la <a href="https://www.futurelearn.com/info/courses/more-data-mining-with-weka/0/steps/29114">discretización supervisada</a> <strong>sí considera la respuesta</strong> al momento de discretizar uno o más predictores, con el fin de crear intervalos de discretización que maximicen la probabilidad de predecir adecuadamente una <strong>training observation</strong>, no de tipo <strong>testing</strong>.</p></li>
+<li><p><a href="https://sci2s.ugr.es/keel/pdf/algorithm/congreso/1992-Kerber-ChimErge-AAAI92.pdf">Chi-Merge</a></p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Discretizando por el método Chi-Merge</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(discretization)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'discretization' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Discretizamos todas las columnas, salvo la última.</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>d_diab <span class="ot">=</span> <span class="fu">chiM</span>(diabetes, <span class="fl">0.01</span>)<span class="sc">$</span>Disc.data</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Discretizamos solo la primera y tercera columnas</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># d_diab = chiM(diabetes[, c(1, 3)], 0.01)$Disc.data</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertimos a categórica para evitar que la función</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># naive_bayes asuma con variables numéricas (gaussianas o no)</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  d_diab[,i] <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(d_diab[,i])</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>d_diab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    glucose insulin sspg    class
+1         1       1    2   normal
+2         2       1    3   normal
+3         1       1    3   normal
+4         1       1    3   normal
+5         1       1    3   normal
+6         1       1    3   normal
+7         1       1    3   normal
+8         1       1    3   normal
+9         1       1    2   normal
+10        1       1    3   normal
+11        1       1    3   normal
+12        1       1    2   normal
+13        1       1    3   normal
+14        1       1    3   normal
+15        1       1    3   normal
+16        1       1    3   normal
+17        1       1    2   normal
+18        1       1    2   normal
+19        1       1    2   normal
+20        1       1    2   normal
+21        1       1    3   normal
+22        1       1    3   normal
+23        1       1    3   normal
+24        1       1    3   normal
+25        1       1    3   normal
+26        1       1    3   normal
+27        1       1    2   normal
+28        1       1    3   normal
+29        1       1    3   normal
+30        1       1    3   normal
+31        1       1    3   normal
+32        1       1    2   normal
+33        1       1    3   normal
+34        1       1    3   normal
+35        2       1    2   normal
+36        2       1    3   normal
+37        1       1    3   normal
+38        1       1    2   normal
+39        1       1    2   normal
+40        1       1    2   normal
+41        1       1    2   normal
+42        1       1    3   normal
+43        1       1    3   normal
+44        1       1    3   normal
+45        1       1    3   normal
+46        1       1    3   normal
+47        1       1    3   normal
+48        1       1    2   normal
+49        1       1    2   normal
+50        1       2    3 chemical
+51        1       1    2   normal
+52        2       2    2   normal
+53        1       2    3 chemical
+54        1       1    2   normal
+55        1       2    3 chemical
+56        1       1    2   normal
+57        1       1    2   normal
+58        1       1    3   normal
+59        1       1    3   normal
+60        1       1    2   normal
+61        1       1    3   normal
+62        2       1    3   normal
+63        2       1    3   normal
+64        1       2    3 chemical
+65        1       1    3   normal
+66        1       1    3   normal
+67        1       1    3   normal
+68        1       1    2   normal
+69        1       1    4   normal
+70        1       2    3 chemical
+71        1       1    2   normal
+72        2       2    4 chemical
+73        2       2    3 chemical
+74        2       2    4 chemical
+75        2       2    3 chemical
+76        2       2    4 chemical
+77        2       2    4 chemical
+78        1       2    4 chemical
+79        2       2    3 chemical
+80        1       2    4 chemical
+81        1       2    4 chemical
+82        2       2    4 chemical
+83        1       2    4 chemical
+84        2       2    3 chemical
+85        1       2    2 chemical
+86        1       2    4 chemical
+87        1       2    2 chemical
+88        1       2    4 chemical
+89        2       2    2 chemical
+90        1       2    3 chemical
+91        2       2    3 chemical
+92        2       2    2 chemical
+93        3       3    1    overt
+94        3       3    3    overt
+95        3       3    1    overt
+96        3       3    2    overt
+97        3       3    2    overt
+98        3       3    1    overt
+99        3       3    2    overt
+100       3       3    2    overt
+101       3       2    2    overt
+102       3       3    1    overt
+103       3       3    2    overt
+104       3       3    2    overt
+105       3       3    2    overt
+106       3       2    4    overt
+107       3       3    1    overt
+108       3       3    1    overt
+109       3       2    2    overt
+110       3       3    1    overt
+111       3       2    4    overt
+112       3       3    3    overt
+113       3       3    2    overt
+114       3       3    1    overt
+115       3       3    1    overt</code></pre>
+</div>
+</div>
+<p><strong>Esta librería asume que la última columna del data frame es la de la clase que deseamos predecir.</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sin corrección de Laplace (observar prob. cond.)</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(class <span class="sc">~</span> ., <span class="at">data =</span> d_diab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: naive_bayes(): Feature glucose - zero probabilities are present.
+Consider Laplace smoothing.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: naive_bayes(): Feature insulin - zero probabilities are present.
+Consider Laplace smoothing.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: naive_bayes(): Feature sspg - zero probabilities are present. Consider
+Laplace smoothing.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>b0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+================================== Naive Bayes ================================== 
+ 
+ Call: 
+naive_bayes.formula(formula = class ~ ., data = d_diab)
+
+--------------------------------------------------------------------------------- 
+ 
+Laplace smoothing: 0
+
+--------------------------------------------------------------------------------- 
+ 
+ A priori probabilities: 
+
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+--------------------------------------------------------------------------------- 
+ 
+ Tables: 
+
+--------------------------------------------------------------------------------- 
+ ::: glucose (Categorical) 
+--------------------------------------------------------------------------------- 
+       
+glucose   chemical     normal      overt
+      1 0.53846154 0.90909091 0.00000000
+      2 0.46153846 0.09090909 0.00000000
+      3 0.00000000 0.00000000 1.00000000
+
+--------------------------------------------------------------------------------- 
+ ::: insulin (Categorical) 
+--------------------------------------------------------------------------------- 
+       
+insulin   chemical     normal      overt
+      1 0.00000000 0.98484848 0.00000000
+      2 1.00000000 0.01515152 0.17391304
+      3 0.00000000 0.00000000 0.82608696
+
+--------------------------------------------------------------------------------- 
+ ::: sspg (Categorical) 
+--------------------------------------------------------------------------------- 
+    
+sspg   chemical     normal      overt
+   1 0.00000000 0.00000000 0.39130435
+   2 0.15384615 0.36363636 0.43478261
+   3 0.42307692 0.62121212 0.08695652
+   4 0.42307692 0.01515152 0.08695652
+
+---------------------------------------------------------------------------------</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicando laplaciano = 1</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(class <span class="sc">~</span> ., <span class="at">data =</span> d_diab, <span class="at">laplace =</span> <span class="dv">1</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>b1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+================================== Naive Bayes ================================== 
+ 
+ Call: 
+naive_bayes.formula(formula = class ~ ., data = d_diab, laplace = 1)
+
+--------------------------------------------------------------------------------- 
+ 
+Laplace smoothing: 1
+
+--------------------------------------------------------------------------------- 
+ 
+ A priori probabilities: 
+
+chemical   normal    overt 
+0.226087 0.573913 0.200000 
+
+--------------------------------------------------------------------------------- 
+ 
+ Tables: 
+
+--------------------------------------------------------------------------------- 
+ ::: glucose (Categorical) 
+--------------------------------------------------------------------------------- 
+       
+glucose   chemical     normal      overt
+      1 0.51724138 0.88405797 0.03846154
+      2 0.44827586 0.10144928 0.03846154
+      3 0.03448276 0.01449275 0.92307692
+
+--------------------------------------------------------------------------------- 
+ ::: insulin (Categorical) 
+--------------------------------------------------------------------------------- 
+       
+insulin   chemical     normal      overt
+      1 0.03448276 0.95652174 0.03846154
+      2 0.93103448 0.02898551 0.19230769
+      3 0.03448276 0.01449275 0.76923077
+
+--------------------------------------------------------------------------------- 
+ ::: sspg (Categorical) 
+--------------------------------------------------------------------------------- 
+    
+sspg   chemical     normal      overt
+   1 0.03333333 0.01428571 0.37037037
+   2 0.16666667 0.35714286 0.40740741
+   3 0.40000000 0.60000000 0.11111111
+   4 0.40000000 0.02857143 0.11111111
+
+---------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pred0 <span class="ot">=</span> <span class="fu">predict</span>(b0, d_diab[,<span class="sc">-</span><span class="dv">4</span>])</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pred0, d_diab[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       26      1     0
+  normal          0     65     0
+  overt           0      0    23
+
+Overall Statistics
+                                          
+               Accuracy : 0.9913          
+                 95% CI : (0.9525, 0.9998)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.9851          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   1.0000        0.9848          1.0
+Specificity                   0.9888        1.0000          1.0
+Pos Pred Value                0.9630        1.0000          1.0
+Neg Pred Value                1.0000        0.9800          1.0
+Prevalence                    0.2261        0.5739          0.2
+Detection Rate                0.2261        0.5652          0.2
+Detection Prevalence          0.2348        0.5652          0.2
+Balanced Accuracy             0.9944        0.9924          1.0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>pred1 <span class="ot">=</span> <span class="fu">predict</span>(b1, d_diab[,<span class="sc">-</span><span class="dv">4</span>])</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(pred1, d_diab[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       26      1     0
+  normal          0     65     0
+  overt           0      0    23
+
+Overall Statistics
+                                          
+               Accuracy : 0.9913          
+                 95% CI : (0.9525, 0.9998)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.9851          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   1.0000        0.9848          1.0
+Specificity                   0.9888        1.0000          1.0
+Pos Pred Value                0.9630        1.0000          1.0
+Neg Pred Value                1.0000        0.9800          1.0
+Prevalence                    0.2261        0.5739          0.2
+Detection Rate                0.2261        0.5652          0.2
+Detection Prevalence          0.2348        0.5652          0.2
+Balanced Accuracy             0.9944        0.9924          1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="testing-data" class="level3">
+<h3 class="anchored" data-anchor-id="testing-data">Testing data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos de Prueba</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"../datos/DiabetesTest.csv"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>diabetes_test<span class="sc">$</span>class <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(diabetes_test<span class="sc">$</span>class)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  glucose insulin sspg    class
+1      89     472  162 chemical
+2      96     465  237 chemical
+3     112     503  408 chemical
+4     110     477  124 chemical
+5      90     413  344 chemical
+6     102     472  297 chemical</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(a, diabetes_test[,<span class="sc">-</span><span class="dv">4</span>]), diabetes_test[,<span class="dv">4</span>]</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical        9      1     0
+  normal          1      9     0
+  overt           0      0    10
+
+Overall Statistics
+                                          
+               Accuracy : 0.9333          
+                 95% CI : (0.7793, 0.9918)
+    No Information Rate : 0.3333          
+    P-Value [Acc &gt; NIR] : 8.747e-12       
+                                          
+                  Kappa : 0.9             
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.9000        0.9000       1.0000
+Specificity                   0.9500        0.9500       1.0000
+Pos Pred Value                0.9000        0.9000       1.0000
+Neg Pred Value                0.9500        0.9500       1.0000
+Prevalence                    0.3333        0.3333       0.3333
+Detection Rate                0.3000        0.3000       0.3333
+Detection Prevalence          0.3333        0.3333       0.3333
+Balanced Accuracy             0.9250        0.9250       1.0000</code></pre>
+</div>
+</div>
+<div id="thm-" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1 </strong></span>Si se discretizó el <strong>training set</strong>, usar esos <strong>mismos intervalos de discretazicación</strong> para el <strong>testing set</strong>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalos de discretización</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">chiM</span>(diabetes, alpha)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>cutp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 100.5 117.0
+
+[[2]]
+[1] 420.5 656.5
+
+[[3]]
+[1]  63.5 140.5 283.5</code></pre>
+</div>
+</div>
+<p><strong>El nivel de discretización</strong> (<code>alpha</code>) también es un <strong>hiperparámtro</strong>.</p>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 </strong></span>Ejercicio</p>
+<p>Discretizar el testing dataset usando los intervalos de discretización del training dataset, para evaluar la matriz de confusión asociada a los modelos <code>b0</code> y <code>b1</code>.</p>
+</div>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 </strong></span>Ejercicio</p>
+<p>Implementar un <code>for loop</code> para el hiperparámetro <code>alpha</code>, y obtener la matriz de confusión asociada al modelo con discretización Chi-Merge.</p>
+</div>
+</section>
+</section>
+<section id="k-vecinos-más-cercanos-knn" class="level2">
+<h2 class="anchored" data-anchor-id="k-vecinos-más-cercanos-knn">K-vecinos más cercanos (KNN)</h2>
+<ul>
+<li><p><strong>No es eficiente para inferencia</strong>, es decir, entender el efecto de predictores sobre la response.</p></li>
+<li><p>Útil para <strong>regresión y clasificación</strong>.</p></li>
+<li><p><strong>Difícil de intepretar</strong>.</p></li>
+<li><p>No le afecta si son varias clases para respuesta.</p></li>
+<li><p>Llega a <strong>demorar computacionalmente</strong> para altos volúmenes de datos, por lo que <strong>no es un algoritmo escalable</strong>.</p></li>
+<li><p>Se le considera un <strong>lazy algorithm</strong>, pues no estima nada, no es que genere una <em>función de predicción</em>, como hemos vimos en otros algoritmos. &nbsp; Por ello, si se aumenta la cantidad de datos de entrenamiento, habría que ejecutar <strong>todo el algoritmo de nuevo</strong>.</p></li>
+<li><p>Se emplea para <strong>predictores numéricos</strong>.</p></li>
+<li><p>Se deben <strong>estandarizar los datos</strong> (mapeándolos al intervalo <span class="math inline">\(\left( 0,1 \right)\)</span> por ejemplo), puesto que las unidades de los predictores pueden alterar la <em>noción de cercanía</em>.</p></li>
+<li><p>Se emplea para <strong>predictores numéricos</strong>.</p></li>
+<li><p>Se deben <strong>estandarizar los datos</strong> (mapeándolos al intervalo <span class="math inline">\(\left( 0,1 \right)\)</span> por ejemplo), puesto que las unidades de los predictores pueden alterar la <em>noción de cercanía</em>.</p></li>
+<li><p>En el caso se desee usar <strong>predictores categóricos</strong> en el modelo, se tienen algunas alternativas:</p>
+<ul>
+<li>Estimar <strong>variables latentes</strong> asociadas a predictores categóricos (lo veremos en <em>Stats. Learning 2</em>)</li>
+<li><strong>Binarizar</strong> las variables categóricas, pero <strong>sin descartar</strong> las columnas consideradas <em>extra</em>, cuando se hace el tratamiento de <em>dummy variables</em>.</li>
+</ul></li>
+</ul>
+<section id="pasos" class="level3">
+<h3 class="anchored" data-anchor-id="pasos">Pasos</h3>
+<ol type="1">
+<li><p>Elegimos dos parámetros:</p>
+<ul>
+<li><strong>Métrica</strong> para calcular distancias.</li>
+<li>Valor de <strong>K</strong> (número de vecinos a considerar).</li>
+</ul></li>
+<li><p>Dada una observación <span class="math inline">\(x_0\)</span>, buscar los <span class="math inline">\(K\)</span> puntos de <strong>datos de entrenamiento</strong> más cercanos a <span class="math inline">\(x_0\)</span>.</p></li>
+<li><p>Estos <span class="math inline">\(K\)</span> puntos forman la vecindad <span class="math inline">\(\mathcal{N}_0\)</span> de <span class="math inline">\(x_0\)</span>.</p></li>
+<li><p>La clasificación se realiza vía algún tipo de promedio. Por ejemplo, <strong>media</strong> (ponderada o no) para el caso de <strong>regresión</strong>; y, <strong>moda</strong>, para el caso de <strong>clasificación</strong>.</p></li>
+</ol>
+</section>
+<section id="cómo-elegir-k" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-elegir-k">¿Cómo elegir K?</h3>
+<ul>
+<li><span class="math inline">\(K = 1\)</span> genera un modelo <strong>muy flexible</strong>.</li>
+<li><span class="math inline">\(K\)</span> muy grande puede generar una separación via un hiperplano, por lo que se espera un resultado similar a usar Análisis Discriminante.</li>
+</ul>
+</section>
+</section>
+<section id="ejemplo-práctico-1" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-1">Ejemplo práctico</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'class' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Repetimos los datos, por fines ilustrativos</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> diabetes[,<span class="dv">4</span>]</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Por default, K vale 1</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] normal   normal   normal   normal   normal   normal   normal   normal  
+  [9] normal   normal   normal   normal   normal   normal   normal   normal  
+ [17] normal   normal   normal   normal   normal   normal   normal   normal  
+ [25] normal   normal   normal   normal   normal   normal   normal   normal  
+ [33] normal   normal   normal   normal   normal   normal   normal   normal  
+ [41] normal   normal   normal   normal   normal   normal   normal   normal  
+ [49] normal   chemical normal   normal   chemical normal   chemical normal  
+ [57] normal   normal   normal   normal   normal   normal   normal   chemical
+ [65] normal   normal   normal   normal   normal   chemical normal   chemical
+ [73] chemical chemical chemical chemical chemical chemical chemical chemical
+ [81] chemical chemical chemical chemical chemical chemical chemical chemical
+ [89] chemical chemical chemical chemical overt    overt    overt    overt   
+ [97] overt    overt    overt    overt    overt    overt    overt    overt   
+[105] overt    overt    overt    overt    overt    overt    overt    overt   
+[113] overt    overt    overt   
+Levels: chemical normal overt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimacion del error por resubstitución</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(b, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       26      0     0
+  normal          0     66     0
+  overt           0      0    23
+
+Overall Statistics
+                                     
+               Accuracy : 1          
+                 95% CI : (0.9684, 1)
+    No Information Rate : 0.5739     
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16  
+                                     
+                  Kappa : 1          
+                                     
+ Mcnemar's Test P-Value : NA         
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   1.0000        1.0000          1.0
+Specificity                   1.0000        1.0000          1.0
+Pos Pred Value                1.0000        1.0000          1.0
+Neg Pred Value                1.0000        1.0000          1.0
+Prevalence                    0.2261        0.5739          0.2
+Detection Rate                0.2261        0.5739          0.2
+Detection Prevalence          0.2261        0.5739          0.2
+Balanced Accuracy             1.0000        1.0000          1.0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># con K=3</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>k_3 <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> diabetes[,<span class="dv">4</span>], <span class="at">k =</span> <span class="dv">3</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_3, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       25      1     4
+  normal          1     65     0
+  overt           0      0    19
+
+Overall Statistics
+                                          
+               Accuracy : 0.9478          
+                 95% CI : (0.8899, 0.9806)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.9098          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.9615        0.9848       0.8261
+Specificity                   0.9438        0.9796       1.0000
+Pos Pred Value                0.8333        0.9848       1.0000
+Neg Pred Value                0.9882        0.9796       0.9583
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.2174        0.5652       0.1652
+Detection Prevalence          0.2609        0.5739       0.1652
+Balanced Accuracy             0.9527        0.9822       0.9130</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(k_3 <span class="sc">==</span> diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9478261</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># con K=7</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>k_7 <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> diabetes[,<span class="dv">4</span>], <span class="at">k =</span> <span class="dv">7</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_7, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       22      1     5
+  normal          4     65     0
+  overt           0      0    18
+
+Overall Statistics
+                                          
+               Accuracy : 0.913           
+                 95% CI : (0.8459, 0.9575)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 8.022e-16       
+                                          
+                  Kappa : 0.8473          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8462        0.9848       0.7826
+Specificity                   0.9326        0.9184       1.0000
+Pos Pred Value                0.7857        0.9420       1.0000
+Neg Pred Value                0.9540        0.9783       0.9485
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1913        0.5652       0.1565
+Detection Prevalence          0.2435        0.6000       0.1565
+Balanced Accuracy             0.8894        0.9516       0.8913</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(k_7 <span class="sc">==</span> diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9130435</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># con K=15</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>k_15 <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> diabetes[,<span class="dv">4</span>], <span class="at">k =</span> <span class="dv">15</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_15, diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical       20      1     5
+  normal          6     65     0
+  overt           0      0    18
+
+Overall Statistics
+                                          
+               Accuracy : 0.8957          
+                 95% CI : (0.8248, 0.9449)
+    No Information Rate : 0.5739          
+    P-Value [Acc &gt; NIR] : 3.778e-14       
+                                          
+                  Kappa : 0.8147          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.7692        0.9848       0.7826
+Specificity                   0.9326        0.8776       1.0000
+Pos Pred Value                0.7692        0.9155       1.0000
+Neg Pred Value                0.9326        0.9773       0.9485
+Prevalence                    0.2261        0.5739       0.2000
+Detection Rate                0.1739        0.5652       0.1565
+Detection Prevalence          0.2261        0.6174       0.1565
+Balanced Accuracy             0.8509        0.9312       0.8913</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(k_15 <span class="sc">==</span> diabetes[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8956522</code></pre>
+</div>
+</div>
+<section id="testing-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="testing-data-1">Testing data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicando K=3 en los datos de test</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"../datos/DiabetesTest.csv"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>diabetes_test<span class="sc">$</span>class <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(diabetes_test<span class="sc">$</span>class)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>K_3 <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> diabetes[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> diabetes_test[,<span class="sc">-</span><span class="dv">4</span>],</span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> diabetes[,<span class="dv">4</span>], <span class="at">k =</span> <span class="dv">3</span>, <span class="at">prob =</span> <span class="cn">TRUE</span></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener la proporción de votos para la clase ganadora</span></span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>K_3_prob <span class="ot">&lt;-</span> <span class="fu">attr</span>(K_3, <span class="st">"prob"</span>)</span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores predichos</span></span>
+<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(K_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] chemical chemical chemical chemical normal   chemical
+Levels: chemical normal overt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Proporciones de "votos"</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(K_3_prob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.0000000 1.0000000 0.6666667 1.0000000 0.6666667 1.0000000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(K_3, diabetes_test[,<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction chemical normal overt
+  chemical        8      0     0
+  normal          2     10     0
+  overt           0      0    10
+
+Overall Statistics
+                                          
+               Accuracy : 0.9333          
+                 95% CI : (0.7793, 0.9918)
+    No Information Rate : 0.3333          
+    P-Value [Acc &gt; NIR] : 8.747e-12       
+                                          
+                  Kappa : 0.9             
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: chemical Class: normal Class: overt
+Sensitivity                   0.8000        1.0000       1.0000
+Specificity                   1.0000        0.9000       1.0000
+Pos Pred Value                1.0000        0.8333       1.0000
+Neg Pred Value                0.9091        1.0000       1.0000
+Prevalence                    0.3333        0.3333       0.3333
+Detection Rate                0.2667        0.3333       0.3333
+Detection Prevalence          0.2667        0.4000       0.3333
+Balanced Accuracy             0.9000        0.9500       1.0000</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../apuntes/clase-04.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

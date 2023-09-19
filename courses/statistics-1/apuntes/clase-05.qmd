@@ -1,0 +1,380 @@
+# Apuntes de clase {-}
+
+## Naive Bayes
+
+- Es un modelo **no paramétrico**, donde, entre sus parámetros
+está la estimación, via frecuencia relativa, de los parámetros
+$Pr[Y=k]$ de la población.
+
+- **No es un modelo interpetable** ... no 
+se usa para entender cómo afectan los predictores a la respuesta.
+
+- No nos permite conocer la verdadera distribución condicional
+de $Pr(Y\mid X)$ para datos reales.
+
+- El supuesto de normalidad multivariada
+casi nunca se cumple en la vida real,
+por lo que el modelo **Naive Bayes**
+propone, en parte, una 
+**menor restricción sobre la distribución de los predictores**.
+
+### Cálculo de probabilidades condicionales
+
+- El clasificador Naive Bayes puede ser aplicado también
+cuando hay **predictors continuos**. Alternativas:
+    - **Discretización**.  
+    Discretizar variables numéricas **no** siempre 
+    es una *pérdida de información*. Más bien, la discretización
+    puede ser una buena alternativa para **remover ruido de los datos**,
+    **lidiar con** el hecho que las variables numéricas presentan
+    **distintas escalas (min max)**.
+    
+    - [Estimación no paramétrica](https://www.researchgate.net/publication/43185083_Nonparametric_and_Semiparametric_Models) 
+    de la densidad del kernel.
+
+    - Supone una distribución para cada predictora, por lo general
+    Gaussiana, con media y varianza estimada de los datos.
+
+Si simplemente asumes normalidad, es parecido (no totalmente)
+al caso estudiado en Análisis Discriminante.
+
+### Estimador Naive Bayes
+
+- Es importante **evitar** que haya alguna **probabilidad igual a cero**, respecto a alguna de las clases.
+    - En ese tipo de casos, 
+    se puede usar una [correción de Laplace](https://dials.tidymodels.org/reference/Laplace.html).
+    - **No existe un corrector Laplaciano mejor que todos**, 
+    pero por lo general suele usarse el valor 1.
+    - Aún así, puede tratarse el corrector Laplaciano
+    como un **hiperparámetro** del modelo.
+
+### Predicción
+
+- Para predecir la clase a la cual pertenece $X$, 
+$Pr[Y = k]Pr[X \mid Y = k]$ es evaluado para cada clase $k$ .
+
+- El clasificador predecirá que los valores de $X$ pertenecen
+a la clase $i$ si y solo si:
+$$
+\begin{gather}
+  Pr[Y = i]Pr[X \mid Y = i] > Pr[Y = j]Pr[X \mid Y = j], \\
+  \; \forall 1\leq j\leq m, \; j \ne i
+\end{gather}
+$$
+
+
+## Ejemplo práctico
+
+```{r}
+diabetes = read.csv(
+  "../datos/DiabetesTrain.csv", stringsAsFactors = TRUE
+)
+head(diabetes)
+```
+
+```{r}
+# ¿Hay normalidad?
+diabetes$glucose |> hist()
+```
+
+### Sin discretizar y asumiendo normalidad
+
+```{r}
+library(e1071)
+
+a <- naiveBayes(class ~ .,data = diabetes)
+a
+```
+
+**Esta librería asume que las variables numéricas usadas siguen una distriubución normal marginal**.
+
+```{r}
+pred = predict(a, diabetes[,-4], type = "raw")
+pred
+```
+
+```{r}
+pred1 = factor(max.col(pred), labels = levels(diabetes$class))
+pred1
+```
+
+```{r}
+pred1 = predict(a, diabetes[,-4])
+pred1
+```
+
+```{r}
+caret::confusionMatrix(pred1, diabetes[,4])
+```
+
+### Sin discretizar ni asumir normalidad
+
+```{r}
+library(naivebayes)
+
+a <- naive_bayes(class ~ ., data = diabetes)
+a
+```
+
+**Por default, se asumió normalidad marginal, debido al valor `FALSE` del parámetro `usekernel` de `naive_bayes`**.
+
+```{r}
+pred = predict(a, diabetes[,-4])
+pred
+```
+
+```{r}
+caret::confusionMatrix(pred,diabetes[,4])
+
+predict(a, diabetes[,-4], type = "prob")
+```
+
+**Ahora no asumiremos normalidad marginal**:
+
+```{r}
+a <- naive_bayes(class ~ ., data = diabetes, usekernel = TRUE)
+a
+
+plot(a)
+```
+
+```{r}
+pred = predict(a, diabetes[,-4])
+pred
+
+caret::confusionMatrix(pred, diabetes[,4])
+```
+
+### Discretizar usando Chi-Merge
+
+- Una **discretización no supervisada** no toma en cuenta
+los valores de la response, al momento de discretizar uno 
+o más predictores.
+
+- Por otro lado, la [discretización supervisada](https://www.futurelearn.com/info/courses/more-data-mining-with-weka/0/steps/29114) **sí considera la respuesta** al momento de discretizar
+uno o más predictores, con el fin de crear intervalos de 
+discretización que maximicen la probabilidad de predecir
+adecuadamente una **training observation**, no de tipo **testing**.
+
+- [Chi-Merge](https://sci2s.ugr.es/keel/pdf/algorithm/congreso/1992-Kerber-ChimErge-AAAI92.pdf)
+
+```{r}
+# Discretizando por el método Chi-Merge
+library(discretization)
+
+# Discretizamos todas las columnas, salvo la última.
+d_diab = chiM(diabetes, 0.01)$Disc.data
+
+# Discretizamos solo la primera y tercera columnas
+# d_diab = chiM(diabetes[, c(1, 3)], 0.01)$Disc.data
+
+
+# Convertimos a categórica para evitar que la función
+# naive_bayes asuma con variables numéricas (gaussianas o no)
+for (i in 1:3) {
+  d_diab[,i] <- as.factor(d_diab[,i])
+}
+
+d_diab
+```
+
+**Esta librería asume que la última columna del data frame es la de la clase que deseamos predecir.**
+
+```{r}
+# Sin corrección de Laplace (observar prob. cond.)
+b0 <- naive_bayes(class ~ ., data = d_diab)
+b0
+
+# Aplicando laplaciano = 1
+b1 <- naive_bayes(class ~ ., data = d_diab, laplace = 1)
+b1
+```
+
+```{r}
+pred0 = predict(b0, d_diab[,-4])
+caret::confusionMatrix(pred0, d_diab[,4])
+```
+
+```{r}
+pred1 = predict(b1, d_diab[,-4])
+caret::confusionMatrix(pred1, d_diab[,4])
+```
+
+### Testing data
+
+```{r}
+# Datos de Prueba
+diabetes_test = read.csv("../datos/DiabetesTest.csv")
+diabetes_test$class <- as.factor(diabetes_test$class)
+
+head(diabetes_test)
+caret::confusionMatrix(
+  predict(a, diabetes_test[,-4]), diabetes_test[,4]
+)
+```
+
+::: {#thm-}
+
+Si se discretizó el **training set**, usar esos 
+**mismos intervalos de discretazicación** para el 
+**testing set**.
+
+:::
+
+
+```{r}
+# Intervalos de discretización
+alpha <- 0.01
+d <- chiM(diabetes, alpha)
+d$cutp
+```
+
+**El nivel de discretización** (`alpha`) también es un
+**hiperparámtro**.
+
+::: {#prp-}
+
+Ejercicio
+
+Discretizar el testing dataset usando los intervalos de discretización del training dataset, para
+evaluar la matriz de confusión asociada a los modelos `b0` y `b1`.
+
+:::
+
+::: {#prp-}
+
+Ejercicio
+
+Implementar un `for loop` para el hiperparámetro `alpha`, 
+y obtener la matriz de confusión asociada al modelo
+con discretización Chi-Merge.
+
+:::
+
+
+## K-vecinos más cercanos (KNN)
+
+- **No es eficiente para inferencia**, es decir,
+entender el efecto de predictores sobre la response.
+
+- Útil para **regresión y clasificación**.
+
+- **Difícil de intepretar**.
+
+- No le afecta si son varias clases para respuesta.
+
+- Llega a **demorar computacionalmente** para altos volúmenes de datos, por lo que **no es un algoritmo escalable**.
+
+- Se le considera un **lazy algorithm**, pues no estima nada,
+no es que genere una *función de predicción*, como hemos 
+vimos en otros algoritmos. \ 
+Por ello, si se aumenta la cantidad de datos de entrenamiento,
+habría que ejecutar **todo el algoritmo de nuevo**.
+
+- Se emplea para **predictores numéricos**.
+
+- Se deben **estandarizar los datos** (mapeándolos al intervalo
+$\left( 0,1 \right)$ por ejemplo), puesto que las unidades de
+los predictores pueden alterar la *noción de cercanía*.
+
+- Se emplea para **predictores numéricos**.
+
+- Se deben **estandarizar los datos** (mapeándolos al intervalo
+$\left( 0,1 \right)$ por ejemplo), puesto que las unidades de
+los predictores pueden alterar la *noción de cercanía*.
+
+- En el caso se desee usar **predictores categóricos** en el modelo, se tienen algunas alternativas:
+    - Estimar **variables latentes** asociadas a predictores
+    categóricos (lo veremos en *Stats. Learning 2*)
+    - **Binarizar** las variables categóricas, pero 
+    **sin descartar** las columnas consideradas *extra*, 
+    cuando se hace el tratamiento de *dummy variables*.
+
+### Pasos
+
+1. Elegimos dos parámetros:
+    - **Métrica** para calcular distancias.
+    - Valor de **K** (número de vecinos a considerar).
+
+1. Dada una observación $x_0$, buscar los $K$ puntos de
+**datos de entrenamiento** más cercanos a $x_0$.
+
+1. Estos $K$ puntos forman la vecindad $\mathcal{N}_0$ de $x_0$.
+
+1. La clasificación se realiza vía algún tipo de promedio.
+Por ejemplo, **media** (ponderada o no) para el caso de **regresión**; y, **moda**, para el caso de **clasificación**.
+
+### ¿Cómo elegir K?
+
+- $K = 1$ genera un modelo **muy flexible**.
+- $K$ muy grande puede generar una separación via un hiperplano,
+por lo que se espera un resultado similar a usar Análisis Discriminante.
+
+## Ejemplo práctico
+
+```{r}
+library(class)
+
+b <- knn(
+  # Repetimos los datos, por fines ilustrativos
+  train = diabetes[,1:3], test = diabetes[,1:3],
+  cl = diabetes[,4]
+  # Por default, K vale 1
+)
+b
+
+# Estimacion del error por resubstitución
+caret::confusionMatrix(b, diabetes[,4])
+```
+
+```{r}
+# con K=3
+k_3 <- knn(
+  train = diabetes[,1:3], test = diabetes[,1:3],
+  cl = diabetes[,4], k = 3
+)
+caret::confusionMatrix(k_3, diabetes[,4])
+mean(k_3 == diabetes[,4])
+
+# con K=7
+k_7 <- knn(
+  train = diabetes[,1:3], test = diabetes[,1:3],
+  cl = diabetes[,4], k = 7
+)
+caret::confusionMatrix(k_7, diabetes[,4])
+mean(k_7 == diabetes[,4])
+
+# con K=15
+k_15 <- knn(
+  train = diabetes[,1:3], test = diabetes[,1:3],
+  cl = diabetes[,4], k = 15
+)
+caret::confusionMatrix(k_15, diabetes[,4])
+mean(k_15 == diabetes[,4])
+```
+
+### Testing data
+
+```{r}
+# Aplicando K=3 en los datos de test
+diabetes_test = read.csv("../datos/DiabetesTest.csv")
+diabetes_test$class <- as.factor(diabetes_test$class)
+
+K_3 <- knn(
+  train = diabetes[,1:3], test = diabetes_test[,-4],
+  cl = diabetes[,4], k = 3, prob = TRUE
+)
+
+# Obtener la proporción de votos para la clase ganadora
+K_3_prob <- attr(K_3, "prob")
+
+# Valores predichos
+head(K_3)
+
+# Proporciones de "votos"
+head(K_3_prob)
+```
+
+```{r}
+caret::confusionMatrix(K_3, diabetes_test[,4])
+```

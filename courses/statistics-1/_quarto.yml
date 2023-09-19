@@ -19,6 +19,9 @@ book:
     - part: "Semana 4"
       chapters: 
         - apuntes/clase-04.qmd
+    - part: "Semana 5"
+      chapters: 
+        - apuntes/clase-05.qmd
 
 format:
   html:
