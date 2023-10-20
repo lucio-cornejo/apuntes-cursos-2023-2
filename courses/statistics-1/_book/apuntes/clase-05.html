@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-06.html" rel="next">
 <link href="../apuntes/clase-04.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -94,48 +95,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-<script type="module">
-  // When keyboard's 's' key is pressed, 
-  // hide both sidebars (tables of contents)
-  document.addEventListener(
-    "keydown", 
-    function (evt) {
-      // Avoid keydown event repetition due to holding key
-      if (evt.repeat) return;
-
-      if ('s' === event.key.toLowerCase()) {
-        const quartoContent = document.querySelector("#quarto-content");
-        
-        if (window.getComputedStyle(quartoContent).display === 'grid') {
-          // Remove grid display
-          quartoContent.style.display = "block";
-          
-          // Hide every HTML element, except for main content
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "none");
-  
-          // Change content margin for desktop view
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "20px 100px";
-        } else {
-          // Try to restore Quarto's initial style
-          quartoContent.style.display = "grid";
-
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "flex");
-
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "21px 0";
-        }
-      }
-    }
-  );
-</script> 
 <script type="module">
   document.addEventListener(
     "DOMContentLoaded",
@@ -286,6 +245,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -297,25 +307,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link active" data-scroll-target="#naive-bayes">Naive Bayes</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#cálculo-de-probabilidades-condicionales" id="toc-cálculo-de-probabilidades-condicionales" class="nav-link" data-scroll-target="#cálculo-de-probabilidades-condicionales">Cálculo de probabilidades condicionales</a></li>
   <li><a href="#estimador-naive-bayes" id="toc-estimador-naive-bayes" class="nav-link" data-scroll-target="#estimador-naive-bayes">Estimador Naive Bayes</a></li>
   <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
   </ul></li>
   <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#sin-discretizar-y-asumiendo-normalidad" id="toc-sin-discretizar-y-asumiendo-normalidad" class="nav-link" data-scroll-target="#sin-discretizar-y-asumiendo-normalidad">Sin discretizar y asumiendo normalidad</a></li>
   <li><a href="#sin-discretizar-ni-asumir-normalidad" id="toc-sin-discretizar-ni-asumir-normalidad" class="nav-link" data-scroll-target="#sin-discretizar-ni-asumir-normalidad">Sin discretizar ni asumir normalidad</a></li>
   <li><a href="#discretizar-usando-chi-merge" id="toc-discretizar-usando-chi-merge" class="nav-link" data-scroll-target="#discretizar-usando-chi-merge">Discretizar usando Chi-Merge</a></li>
   <li><a href="#testing-data" id="toc-testing-data" class="nav-link" data-scroll-target="#testing-data">Testing data</a></li>
   </ul></li>
   <li><a href="#k-vecinos-más-cercanos-knn" id="toc-k-vecinos-más-cercanos-knn" class="nav-link" data-scroll-target="#k-vecinos-más-cercanos-knn">K-vecinos más cercanos (KNN)</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#pasos" id="toc-pasos" class="nav-link" data-scroll-target="#pasos">Pasos</a></li>
   <li><a href="#cómo-elegir-k" id="toc-cómo-elegir-k" class="nav-link" data-scroll-target="#cómo-elegir-k">¿Cómo elegir K?</a></li>
   </ul></li>
   <li><a href="#ejemplo-práctico-1" id="toc-ejemplo-práctico-1" class="nav-link" data-scroll-target="#ejemplo-práctico-1">Ejemplo práctico</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#testing-data-1" id="toc-testing-data-1" class="nav-link" data-scroll-target="#testing-data-1">Testing data</a></li>
   </ul></li>
   </ul>
@@ -2110,6 +2120,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../apuntes/clase-06.html" class="pagination-link">
+        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

@@ -61,48 +61,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-
-<script type="module">
-  // When keyboard's 's' key is pressed, 
-  // hide both sidebars (tables of contents)
-  document.addEventListener(
-    "keydown", 
-    function (evt) {
-      // Avoid keydown event repetition due to holding key
-      if (evt.repeat) return;
-
-      if ('s' === event.key.toLowerCase()) {
-        const quartoContent = document.querySelector("#quarto-content");
-        
-        if (window.getComputedStyle(quartoContent).display === 'grid') {
-          // Remove grid display
-          quartoContent.style.display = "block";
-          
-          // Hide every HTML element, except for main content
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "none");
-  
-          // Change content margin for desktop view
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "20px 100px";
-        } else {
-          // Try to restore Quarto's initial style
-          quartoContent.style.display = "grid";
-
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "flex");
-
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "21px 0";
-        }
-      }
-    }
-  );
-</script> 
 <script type="module">
   document.addEventListener(
     "DOMContentLoaded",
@@ -253,6 +211,57 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -265,12 +274,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#sobre-el-curso" id="toc-sobre-el-curso" class="nav-link active" data-scroll-target="#sobre-el-curso">Sobre el curso</a></li>
   <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#qué-es-statistical-learning" id="toc-qué-es-statistical-learning" class="nav-link" data-scroll-target="#qué-es-statistical-learning">¿Qué es Statistical Learning?</a></li>
   <li><a href="#statistical-learning-vs-data-science" id="toc-statistical-learning-vs-data-science" class="nav-link" data-scroll-target="#statistical-learning-vs-data-science">Statistical Learning vs Data Science</a></li>
   </ul></li>
   <li><a href="#aprendizaje-estadístico" id="toc-aprendizaje-estadístico" class="nav-link" data-scroll-target="#aprendizaje-estadístico">Aprendizaje Estadístico</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#qué-es" id="toc-qué-es" class="nav-link" data-scroll-target="#qué-es">¿Qué es?</a></li>
   <li><a href="#el-problema-del-aprendizaje-supervisado" id="toc-el-problema-del-aprendizaje-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-supervisado">El problema del Aprendizaje Supervisado</a></li>
   <li><a href="#el-problema-del-aprendizaje-no-supervisado" id="toc-el-problema-del-aprendizaje-no-supervisado" class="nav-link" data-scroll-target="#el-problema-del-aprendizaje-no-supervisado">El problema del Aprendizaje No Supervisado</a></li>

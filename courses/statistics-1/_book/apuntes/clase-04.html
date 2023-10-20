@@ -95,48 +95,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-<script type="module">
-  // When keyboard's 's' key is pressed, 
-  // hide both sidebars (tables of contents)
-  document.addEventListener(
-    "keydown", 
-    function (evt) {
-      // Avoid keydown event repetition due to holding key
-      if (evt.repeat) return;
-
-      if ('s' === event.key.toLowerCase()) {
-        const quartoContent = document.querySelector("#quarto-content");
-        
-        if (window.getComputedStyle(quartoContent).display === 'grid') {
-          // Remove grid display
-          quartoContent.style.display = "block";
-          
-          // Hide every HTML element, except for main content
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "none");
-  
-          // Change content margin for desktop view
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "20px 100px";
-        } else {
-          // Try to restore Quarto's initial style
-          quartoContent.style.display = "grid";
-
-          quartoContent
-            .querySelectorAll(":scope > :not(.content, script)")
-            .forEach(e => e.style.display = "flex");
-
-          quartoContent
-            .querySelector("main.content")
-            .style.margin = "21px 0";
-        }
-      }
-    }
-  );
-</script> 
 <script type="module">
   document.addEventListener(
     "DOMContentLoaded",
@@ -287,6 +245,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -299,14 +308,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link active" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a></li>
   <li><a href="#clasificador-de-bayes" id="toc-clasificador-de-bayes" class="nav-link" data-scroll-target="#clasificador-de-bayes">Clasificador de Bayes</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades">Propiedades</a></li>
   <li><a href="#tasas-de-error" id="toc-tasas-de-error" class="nav-link" data-scroll-target="#tasas-de-error">Tasas de error</a></li>
   </ul></li>
   <li><a href="#dos-paradigmas" id="toc-dos-paradigmas" class="nav-link" data-scroll-target="#dos-paradigmas">Dos paradigmas</a></li>
   <li><a href="#análisis-discriminante" id="toc-análisis-discriminante" class="nav-link" data-scroll-target="#análisis-discriminante">Análisis Discriminante</a></li>
   <li><a href="#ejemplo-práctico-lda" id="toc-ejemplo-práctico-lda" class="nav-link" data-scroll-target="#ejemplo-práctico-lda">Ejemplo práctico LDA</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#análisis-descriptivo" id="toc-análisis-descriptivo" class="nav-link" data-scroll-target="#análisis-descriptivo">Análisis descriptivo</a></li>
   <li><a href="#análisis-discriminante-lineal" id="toc-análisis-discriminante-lineal" class="nav-link" data-scroll-target="#análisis-discriminante-lineal">Análisis Discriminante Lineal</a></li>
   <li><a href="#selección-de-variables" id="toc-selección-de-variables" class="nav-link" data-scroll-target="#selección-de-variables">Selección de Variables</a></li>
@@ -314,13 +323,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#datos-de-test" id="toc-datos-de-test" class="nav-link" data-scroll-target="#datos-de-test">Datos de Test</a></li>
   </ul></li>
   <li><a href="#ejemplo-práctico-qda" id="toc-ejemplo-práctico-qda" class="nav-link" data-scroll-target="#ejemplo-práctico-qda">Ejemplo práctico QDA</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#selección-de-variables-1" id="toc-selección-de-variables-1" class="nav-link" data-scroll-target="#selección-de-variables-1">Selección de variables</a></li>
   <li><a href="#evaluación" id="toc-evaluación" class="nav-link" data-scroll-target="#evaluación">Evaluación</a></li>
   </ul></li>
   <li><a href="#análisis-discriminante-regularizado" id="toc-análisis-discriminante-regularizado" class="nav-link" data-scroll-target="#análisis-discriminante-regularizado">Análisis Discriminante Regularizado</a></li>
   <li><a href="#ejemplo-práctico-1" id="toc-ejemplo-práctico-1" class="nav-link" data-scroll-target="#ejemplo-práctico-1">Ejemplo práctico</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#selección-de-variables-2" id="toc-selección-de-variables-2" class="nav-link" data-scroll-target="#selección-de-variables-2">Selección de variables</a></li>
   <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final">Modelo final</a></li>
   </ul></li>

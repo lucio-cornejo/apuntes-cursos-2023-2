@@ -22,15 +22,25 @@ book:
     - part: "Semana 5"
       chapters: 
         - apuntes/clase-05.qmd
+    - part: "Semana 6"
+      chapters: 
+        - apuntes/clase-06.qmd
+    - part: "Semana 7"
+      chapters: 
+        - apuntes/clase-07.qmd
+    - part: "Semana 8"
+      chapters: 
+        - apuntes/clase-08.qmd
 
 format:
   html:
     theme: cosmo
     fontsize: 16pt
     toc-title: Tabla de Contenidos
+    toc-depth: 4
     css: style.css
     include-in-header:
-      - sidebars-toggle.html
+      # - sidebars-toggle.html
       - fold-sidebar-sections.html
 
 execute:

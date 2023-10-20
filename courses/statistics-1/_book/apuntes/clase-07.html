@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Learning 1 - Apuntes de clase</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-08.html" rel="next">
+<link href="../apuntes/clase-06.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-07.html">Semana 7</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-07.html">Apuntes de clase</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Learning 1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sílabo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Semana 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Semana 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Semana 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Semana 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Semana 5</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de Contenidos</h2>
+   
+  <ul>
+  <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link active" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a>
+  <ul>
+  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación">Estimación</a></li>
+  <li><a href="#cálculo-de-métricas-de-evaluación-del-modelo" id="toc-cálculo-de-métricas-de-evaluación-del-modelo" class="nav-link" data-scroll-target="#cálculo-de-métricas-de-evaluación-del-modelo">Cálculo de métricas de evaluación del modelo</a></li>
+  <li><a href="#logloss" id="toc-logloss" class="nav-link" data-scroll-target="#logloss">LogLoss</a></li>
+  <li><a href="#curvas-roc" id="toc-curvas-roc" class="nav-link" data-scroll-target="#curvas-roc">Curvas ROC</a>
+  <ul class="collapse">
+  <li><a href="#coeficiente-gini" id="toc-coeficiente-gini" class="nav-link" data-scroll-target="#coeficiente-gini">Coeficiente Gini</a></li>
+  <li><a href="#gráfica-de-la-curva-roc" id="toc-gráfica-de-la-curva-roc" class="nav-link" data-scroll-target="#gráfica-de-la-curva-roc">Gráfica de la curva ROC</a></li>
+  <li><a href="#punto-de-corte" id="toc-punto-de-corte" class="nav-link" data-scroll-target="#punto-de-corte">Punto de corte</a></li>
+  </ul></li>
+  <li><a href="#otros-enlaces" id="toc-otros-enlaces" class="nav-link" data-scroll-target="#otros-enlaces">Otros enlaces</a>
+  <ul class="collapse">
+  <li><a href="#probit" id="toc-probit" class="nav-link" data-scroll-target="#probit">probit</a></li>
+  <li><a href="#cloglog" id="toc-cloglog" class="nav-link" data-scroll-target="#cloglog">cloglog</a></li>
+  <li><a href="#cauchit" id="toc-cauchit" class="nav-link" data-scroll-target="#cauchit">cauchit</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#remuestreo" id="toc-remuestreo" class="nav-link" data-scroll-target="#remuestreo">Remuestreo</a>
+  <ul>
+  <li><a href="#qué-aprenderemos" id="toc-qué-aprenderemos" class="nav-link" data-scroll-target="#qué-aprenderemos">¿Qué aprenderemos?</a></li>
+  <li><a href="#eficiencia-de-un-método-de-aprendizaje" id="toc-eficiencia-de-un-método-de-aprendizaje" class="nav-link" data-scroll-target="#eficiencia-de-un-método-de-aprendizaje">Eficiencia de un método de aprendizaje</a></li>
+  <li><a href="#error-de-entrenamiento-vs-error-de-prueba" id="toc-error-de-entrenamiento-vs-error-de-prueba" class="nav-link" data-scroll-target="#error-de-entrenamiento-vs-error-de-prueba">Error de entrenamiento vs Error de prueba</a></li>
+  <li><a href="#funciones-de-pérdida" id="toc-funciones-de-pérdida" class="nav-link" data-scroll-target="#funciones-de-pérdida">Funciones de pérdida</a></li>
+  <li><a href="#el-reto" id="toc-el-reto" class="nav-link" data-scroll-target="#el-reto">El reto</a></li>
+  <li><a href="#situación-con-abundancia-de-datos" id="toc-situación-con-abundancia-de-datos" class="nav-link" data-scroll-target="#situación-con-abundancia-de-datos">Situación con abundancia de datos</a></li>
+  <li><a href="#validación-cruzada-cv" id="toc-validación-cruzada-cv" class="nav-link" data-scroll-target="#validación-cruzada-cv">Validación cruzada (CV)</a>
+  <ul class="collapse">
+  <li><a href="#enfoque-usando-un-conjunto-de-validación" id="toc-enfoque-usando-un-conjunto-de-validación" class="nav-link" data-scroll-target="#enfoque-usando-un-conjunto-de-validación">Enfoque usando un conjunto de validación</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Apuntes de clase</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="ejemplo-práctico" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico">Ejemplo práctico</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Fahrmeir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'Fahrmeir' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargamos una base de datos ya pre-procesada</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(credit)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># help(credit)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(credit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Y      Cuenta Mes             Ppag         Uso   DM   Sexo         Estc
+1 buen          no  18 pre buen pagador     privado 1049  mujer    vive solo
+2 buen          no   9 pre buen pagador profesional 2799 hombre no vive solo
+3 buen bad running  12 pre buen pagador profesional  841  mujer    vive solo
+4 buen          no  12 pre buen pagador profesional 2122 hombre no vive solo
+5 buen          no  12 pre buen pagador profesional 2171 hombre no vive solo
+6 buen          no  10 pre buen pagador profesional 2241 hombre no vive solo</code></pre>
+</div>
+</div>
+<section id="estimación" class="level3">
+<h3 class="anchored" data-anchor-id="estimación">Estimación</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>modelo_logistic <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> ., <span class="at">family =</span> binomial, <span class="at">data =</span> credit)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logistic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Y ~ ., family = binomial, data = credit)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.0572  -0.8050  -0.4581   0.9483   2.4655  
+
+Coefficients:
+                      Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -1.178e+00  2.693e-01  -4.374 1.22e-05 ***
+Cuentagood running  -1.952e+00  2.060e-01  -9.472  &lt; 2e-16 ***
+Cuentabad running   -6.346e-01  1.764e-01  -3.598 0.000321 ***
+Mes                  3.503e-02  7.849e-03   4.463 8.10e-06 ***
+Ppagpre mal pagador  9.884e-01  2.529e-01   3.907 9.33e-05 ***
+Usoprofesional       4.744e-01  1.605e-01   2.956 0.003112 ** 
+DM                   3.242e-05  3.335e-05   0.972 0.330893    
+Sexohombre          -2.235e-01  2.208e-01  -1.012 0.311453    
+Estcvive solo        3.854e-01  2.194e-01   1.757 0.078921 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1221.7  on 999  degrees of freedom
+Residual deviance: 1017.3  on 991  degrees of freedom
+AIC: 1035.3
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+<section id="cálculo-de-métricas-de-evaluación-del-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="cálculo-de-métricas-de-evaluación-del-modelo">Cálculo de métricas de evaluación del modelo</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probabilidades predichas</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>yprob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_logistic, <span class="at">type =</span> <span class="st">'response'</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores predichos</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(yprob <span class="sc">&gt;=</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(<span class="at">labels =</span> <span class="fu">levels</span>(credit<span class="sc">$</span>Y))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ypred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] buen buen buen buen buen buen
+Levels: buen mal</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusión</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> <span class="fu">table</span>(ypred, credit<span class="sc">$</span>Y)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      
+ypred  buen mal
+  buen  636 184
+  mal    64 116</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>testerr <span class="ot">&lt;-</span> <span class="fu">mean</span>(ypred <span class="sc">!=</span> credit<span class="sc">$</span>Y)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>testerr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.248</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusión, usando caret</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ypred, <span class="at">reference =</span> credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  636 184
+      mal    64 116
+                                         
+               Accuracy : 0.752          
+                 95% CI : (0.724, 0.7785)
+    No Information Rate : 0.7            
+    P-Value [Acc &gt; NIR] : 0.000151       
+                                         
+                  Kappa : 0.3333         
+                                         
+ Mcnemar's Test P-Value : 4.14e-14       
+                                         
+            Sensitivity : 0.3867         
+            Specificity : 0.9086         
+         Pos Pred Value : 0.6444         
+         Neg Pred Value : 0.7756         
+             Prevalence : 0.3000         
+         Detection Rate : 0.1160         
+   Detection Prevalence : 0.1800         
+      Balanced Accuracy : 0.6476         
+                                         
+       'Positive' Class : mal            
+                                         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ypred, <span class="at">reference =</span> credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Precision vs recall (incluye F1)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"prec_recall"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  636 184
+      mal    64 116
+                                         
+               Accuracy : 0.752          
+                 95% CI : (0.724, 0.7785)
+    No Information Rate : 0.7            
+    P-Value [Acc &gt; NIR] : 0.000151       
+                                         
+                  Kappa : 0.3333         
+                                         
+ Mcnemar's Test P-Value : 4.14e-14       
+                                         
+              Precision : 0.6444         
+                 Recall : 0.3867         
+                     F1 : 0.4833         
+             Prevalence : 0.3000         
+         Detection Rate : 0.1160         
+   Detection Prevalence : 0.1800         
+      Balanced Accuracy : 0.6476         
+                                         
+       'Positive' Class : mal            
+                                         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ypred, <span class="at">reference =</span> credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"everything"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  636 184
+      mal    64 116
+                                         
+               Accuracy : 0.752          
+                 95% CI : (0.724, 0.7785)
+    No Information Rate : 0.7            
+    P-Value [Acc &gt; NIR] : 0.000151       
+                                         
+                  Kappa : 0.3333         
+                                         
+ Mcnemar's Test P-Value : 4.14e-14       
+                                         
+            Sensitivity : 0.3867         
+            Specificity : 0.9086         
+         Pos Pred Value : 0.6444         
+         Neg Pred Value : 0.7756         
+              Precision : 0.6444         
+                 Recall : 0.3867         
+                     F1 : 0.4833         
+             Prevalence : 0.3000         
+         Detection Rate : 0.1160         
+   Detection Prevalence : 0.1800         
+      Balanced Accuracy : 0.6476         
+                                         
+       'Positive' Class : mal            
+                                         </code></pre>
+</div>
+</div>
+</section>
+<section id="logloss" class="level3">
+<h3 class="anchored" data-anchor-id="logloss">LogLoss</h3>
+<ul>
+<li><p>Hasta ahora, no aprovechamos que no predecimos solo clases, sino también probabilidad de pertenencia a una clase.<br>
+En ese sentido, no hemos empleado que una predicción de clase puede estar asociada a una predicción de probabilidad muy cercana a 1.</p></li>
+<li><p>Esta cantidad <strong>no es interpretable</strong>, pero se usa para comparar modelos de clasificación.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(<span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">LogLoss</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_pred =</span> yprob, <span class="at">y_true =</span> <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5086734</code></pre>
+</div>
+</div>
+</section>
+<section id="curvas-roc" class="level3">
+<h3 class="anchored" data-anchor-id="curvas-roc">Curvas ROC</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'pROC' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type 'citation("pROC")' for a citation.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'pROC'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    cov, smooth, var</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Area debajo de la curva ROC</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>analysis <span class="ot">&lt;-</span> <span class="fu">roc</span>(<span class="at">response =</span> credit<span class="sc">$</span>Y, <span class="at">predictor =</span> yprob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting levels: control = buen, case = mal</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting direction: controls &lt; cases</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>analysis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+roc.default(response = credit$Y, predictor = yprob)
+
+Data: yprob in 700 controls (credit$Y buen) &lt; 300 cases (credit$Y mal).
+Area under the curve: 0.7753</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">AUC</span>(<span class="at">y_pred =</span> yprob, <span class="at">y_true =</span> <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.775319</code></pre>
+</div>
+</div>
+<section id="coeficiente-gini" class="level4">
+<h4 class="anchored" data-anchor-id="coeficiente-gini">Coeficiente Gini</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>analysis<span class="sc">$</span>auc <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5506381</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">Gini</span>(<span class="at">y_pred =</span> yprob, <span class="at">y_true =</span> <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5506381</code></pre>
+</div>
+</div>
+</section>
+<section id="gráfica-de-la-curva-roc" class="level4">
+<h4 class="anchored" data-anchor-id="gráfica-de-la-curva-roc">Gráfica de la curva ROC</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span> <span class="sc">-</span> analysis<span class="sc">$</span>specificities, analysis<span class="sc">$</span>sensitivities,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Sensitividad"</span>, <span class="at">xlab =</span> <span class="st">"1 - Especificidad"</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Curva ROC para el modelo logistico"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-07_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="punto-de-corte" class="level4">
+<h4 class="anchored" data-anchor-id="punto-de-corte">Punto de corte</h4>
+<p>Para encontrar el <strong>mejor equilibrio posible</strong> entre <em>sensibilidad</em> y <em>especificidad</em> (en caso nos interese balancearlos), usamos el criterio del <strong>índice J de Youden</strong>: <span class="math inline">\(J = \text{ sensitivity } + \text{ specificity } - 1\)</span> .</p>
+<p>Se puede usar otro criterio, como encontrar el punto más en la curva ROC más cercano, respecto a distancia euclideana, al punto (1, 0), pues tal vértice representa 100% sensibilidad y 100% especificidad.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  analysis<span class="sc">$</span>thresholds,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  analysis<span class="sc">$</span>sensitivities <span class="sc">+</span> analysis<span class="sc">$</span>specificities <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]        [,2]
+[1,]       -Inf 0.000000000
+[2,] 0.04054953 0.001428571
+[3,] 0.04142278 0.002857143
+[4,] 0.04262476 0.004285714
+[5,] 0.04298069 0.005714286
+[6,] 0.04305416 0.007142857</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>opt_t <span class="ot">&lt;-</span> <span class="fu">subset</span>(e, e[,<span class="dv">2</span>] <span class="sc">==</span> <span class="fu">max</span>(e[,<span class="dv">2</span>]))[,<span class="dv">1</span>]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>opt_t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2842726</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>ypred2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(yprob <span class="sc">&gt;=</span> opt_t ), <span class="at">labels =</span> <span class="fu">levels</span>(credit<span class="sc">$</span>Y)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(ypred2, credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  463  67
+      mal   237 233
+                                          
+               Accuracy : 0.696           
+                 95% CI : (0.6664, 0.7244)
+    No Information Rate : 0.7             
+    P-Value [Acc &gt; NIR] : 0.6235          
+                                          
+                  Kappa : 0.377           
+                                          
+ Mcnemar's Test P-Value : &lt;2e-16          
+                                          
+            Sensitivity : 0.7767          
+            Specificity : 0.6614          
+         Pos Pred Value : 0.4957          
+         Neg Pred Value : 0.8736          
+             Prevalence : 0.3000          
+         Detection Rate : 0.2330          
+   Detection Prevalence : 0.4700          
+      Balanced Accuracy : 0.7190          
+                                          
+       'Positive' Class : mal             
+                                          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Otra forma</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coords</span>(analysis , <span class="st">"b"</span>, <span class="at">ret =</span> <span class="st">"t"</span>, <span class="at">best.method =</span> <span class="st">"youden"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  threshold
+1 0.2842726</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="otros-enlaces" class="level3">
+<h3 class="anchored" data-anchor-id="otros-enlaces">Otros enlaces</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fmla <span class="ot">&lt;-</span> Y <span class="sc">~</span> Cuenta <span class="sc">+</span> Mes <span class="sc">+</span> Ppag <span class="sc">+</span> Uso <span class="sc">+</span> Estc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="probit" class="level4">
+<h4 class="anchored" data-anchor-id="probit">probit</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>modelo_probit <span class="ot">&lt;-</span> <span class="fu">glm</span>(fmla, <span class="at">data =</span> credit, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> probit)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_probit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = fmla, family = binomial(link = probit), data = credit)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.9938  -0.8084  -0.4554   0.9565   2.5057  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -0.791777   0.124560  -6.357 2.06e-10 ***
+Cuentagood running  -1.126848   0.115658  -9.743  &lt; 2e-16 ***
+Cuentabad running   -0.379371   0.106709  -3.555 0.000378 ***
+Mes                  0.022802   0.003696   6.169 6.88e-10 ***
+Ppagpre mal pagador  0.584158   0.151081   3.867 0.000110 ***
+Usoprofesional       0.276439   0.094022   2.940 0.003281 ** 
+Estcvive solo        0.309828   0.093472   3.315 0.000918 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1221.7  on 999  degrees of freedom
+Residual deviance: 1019.7  on 993  degrees of freedom
+AIC: 1033.7
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>yprob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_probit, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.numeric</span>(yprob <span class="sc">&gt;=</span> <span class="fl">0.5</span> ), <span class="at">labels =</span> <span class="fu">levels</span>(credit<span class="sc">$</span>Y))</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(ypred, credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  641 182
+      mal    59 118
+                                          
+               Accuracy : 0.759           
+                 95% CI : (0.7313, 0.7852)
+    No Information Rate : 0.7             
+    P-Value [Acc &gt; NIR] : 1.921e-05       
+                                          
+                  Kappa : 0.3501          
+                                          
+ Mcnemar's Test P-Value : 3.881e-15       
+                                          
+            Sensitivity : 0.3933          
+            Specificity : 0.9157          
+         Pos Pred Value : 0.6667          
+         Neg Pred Value : 0.7789          
+             Prevalence : 0.3000          
+         Detection Rate : 0.1180          
+   Detection Prevalence : 0.1770          
+      Balanced Accuracy : 0.6545          
+                                          
+       'Positive' Class : mal             
+                                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">LogLoss</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y ) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5098517</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">AUC</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7718333</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">Gini</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5384095</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">KS_Stat</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 42.66667</code></pre>
+</div>
+</div>
+</section>
+<section id="cloglog" class="level4">
+<h4 class="anchored" data-anchor-id="cloglog">cloglog</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cloglog</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>modelo_cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(fmla, <span class="at">data =</span> credit,  </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> cloglog)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_cloglog)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = fmla, family = binomial(link = cloglog), data = credit)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.1526  -0.8058  -0.4693   0.9521   2.3490  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -1.345386   0.158400  -8.494  &lt; 2e-16 ***
+Cuentagood running  -1.635383   0.172965  -9.455  &lt; 2e-16 ***
+Cuentabad running   -0.509948   0.130723  -3.901 9.58e-05 ***
+Mes                  0.028268   0.004526   6.246 4.21e-10 ***
+Ppagpre mal pagador  0.616605   0.166996   3.692 0.000222 ***
+Usoprofesional       0.330992   0.121958   2.714 0.006648 ** 
+Estcvive solo        0.391084   0.121486   3.219 0.001286 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1221.7  on 999  degrees of freedom
+Residual deviance: 1022.3  on 993  degrees of freedom
+AIC: 1036.3
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>yprob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_cloglog, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.numeric</span>(yprob <span class="sc">&gt;=</span> <span class="fl">0.5</span> ), <span class="at">labels =</span> <span class="fu">levels</span>(credit<span class="sc">$</span>Y))</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(ypred, credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  641 185
+      mal    59 115
+                                          
+               Accuracy : 0.756           
+                 95% CI : (0.7281, 0.7823)
+    No Information Rate : 0.7             
+    P-Value [Acc &gt; NIR] : 4.795e-05       
+                                          
+                  Kappa : 0.3398          
+                                          
+ Mcnemar's Test P-Value : 1.221e-15       
+                                          
+            Sensitivity : 0.3833          
+            Specificity : 0.9157          
+         Pos Pred Value : 0.6609          
+         Neg Pred Value : 0.7760          
+             Prevalence : 0.3000          
+         Detection Rate : 0.1150          
+   Detection Prevalence : 0.1740          
+      Balanced Accuracy : 0.6495          
+                                          
+       'Positive' Class : mal             
+                                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">LogLoss</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y ) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5111412</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">AUC</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7708857</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">Gini</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5365143</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">KS_Stat</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 41.47619</code></pre>
+</div>
+</div>
+</section>
+<section id="cauchit" class="level4">
+<h4 class="anchored" data-anchor-id="cauchit">cauchit</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>modelo_cauchit <span class="ot">&lt;-</span> <span class="fu">glm</span>(fmla, <span class="at">data =</span> credit,</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> cauchit)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_cauchit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = fmla, family = binomial(link = cauchit), data = credit)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.0058  -0.7719  -0.4911   0.8748   2.1980  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -1.463846   0.242897  -6.027 1.67e-09 ***
+Cuentagood running  -2.389430   0.351330  -6.801 1.04e-11 ***
+Cuentabad running   -0.547335   0.171681  -3.188 0.001432 ** 
+Mes                  0.042563   0.007369   5.776 7.64e-09 ***
+Ppagpre mal pagador  1.119789   0.276162   4.055 5.02e-05 ***
+Usoprofesional       0.512370   0.171564   2.986 0.002822 ** 
+Estcvive solo        0.573785   0.171457   3.347 0.000818 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1221.7  on 999  degrees of freedom
+Residual deviance: 1020.7  on 993  degrees of freedom
+AIC: 1034.7
+
+Number of Fisher Scoring iterations: 7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>yprob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_cauchit, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.numeric</span>(yprob <span class="sc">&gt;=</span> <span class="fl">0.5</span> ), <span class="at">labels =</span> <span class="fu">levels</span>(credit<span class="sc">$</span>Y))</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(ypred, credit<span class="sc">$</span>Y, <span class="at">positive =</span> <span class="st">"mal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction buen mal
+      buen  630 167
+      mal    70 133
+                                          
+               Accuracy : 0.763           
+                 95% CI : (0.7354, 0.7891)
+    No Information Rate : 0.7             
+    P-Value [Acc &gt; NIR] : 5.274e-06       
+                                          
+                  Kappa : 0.3783          
+                                          
+ Mcnemar's Test P-Value : 4.493e-10       
+                                          
+            Sensitivity : 0.4433          
+            Specificity : 0.9000          
+         Pos Pred Value : 0.6552          
+         Neg Pred Value : 0.7905          
+             Prevalence : 0.3000          
+         Detection Rate : 0.1330          
+   Detection Prevalence : 0.2030          
+      Balanced Accuracy : 0.6717          
+                                          
+       'Positive' Class : mal             
+                                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">LogLoss</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y ) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5103524</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">AUC</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7720143</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">Gini</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5387714</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>MLmetrics<span class="sc">::</span><span class="fu">KS_Stat</span>(yprob, <span class="fu">as.numeric</span>(credit<span class="sc">$</span>Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 40.85714</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="remuestreo" class="level2">
+<h2 class="anchored" data-anchor-id="remuestreo">Remuestreo</h2>
+<section id="qué-aprenderemos" class="level3">
+<h3 class="anchored" data-anchor-id="qué-aprenderemos">¿Qué aprenderemos?</h3>
+<ul>
+<li>¿Cómo se evalúa y selecciona un modelo predictivo?</li>
+<li>Solución ideal en una situación de abundancia de datos.</li>
+<li><strong>Validación cruzada (CV)</strong>:
+<ul>
+<li>Conjunto de validación</li>
+<li><em>LOOCV</em></li>
+<li><em>k-fold CV</em></li>
+</ul></li>
+<li><strong>Bootstrapping</strong></li>
+</ul>
+</section>
+<section id="eficiencia-de-un-método-de-aprendizaje" class="level3">
+<h3 class="anchored" data-anchor-id="eficiencia-de-un-método-de-aprendizaje">Eficiencia de un método de aprendizaje</h3>
+<ul>
+<li><p>Modelo <em>bueno</em> cuando se puede <strong>generalizar</strong>.</p></li>
+<li><p>Queremos un método de aprendizaje que funcione bien con datos nuevos (<strong>error de prueba bajo</strong>).</p></li>
+<li><p>Cada modelo tiene una métrica <em>poblacional</em> (accuracy, especificidad, etc), que no depende de los datos de entrenamiento ni test.</p></li>
+<li><p>Esto es importante para:</p>
+<ul>
+<li><strong>Selección de modelos</strong>: Estimar el <em>rendimiento predictivo</em> de diferentes modelos para elegir el <em>mejor</em>.</li>
+<li><strong>Evaluación de modelos</strong>: Estimar su rendimiento (error de predicción) del modelo final sobre un nuevo conjunto de datos.</li>
+</ul></li>
+</ul>
+</section>
+<section id="error-de-entrenamiento-vs-error-de-prueba" class="level3">
+<h3 class="anchored" data-anchor-id="error-de-entrenamiento-vs-error-de-prueba">Error de entrenamiento vs Error de prueba</h3>
+<ul>
+<li>El error de prueba puede <strong>subestimar drásticamente</strong> el error de prueba.</li>
+</ul>
+</section>
+<section id="funciones-de-pérdida" class="level3">
+<h3 class="anchored" data-anchor-id="funciones-de-pérdida">Funciones de pérdida</h3>
+<p>Se suele usar <strong>MSE</strong> (error cuadrático medio) y el <strong>ratio de mala clasificación</strong>.</p>
+</section>
+<section id="el-reto" class="level3">
+<h3 class="anchored" data-anchor-id="el-reto">El reto</h3>
+<p>En los ejemplos anteriores, <strong>sabíamos la verdad</strong>, por lo que pudimos evaluar el error de entrenamiento y prueba.</p>
+<p>En la realidad, tal <strong>no suele ser el caso</strong>.</p>
+</section>
+<section id="situación-con-abundancia-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="situación-con-abundancia-de-datos">Situación con abundancia de datos</h3>
+<ul>
+<li><p>Es una situación <em>ideal</em>, usualmente no realista.</p></li>
+<li><p>Consiste en que se cuenta con una muestra <em>tan representativa</em> de la población, que, al dividirla en <strong>tres partes</strong>, cada una de ellas es también <em>representativa de la población</em>.</p></li>
+<li><p>Partición:</p>
+<ul>
+<li><strong>Conjunto de entrenamiento</strong> (training set): Para <strong>ajustar (estimar) el modelo</strong> .</li>
+<li><strong>Conjunto de validación</strong> (validation set): Para <strong>seleccionar el mejor modelo</strong> .</li>
+<li><strong>Conjunto de evaluación o prueba</strong> (test set): Para <strong>evaluar</strong> qué tan bien el <strong>modelo</strong> se ajusta un conjunto nuevo e <strong>independiente</strong> de datos.</li>
+</ul></li>
+<li><p>Como esta situación no suele ocurrir, se hace <em>uso eficiente de la muestra</em> aplicando técnicas de <strong>remuestro de datos</strong>.</p></li>
+<li><p>Una <strong>estrategia alternativa</strong> para <strong>seleccionar el modelo</strong>* es usando <strong>métodos de penalización</strong> por complejidad, como Lasso.o AIC.</p></li>
+</ul>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 </strong></span>Tras realizar el ajuste de modelo, selección de un único modelo y evaluación de aquel modelo; el modelo se vuelve a estimar usando ahora aquellos <strong>tres conjuntos de datos juntos</strong>, modelo que sería el que se aplica en producción.</p>
+</div>
+</section>
+<section id="validación-cruzada-cv" class="level3">
+<h3 class="anchored" data-anchor-id="validación-cruzada-cv">Validación cruzada (CV)</h3>
+<ul>
+<li><p>Situación de <strong>selección</strong> de modelos, no evaluación.</p></li>
+<li><p>No es necesariamente un muestro simple, puede ser <em>muestreo estratificado</em>, entre otros.</p></li>
+<li><p>Algunas técnicas:</p>
+<ul>
+<li><strong>LOOOCV</strong>: Validación cruzada dejando uno afuera.</li>
+<li><strong>K-fold Cross Validation</strong>: Validación cruzada con <span class="math inline">\(K\)</span> iteraciones; usualmente en 5 o 10 grupos.</li>
+</ul></li>
+</ul>
+<section id="enfoque-usando-un-conjunto-de-validación" class="level4">
+<h4 class="anchored" data-anchor-id="enfoque-usando-un-conjunto-de-validación">Enfoque usando un conjunto de validación</h4>
+<ul>
+<li>Suponga que cuenta con un conjunto de datos; y, <strong>a parte</strong>, un conjunto de evaluación.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../apuntes/clase-06.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../apuntes/clase-08.html" class="pagination-link">
+        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -147,20 +147,20 @@ tienen **clases desbalanceadas**.
 Además, *clases desbalanceadas* **no es un problema de los datos**.
 
 - Predicción
-    1. $\hat{p}_i = \dfrac{1}{1 + e^{-\eta_i}}$ 
-    = $\dfrac{1}{1 + e^{-\left( \hat{\beta}_0 + \hat{\beta}_ 1 x_{1i} + \dots + \hat{\beta}_p x_{pi}\right)}}$ 
-    1. 
-    $$
-    \begin{equation}
-      \hat{Y}_i =
-      \begin{cases*}
-        1 & si $\hat{p}_i \geq c$ \\
-        0 & si $\hat{p}_i < c$
-      \end{cases*}
-    \end{equation}
-    $$
-    donde $c$ se denomina punto de corte (umbral).  
-    Usualmente se utiliza $c = 0.50$ .
+  1. $\hat{p}_i = \dfrac{1}{1 + e^{-\eta_i}}$ 
+  = $\dfrac{1}{1 + e^{-\left( \hat{\beta}_0 + \hat{\beta}_ 1 x_{1i} + \dots + \hat{\beta}_p x_{pi}\right)}}$ 
+  1. 
+  $$
+  \begin{equation}
+    \hat{Y}_i =
+    \begin{cases*}
+      1 & si $\hat{p}_i \geq c$ \\
+      0 & si $\hat{p}_i < c$
+    \end{cases*}
+  \end{equation}
+  $$
+  donde $c$ se denomina punto de corte (umbral).  
+  Usualmente se utiliza $c = 0.50$ .
 
 ::: {#thm-}
 

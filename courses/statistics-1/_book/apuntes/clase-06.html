@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Learning 1 - Apuntes de clase</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-07.html" rel="next">
+<link href="../apuntes/clase-05.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-06.html">Semana 6</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-06.html">Apuntes de clase</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Learning 1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sílabo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Semana 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Semana 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Semana 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Semana 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Semana 5</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de Contenidos</h2>
+   
+  <ul>
+  <li><a href="#ejemplo-práctico-knn" id="toc-ejemplo-práctico-knn" class="nav-link active" data-scroll-target="#ejemplo-práctico-knn">Ejemplo práctico: KNN</a>
+  <ul>
+  <li><a href="#sin-usar-predictores-categóricos" id="toc-sin-usar-predictores-categóricos" class="nav-link" data-scroll-target="#sin-usar-predictores-categóricos">Sin usar predictores categóricos</a></li>
+  <li><a href="#usando-predictores-categóricos" id="toc-usando-predictores-categóricos" class="nav-link" data-scroll-target="#usando-predictores-categóricos">Usando predictores categóricos</a></li>
+  <li><a href="#normalización-min-max" id="toc-normalización-min-max" class="nav-link" data-scroll-target="#normalización-min-max">Normalización Min-Max</a></li>
+  <li><a href="#normalización-softmax" id="toc-normalización-softmax" class="nav-link" data-scroll-target="#normalización-softmax">Normalización SoftMax</a></li>
+  </ul></li>
+  <li><a href="#clasificación-medidas-de-evaluación" id="toc-clasificación-medidas-de-evaluación" class="nav-link" data-scroll-target="#clasificación-medidas-de-evaluación">Clasificación: Medidas de Evaluación</a>
+  <ul>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
+  <li><a href="#evaluación-de-las-clases-predichas" id="toc-evaluación-de-las-clases-predichas" class="nav-link" data-scroll-target="#evaluación-de-las-clases-predichas">Evaluación de las clases predichas</a>
+  <ul class="collapse">
+  <li><a href="#coeficiente-kappa-de-cohen" id="toc-coeficiente-kappa-de-cohen" class="nav-link" data-scroll-target="#coeficiente-kappa-de-cohen">Coeficiente Kappa de Cohen</a></li>
+  <li><a href="#clasificación-binaria" id="toc-clasificación-binaria" class="nav-link" data-scroll-target="#clasificación-binaria">Clasificación Binaria</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#equilibrio-entre-sensibilidad-y-especificdad" id="toc-equilibrio-entre-sensibilidad-y-especificdad" class="nav-link" data-scroll-target="#equilibrio-entre-sensibilidad-y-especificdad">Equilibrio entre sensibilidad y especificdad</a>
+  <ul>
+  <li><a href="#curva-roc" id="toc-curva-roc" class="nav-link" data-scroll-target="#curva-roc">Curva ROC</a></li>
+  </ul></li>
+  <li><a href="#selección-de-medidas" id="toc-selección-de-medidas" class="nav-link" data-scroll-target="#selección-de-medidas">Selección de Medidas</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Apuntes de clase</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="ejemplo-práctico-knn" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-knn">Ejemplo práctico: KNN</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'class' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>admision <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../datos/binary.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>admision<span class="sc">$</span>rank <span class="ot">&lt;-</span> <span class="fu">factor</span>(admision<span class="sc">$</span>rank)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>admision<span class="sc">$</span>admit <span class="ot">&lt;-</span> <span class="fu">factor</span>(admision<span class="sc">$</span>admit)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(admision)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  admit gre  gpa rank
+1     0 380 3.61    3
+2     1 660 3.67    3
+3     1 800 4.00    1
+4     1 640 3.19    4
+5     0 520 2.93    4
+6     1 760 3.00    2</code></pre>
+</div>
+</div>
+<section id="sin-usar-predictores-categóricos" class="level3">
+<h3 class="anchored" data-anchor-id="sin-usar-predictores-categóricos">Sin usar predictores categóricos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>k_11_a <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">test =</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> admision[,<span class="dv">1</span>], <span class="at">k =</span> <span class="dv">11</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_11_a, admision[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 258  97
+         1  15  30
+                                          
+               Accuracy : 0.72            
+                 95% CI : (0.6732, 0.7635)
+    No Information Rate : 0.6825          
+    P-Value [Acc &gt; NIR] : 0.05849         
+                                          
+                  Kappa : 0.2191          
+                                          
+ Mcnemar's Test P-Value : 1.952e-14       
+                                          
+            Sensitivity : 0.9451          
+            Specificity : 0.2362          
+         Pos Pred Value : 0.7268          
+         Neg Pred Value : 0.6667          
+             Prevalence : 0.6825          
+         Detection Rate : 0.6450          
+   Detection Prevalence : 0.8875          
+      Balanced Accuracy : 0.5906          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k_11_b <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">test =</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>],</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> admision[,<span class="dv">1</span>], <span class="at">k =</span> <span class="dv">11</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_11_b, admision[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 257  87
+         1  16  40
+                                          
+               Accuracy : 0.7425          
+                 95% CI : (0.6967, 0.7847)
+    No Information Rate : 0.6825          
+    P-Value [Acc &gt; NIR] : 0.005172        
+                                          
+                  Kappa : 0.3014          
+                                          
+ Mcnemar's Test P-Value : 5.3e-12         
+                                          
+            Sensitivity : 0.9414          
+            Specificity : 0.3150          
+         Pos Pred Value : 0.7471          
+         Neg Pred Value : 0.7143          
+             Prevalence : 0.6825          
+         Detection Rate : 0.6425          
+   Detection Prevalence : 0.8600          
+      Balanced Accuracy : 0.6282          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="usando-predictores-categóricos" class="level3">
+<h3 class="anchored" data-anchor-id="usando-predictores-categóricos">Usando predictores categóricos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binarizar variables, sin remover</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ninguna de las columnas binarizadas.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rank_d <span class="ot">&lt;-</span> fastDummies<span class="sc">::</span><span class="fu">dummy_cols</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  admision, <span class="at">select_columns =</span> <span class="st">"rank"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#rank_e &lt;-model.matrix( ~ rank-1, data=admision)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>admision_d <span class="ot">&lt;-</span> <span class="fu">cbind</span>(admision[,<span class="sc">-</span><span class="dv">4</span>], rank_d)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>k_11_c <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> admision_d[,<span class="sc">-</span><span class="dv">1</span>], <span class="at">test =</span> admision_d[,<span class="sc">-</span><span class="dv">1</span>],</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> admision[,<span class="dv">1</span>], <span class="at">k =</span> <span class="dv">11</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_11_c,admision[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 266  67
+         1   7  60
+                                          
+               Accuracy : 0.815           
+                 95% CI : (0.7734, 0.8519)
+    No Information Rate : 0.6825          
+    P-Value [Acc &gt; NIR] : 1.706e-09       
+                                          
+                  Kappa : 0.5114          
+                                          
+ Mcnemar's Test P-Value : 6.953e-12       
+                                          
+            Sensitivity : 0.9744          
+            Specificity : 0.4724          
+         Pos Pred Value : 0.7988          
+         Neg Pred Value : 0.8955          
+             Prevalence : 0.6825          
+         Detection Rate : 0.6650          
+   Detection Prevalence : 0.8325          
+      Balanced Accuracy : 0.7234          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="normalización-min-max" class="level3">
+<h3 class="anchored" data-anchor-id="normalización-min-max">Normalización Min-Max</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>admision_mm <span class="ot">&lt;-</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>admision_mm<span class="sc">$</span>gre <span class="ot">&lt;-</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  (admision_mm<span class="sc">$</span>gre <span class="sc">-</span> <span class="fu">min</span>(admision_mm<span class="sc">$</span>gre)) <span class="sc">/</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">max</span>(admision_mm<span class="sc">$</span>gre) <span class="sc">-</span> <span class="fu">min</span>(admision_mm<span class="sc">$</span>gre)) <span class="sc">*</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  (b <span class="sc">-</span> a) <span class="sc">+</span> a</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>admision_mm<span class="sc">$</span>gpa <span class="ot">&lt;-</span> </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  (admision_mm<span class="sc">$</span>gpa <span class="sc">-</span> <span class="fu">min</span>(admision_mm<span class="sc">$</span>gpa)) <span class="sc">/</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">max</span>(admision_mm<span class="sc">$</span>gpa) <span class="sc">-</span> <span class="fu">min</span>(admision_mm<span class="sc">$</span>gpa)) <span class="sc">*</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  (b <span class="sc">-</span> a) <span class="sc">+</span> a</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>admision_mm <span class="ot">&lt;-</span> <span class="fu">cbind</span>(admision_mm, rank_d)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(admision_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      gre              gpa         admit        gre             gpa       
+ Min.   :0.0000   Min.   :0.0000   0:273   Min.   :220.0   Min.   :2.260  
+ 1st Qu.:0.5172   1st Qu.:0.5000   1:127   1st Qu.:520.0   1st Qu.:3.130  
+ Median :0.6207   Median :0.6523           Median :580.0   Median :3.395  
+ Mean   :0.6340   Mean   :0.6494           Mean   :587.7   Mean   :3.390  
+ 3rd Qu.:0.7586   3rd Qu.:0.8103           3rd Qu.:660.0   3rd Qu.:3.670  
+ Max.   :1.0000   Max.   :1.0000           Max.   :800.0   Max.   :4.000  
+ rank        rank_1           rank_2           rank_3           rank_4      
+ 1: 61   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 2:151   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ 3:121   Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+ 4: 67   Mean   :0.1525   Mean   :0.3775   Mean   :0.3025   Mean   :0.1675  
+         3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000  
+         Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>k_11_mm <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> admision_mm, <span class="at">test =</span> admision_mm,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> admision[,<span class="dv">1</span>], <span class="at">k =</span> <span class="dv">11</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_11_mm, admision[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 266  67
+         1   7  60
+                                          
+               Accuracy : 0.815           
+                 95% CI : (0.7734, 0.8519)
+    No Information Rate : 0.6825          
+    P-Value [Acc &gt; NIR] : 1.706e-09       
+                                          
+                  Kappa : 0.5114          
+                                          
+ Mcnemar's Test P-Value : 6.953e-12       
+                                          
+            Sensitivity : 0.9744          
+            Specificity : 0.4724          
+         Pos Pred Value : 0.7988          
+         Neg Pred Value : 0.8955          
+             Prevalence : 0.6825          
+         Detection Rate : 0.6650          
+   Detection Prevalence : 0.8325          
+      Balanced Accuracy : 0.7234          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="normalización-softmax" class="level3">
+<h3 class="anchored" data-anchor-id="normalización-softmax">Normalización SoftMax</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>admision_sm <span class="ot">&lt;-</span> admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>admision_sm <span class="ot">&lt;-</span> DMwR2<span class="sc">::</span><span class="fu">SoftMax</span>(admision[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">lambda =</span> <span class="dv">2</span><span class="sc">*</span>pi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>admision_sm <span class="ot">&lt;-</span> <span class="fu">cbind</span>(admision_sm, rank_d)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(admision_sm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      gre               gpa          admit        gre             gpa       
+ Min.   :0.03981   Min.   :0.04885   0:273   Min.   :220.0   Min.   :2.260  
+ 1st Qu.:0.35754   1st Qu.:0.33561   1:127   1st Qu.:520.0   1st Qu.:3.130  
+ Median :0.48334   Median :0.50335           Median :580.0   Median :3.395  
+ Mean   :0.50137   Mean   :0.50218           Mean   :587.7   Mean   :3.390  
+ 3rd Qu.:0.65156   3rd Qu.:0.67612           3rd Qu.:660.0   3rd Qu.:3.670  
+ Max.   :0.86269   Max.   :0.83246           Max.   :800.0   Max.   :4.000  
+ rank        rank_1           rank_2           rank_3           rank_4      
+ 1: 61   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 2:151   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ 3:121   Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+ 4: 67   Mean   :0.1525   Mean   :0.3775   Mean   :0.3025   Mean   :0.1675  
+         3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000  
+         Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>k_11_sm <span class="ot">&lt;-</span> <span class="fu">knn</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">train =</span> admision_sm, <span class="at">test =</span> admision_sm,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cl =</span> admision[,<span class="dv">1</span>], <span class="at">k =</span> <span class="dv">11</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(k_11_sm,admision[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 266  67
+         1   7  60
+                                          
+               Accuracy : 0.815           
+                 95% CI : (0.7734, 0.8519)
+    No Information Rate : 0.6825          
+    P-Value [Acc &gt; NIR] : 1.706e-09       
+                                          
+                  Kappa : 0.5114          
+                                          
+ Mcnemar's Test P-Value : 6.953e-12       
+                                          
+            Sensitivity : 0.9744          
+            Specificity : 0.4724          
+         Pos Pred Value : 0.7988          
+         Neg Pred Value : 0.8955          
+             Prevalence : 0.6825          
+         Detection Rate : 0.6650          
+   Detection Prevalence : 0.8325          
+      Balanced Accuracy : 0.7234          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="clasificación-medidas-de-evaluación" class="level2">
+<h2 class="anchored" data-anchor-id="clasificación-medidas-de-evaluación">Clasificación: Medidas de Evaluación</h2>
+<section id="predicción" class="level3">
+<h3 class="anchored" data-anchor-id="predicción">Predicción</h3>
+<ul>
+<li><p>Los modelos de clasificación generan dos tipos de predicciones:</p>
+<ul>
+<li>Continuas: <strong>Probabilidad</strong> de pertenencia a una clase.</li>
+<li>Categóricas: <strong>Clase</strong> predicha.</li>
+</ul></li>
+<li><p>KNN provee ambos tipos de predicciones; mientras que Regresión Logística solo provee la probabilidad de pertenencia a una clase.</p></li>
+<li><p>Las <strong>probabilidades de pertenencia</strong> a una clase pueden servir incluso como input para modelos.</p></li>
+</ul>
+</section>
+<section id="evaluación-de-las-clases-predichas" class="level3">
+<h3 class="anchored" data-anchor-id="evaluación-de-las-clases-predichas">Evaluación de las clases predichas</h3>
+<ul>
+<li>Un método común para tal evaluación es la <strong>matriz de confusión</strong>.</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Predichos</th>
+<th style="text-align: center;">Eventos Observados</th>
+<th style="text-align: center;">No Eventos Observados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Eventos</td>
+<td style="text-align: center;"><strong>True Positive</strong></td>
+<td style="text-align: center;"><strong>False Positive</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">No Eventos</td>
+<td style="text-align: center;"><strong>False Negative</strong></td>
+<td style="text-align: center;"><strong>True Negative</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Métrica más simple:</p>
+<ul>
+<li><strong>Ratio de la exactitud total</strong> (accuracy) <span class="math inline">\(\quad acc(d) = \dfrac{TP + TN}{P + N}\)</span></li>
+<li><strong>Ratio de error</strong>: <span class="math inline">\(\quad 1 - acc(d)\)</span></li>
+</ul></li>
+<li><p>Desventajas de este par de métricas:</p>
+<ul>
+<li><strong>No realiza distinciones entre el tipo de error cometido</strong>.<br>
+Por ejemplo, en filtros de spam, el costo de borrar un e-mail importante es mucho mayor que los costos de permitir un e-mail spam pase el filtro.</li>
+<li>Es importante considerar la frecuencia total de cada clase.<br>
+<strong>Cuando se tienen clases muy desbalanceadas, el accuracy no debería</strong> <strong>ser la métrica principal para evaluar el modelo de clasificación</strong>.</li>
+</ul></li>
+<li><p>Para regresión logística binaria, el <em>accuracy</em> se maximiza cuando el punto de corte <span class="math inline">\(c\)</span> (para asignar clase en base a probabilidad estimada) vale 0.5.</p></li>
+<li><p><strong>Ratio no informativo</strong>: Ratio de exactitud que se podría alcanzar sin usar un modelo. Por ejemplo, <span class="math inline">\(50\%\)</span> en caso de tirar una moneda justa.</p></li>
+<li><p>Este último ratio se puede definir de varias formas:</p>
+<ul>
+<li>Para un conjunto de datos con <span class="math inline">\(C\)</span> clases, se puede considerar <span class="math inline">\(1/C\)</span>.</li>
+<li>Puede usarse el porcentaje de la clase de mayor frecuencia, en el conjunto de entrenamiento.</li>
+<li>Sobre el efecto severo de clases no balanceadas y posibles medidas remediales, ver Kuhn y Johnson (2013).</li>
+</ul></li>
+<li><p>No necesariamente clases desbalanceadas implica dificultad de predicción. Por ejemplo, si la clase representa alguna condición extremadamente poco común (<em>que una persona sea intersex</em>, o algo así). &nbsp; En ese contexto, (clases poco comunes pero fáciles de predecir) <strong>no se consideran</strong> los datos como desbalanceados.</p></li>
+</ul>
+<section id="coeficiente-kappa-de-cohen" class="level4">
+<h4 class="anchored" data-anchor-id="coeficiente-kappa-de-cohen">Coeficiente Kappa de Cohen</h4>
+<ul>
+<li><p>El coeficiente Kappa fue diseñado para <strong>evaluar la concordancia entre dos evaluadores/jueces</strong>.</p></li>
+<li><p>Kappa toma en cuenta la precisión que sería generada por causas aleatorias: <span class="math inline">\(Kappa = \dfrac{O - E}{1 - E}\)</span>, donde <span class="math inline">\(O\)</span> es la <strong>precisión observada</strong>, y, <span class="math inline">\(E\)</span>, la <strong>precisión esperada</strong>.</p></li>
+<li><p><span class="math inline">\(O\)</span> es <span class="math inline">\(acc(.)\)</span> del modelo usado.</p></li>
+<li><p>Kappa está entre <span class="math inline">\(-1\)</span> y <span class="math inline">\(1\)</span>.</p>
+<ul>
+<li><span class="math inline">\(Kappa \leq 0\)</span> implica baja concordancia, pudiendo ser generada por haber definido erróneamente algunas categorías.</li>
+<li><span class="math inline">\(Kappa \approx 0\)</span> implica <strong>no hay concordancia</strong> entre las clases observadas y las pronisticadas..</li>
+<li><span class="math inline">\(Kappa \approx 1\)</span> implica <strong>perfecta concordancia</strong> entre las clases observadas y las pronisticadas.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../media/cohen-kappa.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Interpretation of Cohen’s Kappa</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Ejemplo para una matriz de confusión que vimos en un modelo de hoy:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">c</span>(<span class="dv">256</span>, <span class="dv">84</span>, <span class="dv">17</span>, <span class="dv">43</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>mc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]  256   84
+[2,]   17   43</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="fu">sum</span>(mc[<span class="dv">1</span>, ])</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">sum</span>(mc[<span class="dv">2</span>, ])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>O <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">diag</span>(mc)) <span class="sc">/</span> (P <span class="sc">+</span> N)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>O</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7475</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>prop_P <span class="ot">&lt;-</span> P <span class="sc">/</span> (P <span class="sc">+</span> N)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>prop_N <span class="ot">&lt;-</span> N <span class="sc">/</span> (P <span class="sc">+</span> N)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>E <span class="ot">&lt;-</span> (<span class="fu">sum</span>(mc[,<span class="dv">1</span>])<span class="sc">*</span>prop_P <span class="sc">+</span> <span class="fu">sum</span>(mc[,<span class="dv">2</span>])<span class="sc">*</span>prop_N) <span class="sc">/</span> (P <span class="sc">+</span> N)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>E</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.62775</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>kappa <span class="ot">&lt;-</span> (O <span class="sc">-</span> E) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> E)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>kappa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3216924</code></pre>
+</div>
+</div>
+</section>
+<section id="clasificación-binaria" class="level4">
+<h4 class="anchored" data-anchor-id="clasificación-binaria">Clasificación Binaria</h4>
+<ul>
+<li><p>La <strong>sensitivity/sensibilidad/recall</strong> de un modelo es el ratio en que el evento de interés es <strong>predicho correctamente</strong>, para todas las muestras que contienen el evento:</p>
+<ul>
+<li>Es el <strong>ratio de verdaderos positivos</strong>.</li>
+<li><span class="math inline">\(sensibilidad(d) = \dfrac{TP}{TP + FN}\)</span></li>
+</ul></li>
+<li><p><strong>Especificidad</strong>:</p>
+<ul>
+<li>Es el <strong>ratio de verdaderos negativos</strong>.</li>
+<li><span class="math inline">\(Especificidad(d) = \dfrac{TN}{FP + TN}\)</span></li>
+</ul></li>
+<li><p>En el caso de predecir si un correo es <strong>SPAM</strong>, considerando como <em>éxito</em> <span class="math inline">\(Y = 1\)</span>, de tratarse de SPAM, es mejor una mayor <em>especificidad</em>, que <em>sensibilidad</em>.</p></li>
+<li><p><strong>Falsa alarma</strong>:</p>
+<ul>
+<li>Es el ratio de los <strong>falsos positivos</strong>.</li>
+<li><span class="math inline">\(Falarm(d) = 1 - Especificidad(d) = \dfrac{FP}{FP + TN}\)</span></li>
+</ul></li>
+<li><p><strong>Precisión</strong>:</p>
+<ul>
+<li>Comparación entre los verdaderos positivos, con las instancias predichas como positivas.</li>
+<li><span class="math inline">\(Precision(d) = \dfrac{TP}{TP + FP}\)</span></li>
+</ul></li>
+<li><p><strong><span class="math inline">\(F_{\beta}-score\)</span></strong></p>
+<ul>
+<li><p>Indicador muy útil cuando hay <strong>datos desbalanceados</strong>, aunque aún se puede usar si no hay desbalance.</p></li>
+<li><p><span class="math inline">\(\beta\)</span> se puede considerar un <em>hiperparámetro</em>.</p></li>
+<li><p><strong>F1-score</strong>:<br>
+<span class="math display">\[\begin{gather}
+F_1 (d) = 2 \dfrac{precision * sensibilidad}{precision + sensibilidad} \\
+
+F_{\beta}(d) = \dfrac{\left( 1 + \beta^2  \right)*precision * sensibiidad}{\left( \beta^2 * precision + sensibilidad \right)}
+  \end{gather}\]</span></p></li>
+<li><p>Cuando el desbalance va a favor de la clase positiva, es útil considerar <span class="math inline">\(\beta = 1\)</span>.</p></li>
+<li><p><strong>Mayor <span class="math inline">\(F_1\)</span>-score</strong> significa que balanceas bien la <em>sensibilidad</em> y <em>precisión</em> del modelo … es un promedio de dos indicadores.</p></li>
+<li><p><strong>No hay un punto de corte exacto</strong> para el <span class="math inline">\(F_1\)</span>-score. Pero tal indicador es útil para <strong>comparar</strong> modelos.</p></li>
+</ul></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="equilibrio-entre-sensibilidad-y-especificdad" class="level2">
+<h2 class="anchored" data-anchor-id="equilibrio-entre-sensibilidad-y-especificdad">Equilibrio entre sensibilidad y especificdad</h2>
+<p>falta completar apuntes</p>
+<section id="curva-roc" class="level3">
+<h3 class="anchored" data-anchor-id="curva-roc">Curva ROC</h3>
+<p>falta completar apuntes</p>
+</section>
+</section>
+<section id="selección-de-medidas" class="level2">
+<h2 class="anchored" data-anchor-id="selección-de-medidas">Selección de Medidas</h2>
+<ul>
+<li>No existe un único indicador que baste usar para evaluar un modelo.</li>
+<li>En general, ningún clasificador es óptimo para todas las métricas de evaluación.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../apuntes/clase-05.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../apuntes/clase-07.html" class="pagination-link">
+        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

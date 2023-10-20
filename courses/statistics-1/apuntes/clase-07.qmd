@@ -1,0 +1,306 @@
+# Apuntes de clase {-}
+
+## Ejemplo práctico
+
+```{r}  
+library(Fahrmeir)
+
+# Cargamos una base de datos ya pre-procesada
+data(credit)
+# help(credit)
+
+head(credit)
+```
+
+### Estimación
+
+```{r}
+modelo_logistic <- glm(Y ~ ., family = binomial, data = credit)
+summary(modelo_logistic)
+```
+
+### Cálculo de métricas de evaluación del modelo
+
+```{r}
+# Probabilidades predichas
+yprob <- predict(modelo_logistic, type = 'response')
+
+# Valores predichos
+ypred <- as.numeric(yprob >= 0.5) |>
+  factor(labels = levels(credit$Y))
+
+head(ypred)
+```
+
+```{r}
+# Matriz de confusión
+mc <- table(ypred, credit$Y)
+mc
+
+testerr <- mean(ypred != credit$Y)
+testerr
+```
+
+```{r}  
+# Matriz de confusión, usando caret
+caret::confusionMatrix(
+  data = ypred, reference = credit$Y, positive = "mal"
+)
+
+caret::confusionMatrix(
+  data = ypred, reference = credit$Y, positive = "mal", 
+  # Precision vs recall (incluye F1)
+  mode = "prec_recall"
+)
+
+caret::confusionMatrix(
+  data = ypred, reference = credit$Y, positive = "mal", 
+  mode = "everything"
+)
+```
+
+### LogLoss
+
+- Hasta ahora, no aprovechamos que no predecimos solo
+clases, sino también probabilidad de pertenencia a una clase. \
+En ese sentido, no hemos empleado que una predicción de clase
+puede estar asociada a una predicción de probabilidad muy cercana a 1.
+
+- Esta cantidad **no es interpretable**,
+pero se usa para comparar modelos de clasificación.
+
+```{r}
+unique(as.numeric(credit$Y))
+MLmetrics::LogLoss(
+  y_pred = yprob, y_true = as.numeric(credit$Y) - 1
+)
+```
+
+### Curvas ROC
+
+```{r}
+library(pROC)
+
+# Area debajo de la curva ROC
+analysis <- roc(response = credit$Y, predictor = yprob)
+analysis
+
+MLmetrics::AUC(y_pred = yprob, y_true = as.numeric(credit$Y) -1)
+```
+
+#### Coeficiente Gini
+
+```{r}
+2*analysis$auc - 1
+
+MLmetrics::Gini(y_pred = yprob, y_true = as.numeric(credit$Y) - 1) 
+```
+
+#### Gráfica de la curva ROC
+
+```{r}
+plot(1 - analysis$specificities, analysis$sensitivities,
+  ylab = "Sensitividad", xlab = "1 - Especificidad",
+  main = "Curva ROC para el modelo logistico",
+  type = "l", col = "blue", lwd = 2
+)
+abline(a = 0, b = 1, col = "red")
+```
+
+#### Punto de corte
+
+Para encontrar el **mejor equilibrio posible** 
+entre *sensibilidad* y *especificidad* 
+(en caso nos interese balancearlos),
+usamos el criterio del **índice J de Youden**:
+$J = \text{ sensitivity } + \text{ specificity } - 1$ .
+
+Se puede usar otro criterio, como encontrar el punto
+más en la curva ROC más cercano, respecto a distancia euclideana,
+al punto (1, 0), pues tal vértice representa 
+100% sensibilidad y 100% especificidad.
+
+```{r}
+e <- cbind(
+  analysis$thresholds,
+  analysis$sensitivities + analysis$specificities - 1
+)
+head(e)
+
+opt_t <- subset(e, e[,2] == max(e[,2]))[,1]
+opt_t
+```
+
+```{r}
+ypred2 <- factor(
+  as.numeric(yprob >= opt_t ), labels = levels(credit$Y)
+)
+caret::confusionMatrix(ypred2, credit$Y, positive = "mal")
+```
+
+```{r}
+# Otra forma
+coords(analysis , "b", ret = "t", best.method = "youden") 
+```
+
+### Otros enlaces
+
+```{r}
+fmla <- Y ~ Cuenta + Mes + Ppag + Uso + Estc
+```
+
+#### probit
+
+```{r}
+modelo_probit <- glm(fmla, data = credit, 
+  family = binomial(link = probit)
+)
+summary(modelo_probit)
+
+yprob <- predict(modelo_probit, type = "response")
+ypred <- factor(as.numeric(yprob >= 0.5 ), labels = levels(credit$Y))
+
+caret::confusionMatrix(ypred, credit$Y, positive = "mal")
+MLmetrics::LogLoss(yprob, as.numeric(credit$Y ) - 1)
+MLmetrics::AUC(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::Gini(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::KS_Stat(yprob, as.numeric(credit$Y) - 1)
+```
+
+#### cloglog
+
+```{r}
+#cloglog
+modelo_cloglog <- glm(fmla, data = credit,  
+  family = binomial(link = cloglog)
+)
+summary(modelo_cloglog)
+
+yprob <- predict(modelo_cloglog, type = "response")
+ypred <- factor(as.numeric(yprob >= 0.5 ), labels = levels(credit$Y))
+
+caret::confusionMatrix(ypred, credit$Y, positive = "mal")
+MLmetrics::LogLoss(yprob, as.numeric(credit$Y ) - 1)
+MLmetrics::AUC(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::Gini(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::KS_Stat(yprob, as.numeric(credit$Y) - 1)
+```
+
+#### cauchit
+
+```{r}
+modelo_cauchit <- glm(fmla, data = credit,
+  family = binomial(link = cauchit)
+)
+summary(modelo_cauchit)
+
+yprob <- predict(modelo_cauchit, type="response")
+ypred <- factor(as.numeric(yprob >= 0.5 ), labels = levels(credit$Y))
+
+caret::confusionMatrix(ypred, credit$Y, positive = "mal")
+MLmetrics::LogLoss(yprob, as.numeric(credit$Y ) - 1)
+MLmetrics::AUC(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::Gini(yprob, as.numeric(credit$Y) - 1)
+MLmetrics::KS_Stat(yprob, as.numeric(credit$Y) - 1)
+```
+
+## Remuestreo
+
+### ¿Qué aprenderemos?
+
+- ¿Cómo se evalúa y selecciona un modelo predictivo?
+- Solución ideal en una situación de abundancia de datos.
+- **Validación cruzada (CV)**:
+    - Conjunto de validación
+    - *LOOCV*
+    - *k-fold CV*
+- **Bootstrapping**
+
+### Eficiencia de un método de aprendizaje
+
+- Modelo *bueno* cuando se puede **generalizar**.
+- Queremos un método de aprendizaje que funcione 
+bien con datos nuevos (**error de prueba bajo**).
+
+- Cada modelo tiene una métrica *poblacional* 
+(accuracy, especificidad, etc), que no depende de 
+los datos de entrenamiento ni test.
+
+- Esto es importante para:
+    - **Selección de modelos**: Estimar el 
+    *rendimiento predictivo* de diferentes modelos
+    para elegir el *mejor*.
+    - **Evaluación de modelos**: Estimar su rendimiento
+    (error de predicción) del modelo final sobre un
+    nuevo conjunto de datos.
+
+
+### Error de entrenamiento vs Error de prueba
+
+- El error de prueba puede **subestimar drásticamente**
+el error de prueba.
+
+### Funciones de pérdida
+
+Se suele usar **MSE** (error cuadrático medio)
+y el **ratio de mala clasificación**.
+
+
+### El reto
+
+En los ejemplos anteriores, **sabíamos la verdad**,
+por lo que pudimos evaluar el error de entrenamiento y prueba.
+
+En la realidad, tal **no suele ser el caso**.
+
+
+### Situación con abundancia de datos
+
+- Es una situación *ideal*, usualmente no realista.
+
+- Consiste en que se cuenta con una muestra *tan representativa*
+de la población, que, al dividirla en **tres partes**,
+cada una de ellas es también *representativa de la población*.
+
+- Partición:
+    - **Conjunto de entrenamiento** (training set): Para **ajustar (estimar) el modelo** .
+    - **Conjunto de validación** (validation set): Para **seleccionar el mejor modelo** .
+    - **Conjunto de evaluación o prueba** (test set): Para **evaluar** qué tan bien
+    el **modelo** se ajusta un conjunto nuevo e **independiente** de datos.
+
+- Como esta situación no suele ocurrir, se hace *uso eficiente de la muestra*
+aplicando técnicas de **remuestro de datos**.
+
+- Una **estrategia alternativa** para **seleccionar el modelo*** es usando
+**métodos de penalización** por complejidad, como Lasso.o AIC.
+
+::: {#prp-}
+
+Tras realizar el ajuste de modelo, selección de un único modelo
+y evaluación de aquel modelo; el modelo se vuelve a estimar usando ahora
+aquellos **tres conjuntos de datos juntos**, modelo que sería
+el que se aplica en producción.
+
+:::
+
+
+### Validación cruzada (CV)
+
+- Situación de **selección** de modelos, no evaluación.
+
+- No es necesariamente un muestro simple, puede ser
+*muestreo estratificado*, entre otros.
+
+- Algunas técnicas:
+    - **LOOOCV**: Validación cruzada dejando uno afuera.
+    - **K-fold Cross Validation**: Validación cruzada
+    con $K$ iteraciones; usualmente en 5 o 10 grupos.
+
+
+#### Enfoque usando un conjunto de validación
+
+
+- Suponga que cuenta con un conjunto de datos; y, **a parte**,
+un conjunto de evaluación.
+
+

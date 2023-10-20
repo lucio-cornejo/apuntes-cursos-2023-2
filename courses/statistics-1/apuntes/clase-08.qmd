@@ -1,0 +1,368 @@
+# Apuntes de clase {-}
+
+## Remuestreo
+
+### Validación Cruzada (CV)
+
+::: {#prp-}
+
+CV **no estima modelos**; estima métricas,
+las cuales usamos para comparar modelos.
+
+CV nos provee de una **estimación del valor esperado**
+de una métrica (MSE, Accuracy, etc) asociada a un modelo
+de Aprendizaje Estadístico.
+
+:::
+
+
+- Implica **selección**, no *evaluación*, del modelo.
+
+- Es influenciada por la **métrica** fijada para
+comparar datos (sea accuracy, etc).
+
+### Enfoque para validation set
+
+- Dividimos un conjunto de $n$ observaciones en dos partes:
+    - *Conjunto de entrenaminto* (para **ajustar modelo**)
+    - *Conjunto de validación* (para predecir la *response* de cada observación del validation set)
+
+## Método de retención
+
+### Ejemplo práctico 
+
+::: {#prp-}
+
+El **método de retención** tiene **alto sesgo** 
+(pues no se considera TODO el conjunto de datos)
+y **alta variabilidad** (debido a la aleatoriedad).
+
+:::
+
+```{r}
+library(ISLR2)
+library(ggplot2)
+library(ggpubr)
+library(reshape2)
+```
+
+```{r}
+set.seed(123)
+n = dim(Auto)[1]
+
+# 11 veces partiremos los datos en train y test
+# 10 grados de polinomios consideraremos
+testMSEmat <- matrix(ncol = 11, nrow = 10)
+
+for (newsample in 1:11) {
+  trainid <- sample(n, n/2)
+  for (polydeg in 1:10) {
+    lm.fit <- lm(
+      mpg ~ poly(horsepower, polydeg),
+      data = Auto,
+      subset = trainid
+    )
+    # Predecimos para los datos de test
+    lm.pred <- predict(lm.fit, Auto)[-trainid]
+    testMSEmat[polydeg, newsample] <- mean((Auto$mpg[-trainid] - lm.pred)^2)
+  }
+}
+yrange <- c(15,28)
+
+# Resultado para la primera selección
+plotdf <- data.frame("testMSE" = testMSEmat[,1], "degree" = 1:10)
+```
+
+```{r}
+g0 <- ggplot(plotdf, aes(x = degree)) +
+  geom_line(y = testMSEmat[,1]) +
+  scale_y_continuous(limits = yrange) +
+  scale_x_continuous(breaks = 1:10) +
+  labs(
+    y = "MSE de conjunto de validación", 
+    x = "Grado del Polinomio"
+  )
+
+g0 + theme_minimal()
+
+# Comparando con las otras muestras
+cols=rainbow(10)
+g1=g0+geom_line(aes(x=1:10,y=testMSEmat[,2]),colour=cols[1])
+
+for (col in 3:11) {
+  g1 <- g1 + 
+    geom_line(
+      aes(x = 1:10, y = testMSEmat[,col]), colour = cols[col - 1]
+    )
+}
+
+g1valid <- g1
+g1valid
+```
+
+## LOOCV
+
+- Produce una estimación **más confiables** comparado al
+*método de retención*.
+
+::: {#prp-}
+
+**Poco sesgo**, pues se usa casi todo el conjunto de datos
+para entrenamiento.
+
+En este caso, se presenta **alta varianza**,
+pues la covarianza entre dos training sets (de los $n$ creados)
+es muy alta, pues ser la misma muestra, salvo a lo más dos observaciones.
+
+:::
+
+- $MSE_i = \left( y_i - \hat{y_i} \right)^2$ 
+
+- **Error total de predicción**: $CV_n = \dfrac{1}{n} \displaystyle{ \sum_{i=1}^{n}MSE_i }$ 
+
+- Funciona **bastante bien para regresión lineal**.
+
+### Ejemplo práctico
+
+```{r}
+set.seed(123)
+n = dim(Auto)[1]
+
+testMSEvec <- NULL
+start <- Sys.time()
+
+for (polydeg in 1:10) {
+  glm.fit = glm(mpg ~ poly(horsepower,polydeg), data = Auto)
+  glm.cv1 = boot::cv.glm(Auto, glm.fit, K = n)
+  # Error cuadrático medio
+  testMSEvec = c(testMSEvec, glm.cv1$delta[1])
+}
+stop = Sys.time()
+
+yrange = c(15, 28)
+plotdf = data.frame(testMSE = testMSEvec, degree = 1:10)
+
+g0 = ggplot(plotdf, aes(x = degree, y = testMSE)) +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous(limits = yrange) +
+  scale_x_continuous(breaks = 1:10) +
+  labs(y = "LOOCV")
+
+g0 + theme_minimal()
+```
+
+```{r}
+stop - start
+```
+
+## k-fold CV
+
+- Procedimiento:
+    - Dividir los datos en $k$ partes *más o menos* iguales.
+    - Utilizar $k-1$ partes para entrenar la $k$-ésima parte
+    para validar.
+    - Hacer esto $k$ veces, omitiendo otra parte en cada $k$ ronda.
+
+- $CV_k = \displaystyle{ \dfrac{1}{k}\sum_{i=1}^{k} MSE_i}$ 
+
+- $CV_k = \displaystyle{ \dfrac{1}{n}\sum_{i=1}^{k} n_i * MSE_i}$ 
+
+- Note que el caso $k=n$ consiste es **LOOCV**.
+
+::: {#prp-}
+
+Presenta cierta variabilidad, debido a la aleatoriedad;
+y puede ser alta cuando $k=n$ (caso determinista) incluso.
+
+El sesgo es menor cuando $k=n$, pero suele usarse $k=5$ o $k=10$ .
+
+:::
+
+### Ejemplo práctico
+
+```{r}
+set.seed(123)
+
+testMSEvec5 = NULL
+testMSEvec10 = NULL
+start = Sys.time()
+
+for (polydeg in 1:10) {
+  glm.fit = glm(mpg ~ poly(horsepower, polydeg), data = Auto)
+  glm.cv5 = boot::cv.glm(Auto, glm.fit, K = 5)
+  glm.cv10 = boot::cv.glm(Auto, glm.fit, K = 10)
+  testMSEvec5 = c(testMSEvec5, glm.cv5$delta[1])
+  testMSEvec10 = c(testMSEvec10, glm.cv10$delta[1])
+}
+
+stop = Sys.time()
+yrange = c(15,28)
+
+plotdf = data.frame(testMSE5  =testMSEvec5, degree = 1:10)
+
+g0 = ggplot(plotdf, aes(x = degree, y = testMSE5))  +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous(limits = yrange) +
+  scale_x_continuous(breaks = 1:10) +
+  labs(y = "CV") +
+  ggtitle("5 and 10 fold CV")
+
+g0 +
+  geom_line(aes(y = testMSEvec10), colour = "red") +
+  geom_point(aes(y = testMSEvec10), colour = "red") +
+  ggtitle("5 fold (black), 10 fold (red)") +
+  theme_minimal()
+```
+
+
+```{r}
+stop - start
+```
+
+
+## Elección del mejor modelo
+
+### Regla del error estándar
+
+
+## Comentarios finales
+
+- Es posible usar $CV$ para la evaluación de modelos,
+tratando a conjuntos de validación como conjuntos de **prueba**.
+
+
+## Bootstrap
+
+- Esta técnica cuantifica la *incertidumbre* asociada a un estimador
+o método de aprendizaje estadístico.
+
+- **Sirve para reducir variabilidad**.
+
+
+## Ejemplo práctico: Clasificación de Buenos Pagaderos
+
+Usaremos validación cruzada para **evaluar**, no *seleccionar* modelos.
+
+```{r}
+library(Fahrmeir)
+data(credit)
+# help(credit)
+
+head(credit)
+```
+
+```{r}
+set.seed(1234)
+
+# Número de folds
+k <- 5
+
+splitPlan <- vtreat::kWayCrossValidation(nRows = dim(credit)[1], k)
+splitPlan
+```
+
+```{r}
+testAUCCV5 <- NULL
+testLogLossCV5 <- NULL
+splitPlan[[1]]
+```
+
+```{r}
+for(i in 1:k) {
+  split <- splitPlan[[i]]
+  modelo_logistic <- glm(Y ~ ., 
+    family = binomial, data = credit[split$train,]
+  )
+  yprob <- predict(modelo_logistic, 
+    newdata = credit[split$app,],
+    type = "response"
+  )
+  
+  testLogLossCV5[i] <- MLmetrics::LogLoss(
+    yprob, as.numeric(credit[split$app,]$Y) - 1
+  )
+  testAUCCV5[i] <- MLmetrics::AUC(
+    yprob, as.numeric(credit[split$app,]$Y) - 1
+  )
+}
+```
+
+```{r}
+# LogLoss
+testLogLossCV5
+mean(testLogLossCV5)
+
+# AUC
+testAUCCV5
+mean(testAUCCV5)
+```
+
+
+## Ejemplo práctico: Calibración de hiperparámetros de KNN
+
+```{r}
+diabetes <- read.csv(
+  "../datos/DiabetesTrain.csv", stringsAsFactors = TRUE
+)
+head(diabetes)
+```
+
+### Validación Cruzada (LOOCV)
+
+```{r}
+set.seed(007)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 1
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 3
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 5
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 7
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 9
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 11
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 13
+  ) == diabetes[,4]
+)
+mean(
+  class::knn.cv(
+    train = diabetes[,1:3], cl = diabetes[,4], k = 15
+  ) == diabetes[,4]
+)
+```
+
+
+## Examen Parcial
+
+Hasta este punto viene el examen.
+
+La primera parte es de pregunta-respuesta múltiple.
+La segunda parte es con **R** (vale 10 puntos o menos).
+
+El examen suele durar 3 o menos horas.
+
+**Puedes traer tu máquina para el examen**.

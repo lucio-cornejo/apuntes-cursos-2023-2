@@ -1,0 +1,260 @@
+# Apuntes de clase {-}
+
+## Ejemplo práctico: KNN
+
+```{r}
+library(class)
+
+admision <- read.csv("../datos/binary.csv")
+admision$rank <- factor(admision$rank)
+admision$admit <- factor(admision$admit)
+head(admision)
+```
+
+### Sin usar predictores categóricos
+
+```{r}
+k_11_a <- knn(
+  train = admision[,2:3], test = admision[,2:3],
+  cl = admision[,1], k = 11
+)
+caret::confusionMatrix(k_11_a, admision[,1])
+
+k_11_b <- knn(
+  train = admision[,2:4], test = admision[,2:4],
+  cl = admision[,1], k = 11
+)
+caret::confusionMatrix(k_11_b, admision[,1])
+```
+
+### Usando predictores categóricos
+
+```{r}
+# Binarizar variables, sin remover
+# ninguna de las columnas binarizadas.
+rank_d <- fastDummies::dummy_cols(
+  admision, select_columns = "rank"
+)
+#rank_e <-model.matrix( ~ rank-1, data=admision)
+admision_d <- cbind(admision[,-4], rank_d)
+
+k_11_c <- knn(
+  train = admision_d[,-1], test = admision_d[,-1],
+  cl = admision[,1], k = 11
+)
+caret::confusionMatrix(k_11_c,admision[,1])
+```
+
+### Normalización Min-Max
+
+```{r}
+admision_mm <- admision[,2:3]
+a <- 0
+b <- 1
+admision_mm$gre <- 
+  (admision_mm$gre - min(admision_mm$gre)) / 
+  (max(admision_mm$gre) - min(admision_mm$gre)) *
+  (b - a) + a
+
+admision_mm$gpa <- 
+  (admision_mm$gpa - min(admision_mm$gpa)) /
+  (max(admision_mm$gpa) - min(admision_mm$gpa)) *
+  (b - a) + a
+
+admision_mm <- cbind(admision_mm, rank_d)
+summary(admision_mm)
+
+k_11_mm <- knn(
+  train = admision_mm, test = admision_mm,
+  cl = admision[,1], k = 11
+)
+caret::confusionMatrix(k_11_mm, admision[,1])
+```
+
+### Normalización SoftMax
+
+```{r}
+admision_sm <- admision[,2:3]
+admision_sm <- DMwR2::SoftMax(admision[,2:3], lambda = 2*pi)
+admision_sm <- cbind(admision_sm, rank_d)
+summary(admision_sm)
+
+k_11_sm <- knn(
+  train = admision_sm, test = admision_sm,
+  cl = admision[,1], k = 11
+)
+caret::confusionMatrix(k_11_sm,admision[,1])
+```
+
+## Clasificación: Medidas de Evaluación
+
+### Predicción
+
+- Los modelos de clasificación generan dos tipos de predicciones:
+    - Continuas: **Probabilidad** de pertenencia a una clase.
+    - Categóricas: **Clase** predicha.
+
+- KNN provee ambos tipos de predicciones; mientras
+que Regresión Logística solo provee la probabilidad de pertenencia a una clase.
+
+- Las **probabilidades de pertenencia** a una clase pueden
+servir incluso como input para modelos.
+
+### Evaluación de las clases predichas
+
+- Un método común para tal evaluación es la **matriz de confusión**.
+
+Predichos | Eventos Observados | No Eventos Observados
+| :---: | :---: | :---: |
+Eventos | **True Positive** | **False Positive**
+No Eventos | **False Negative** | **True Negative**
+
+- Métrica más simple:
+  - **Ratio de la exactitud total** (accuracy)
+    $\quad acc(d) = \dfrac{TP + TN}{P + N}$ 
+  - **Ratio de error**: $\quad 1 - acc(d)$ 
+
+- Desventajas de este par de métricas:
+    - **No realiza distinciones entre el tipo de error cometido**. \
+    Por ejemplo, en filtros de spam, el costo de borrar un e-mail
+    importante es mucho mayor que los costos de permitir un 
+    e-mail spam pase el filtro.
+    - Es importante considerar la frecuencia total de cada clase. \
+    **Cuando se tienen clases muy desbalanceadas, el accuracy no debería**
+    **ser la métrica principal para evaluar el modelo de clasificación**.
+
+- Para regresión logística binaria, el *accuracy*
+se maximiza cuando el punto de corte $c$ 
+(para asignar clase en base a probabilidad estimada) vale 0.5.
+
+- **Ratio no informativo**: Ratio de exactitud que se podría alcanzar sin
+usar un modelo. Por ejemplo, $50\%$ en caso de tirar una moneda justa.
+
+- Este último ratio se puede definir de varias formas:
+    - Para un conjunto de datos con $C$ clases, se puede considerar $1/C$.
+    - Puede usarse el porcentaje de la clase de mayor frecuencia,
+    en el conjunto de entrenamiento.
+    - Sobre el efecto severo de clases no balanceadas y posibles medidas
+    remediales, ver Kuhn y Johnson (2013).
+
+- No necesariamente clases desbalanceadas implica dificultad de predicción.
+Por ejemplo, si la clase representa alguna condición extremadamente 
+poco común (*que una persona sea intersex*, o algo así). \ 
+En ese contexto, (clases poco comunes pero fáciles de predecir) 
+**no se consideran** los datos como desbalanceados.
+
+#### Coeficiente Kappa de Cohen
+
+- El coeficiente Kappa fue diseñado para 
+**evaluar la concordancia entre dos evaluadores/jueces**.
+
+- Kappa toma en cuenta la precisión que sería generada
+por causas aleatorias: $Kappa = \dfrac{O - E}{1 - E}$,
+donde $O$ es la **precisión observada**, y, $E$,
+la **precisión esperada**.
+
+- $O$ es $acc(.)$ del modelo usado.
+
+- Kappa está entre $-1$ y $1$.
+    - $Kappa \leq 0$ implica baja concordancia, 
+    pudiendo ser generada por haber definido erróneamente
+    algunas categorías.
+    - $Kappa \approx 0$ implica **no hay concordancia**
+    entre las clases observadas y las pronisticadas..
+    - $Kappa \approx 1$ implica **perfecta concordancia**
+    entre las clases observadas y las pronisticadas.
+
+```{r}
+#| label: 06-cohen-kappa
+#| echo: false
+#| fig-cap: Interpretation of Cohen's Kappa
+#| out-width: 100%
+knitr::include_graphics("../media/cohen-kappa.jpg")
+```
+
+- Ejemplo para una matriz de confusión que vimos en un modelo de hoy:
+
+```{r}
+mc <- matrix(
+  data = c(256, 84, 17, 43), nrow = 2, byrow = TRUE
+) 
+mc
+
+P <- sum(mc[1, ])
+N <- sum(mc[2, ])
+
+O <- sum(diag(mc)) / (P + N)
+O
+
+prop_P <- P / (P + N)
+prop_N <- N / (P + N)
+
+E <- (sum(mc[,1])*prop_P + sum(mc[,2])*prop_N) / (P + N)
+E
+
+kappa <- (O - E) / (1 - E)
+kappa
+```
+
+#### Clasificación Binaria
+
+- La **sensitivity/sensibilidad/recall** de un modelo 
+es el ratio en que el evento de interés es **predicho  correctamente**, para todas las muestras que contienen el evento:
+    - Es el **ratio de verdaderos positivos**.
+    - $sensibilidad(d) = \dfrac{TP}{TP + FN}$
+
+- **Especificidad**:
+    - Es el **ratio de verdaderos negativos**.
+    - $Especificidad(d) = \dfrac{TN}{FP + TN}$ 
+
+- En el caso de predecir si un correo es **SPAM**,
+considerando como *éxito* $Y = 1$, de tratarse de SPAM,
+es mejor una mayor *especificidad*, que *sensibilidad*.
+
+- **Falsa alarma**:
+    - Es el ratio de los **falsos positivos**.
+    - $Falarm(d) = 1 - Especificidad(d) = \dfrac{FP}{FP + TN}$ 
+
+- **Precisión**:
+    - Comparación entre los verdaderos positivos, 
+    con las instancias predichas como positivas.
+    - $Precision(d) = \dfrac{TP}{TP + FP}$  
+
+- **$F_{\beta}-score$**
+    - Indicador muy útil cuando hay **datos desbalanceados**,
+    aunque aún se puede usar si no hay desbalance.
+    - $\beta$ se puede considerar un *hiperparámetro*.
+    - **F1-score**: \
+    \begin{gather}
+      F_1 (d) = 2 \dfrac{precision * sensibilidad}{precision + sensibilidad} \\
+
+      F_{\beta}(d) = \dfrac{\left( 1 + \beta^2  \right)*precision * sensibiidad}{\left( \beta^2 * precision + sensibilidad \right)}
+    \end{gather}
+    
+  - Cuando el desbalance va a favor de la clase positiva, 
+  es útil considerar $\beta = 1$.
+
+  - **Mayor $F_1$-score** significa que balanceas bien
+  la *sensibilidad* y *precisión* del modelo ... 
+  es un promedio de dos indicadores.
+
+  - **No hay un punto de corte exacto** para el $F_1$-score.
+  Pero tal indicador es útil para **comparar** modelos.
+
+## Equilibrio entre sensibilidad y especificdad
+
+falta completar apuntes
+
+### Curva ROC
+
+falta completar apuntes
+
+## Selección de Medidas
+
+- No existe un único indicador que baste usar para evaluar un modelo.
+- En general, ningún clasificador es óptimo para todas las métricas de evaluación.
+
+## Tarea
+
+La siguiente semana se compartirá la lista de ejercicios,
+por lo que se debe ir avanzando con las listas ya publicadas.

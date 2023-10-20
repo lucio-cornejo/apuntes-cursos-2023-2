@@ -1,0 +1,395 @@
+# Preguntas
+
+## Pregunta 1
+
+```md
+a: Clasi
+b: Clasi
+c: Incorrecto
+d: Clasi
+e: NO CLASI
+```
+
+## Pregunta 2
+
+```md
+a: Falso, en validacion no se estima/ajusta modelos; se comparan.
+```
+
+## Pregunta 3
+
+```md
+d: Nuevas observaciones
+```
+
+## Pregunta 4
+
+```md
+e: Sobreajuste
+```
+
+## Pregunta 5
+
+```md
+Evento: Paciente tiene cancer
+
+a: # dice hay cancer, pero no hay > # no detectas cancer
+b: 
+  # no detectas cancer > # dice hay cancer, pero no hay
+  No
+c: No
+d: # detectas bien no tiene cancer > # dice hay cancer, pero no hay
+e: No
+f: Ninguna?
+g: Todas las anteriores
+  No
+
+RPTA: a
+```
+
+## Pregunta 6
+
+```md
+b
+```
+
+## Pregunta 7
+
+```md
+a
+```
+
+## Pregunta 8
+
+```md
+a: Normalizacion (puntaje Z) (estandarizar a [0,1])
+```
+
+## Pregunta 9
+
+
+```md
+a: Correcto
+b:
+c: No necesariamente tienen la misma importancia;
+  este modelo no nos da esa información.
+d: Correcto
+e: Se ASUME independencia de los atributos.
+```
+
+## Pregunta 10
+
+```md
+a: Respuesta correcta
+c: Verdadero
+d: Verdadero
+```
+
+## Pregunta 11
+
+```md
+Verdadero, es posible por azar que en una particion un predictor pese más
+que para otra partición.
+```
+
+## Pregunta 12
+
+```md
+c: But not sure.
+```
+
+
+#### USAR COMA PARA LAS RESPUESTAS ####
+
+## Pregunta 13
+
+```{r}
+real <- factor(c(
+  # TP
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  # FN
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  # FP
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  # TN
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento"
+))
+
+pred <- factor(c(
+  # TP
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  "evento", "evento", "evento", "evento", "evento",
+  # FN
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  # FP
+  "evento", "evento", "evento", "evento", "evento",
+  # TN
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento",
+  "no_evento", "no_evento", "no_evento", "no_evento", "no_evento"
+))
+
+CM <- caret::confusionMatrix(
+  data = pred, reference = real, 
+  positive = "evento", mode = 'everything'
+)
+```
+
+
+```{r}
+CM
+
+acc <- 0.7
+kappa <- 0.4
+sensitivity <- 0.67
+especificidad <- 0.75
+jouden <- sensitivity + especificidad - 1
+prevalencia <- 0.6
+
+PPV <- (sensitivity * prevalencia) / ( (sensitivity * prevalencia) + (1 - especificidad)*(1 - prevalencia) )
+NPV <- (especificidad * (1 - prevalencia)) / ( (prevalencia * (1 - sensitivity)) + (especificidad * (1 - prevalencia)) )
+```
+
+## Pregunta 14
+
+```md
+El clasificador bayesiano recibe el nombre de naive debido a que aquel modelo supone independencia condicional de los predictores, dentro de clases. Es decir, se supone que, para cada clase k de la variable respuesta/response,  los predictores, restrictos a tal clase k (probabilidad condicional), son independientes entre sí.
+
+Estas son algunas de las implicancias relacionadas a la denominación naive del modelo planteado:
+
+La hipótesis de independencia condicional de predictores, dentro de clases,  en la vida real no suele cumplirse. Es una condición muy fuerte por satisfacer. Sin embargo, aún así el modelo Naive Bayes suele rendir adecuadamente como modelo de clasificación.
+El modelo Naive Bayes es útil para la predicción; mas no para inferencia. Es decir, el modelo Naive Bayes no es un modelo interpretable que nos permita comprender cómo afectan los predictores a la variable respuesta/response.
+La hipótesis mencionada del modelo Naive Bayes facilita mucho la estimación de probabilidades condicionales de los predictores, por clases, por lo que este modelo suele generar, rápidamente, predicciones.
+```
+
+## Pregunta 15
+
+```{r}
+library(naivebayes)
+# apriori * verosimilitud
+
+# Suponemos "evento" = 1 .
+df <- data.frame(
+  A = c(0, 0, 1, 0, 1, 1, 1),
+  B = c(0, 1, 1, 0, 1, 0, 1),
+  C = c(1, 0, 0, 1, 1, 0, 0),
+  Z = factor(c(
+    "no_evento", "no_evento", "no_evento",
+    "evento", "evento", "evento", "evento"
+  ))
+)
+
+df
+
+# Sin asumir normalidad marginal
+a <- naive_bayes(Z ~ ., data = df, usekernel = TRUE)
+a
+
+pred <- predict(a, df[,-4])
+pred
+
+caret::confusionMatrix(pred, df[,4])
+```
+
+
+```{r}
+test <- data.frame(
+  A = c(0), B = c(0), C = c(1)
+)
+predict(a, test, type = 'prob')
+```
+
+
+```{r}
+# Cálculo manual
+# Pr[Z = k] * Pr[X | Z = k]
+
+# Pr[Z = 0] * Pr[X | Z = 0]
+
+pr_z_0 <- 3.0 / 7
+pr_z_1 <- 4.0 / 7
+
+# Pr[X = (0, 0, 1) | Z = 0] = 
+# Pr[A = 0 | Z = 0] * Pr[B = 0 | Z = 0] * Pr[C = 1 | Z = 0]
+p_x_test_dado_z_0 <- (2.0 / 3) * (1.0 / 3) * (1.0 / 3)
+
+# Prob clase 0
+pr_z_0 * p_x_test_dado_z_0
+
+# Pr[X = (0, 0, 1) | Z = 1] = 
+# Pr[A = 0 | Z = 1] * Pr[B = 0 | Z = 1] * Pr[C = 1 | Z = 1]
+p_x_test_dado_z_1 <- (1.0 / 4) * (2.0 / 4) * (2.0 / 4)
+
+# Prob clase 1
+pr_z_1 * p_x_test_dado_z_1
+
+#### RESPUESTA: 0,0357
+```
+
+
+
+## Pregunta 16
+
+```md
+Parte 1:
+
+Para k=1, cero instancias se predicen de manera incorrecta. Esto debido a que, fijado un elemento X_i de los datos de prueba, este también está presente en los datos de entrenamiento, así que su vecino más cercano es el mismo. Luego, como el tamaño fijado de la vecindad es 1, se predice para X_i (prueba) que tiene la clase de X_i (entrenamiento); así que la predicción es correcta.
+
+
+
+Parte 2:
+
+Note que podemos indexar a los datos de prueba por su valor en el eje horizontal (eje X), puesto que poseen el mismo valor en el eje vertical. Así, tenemos los datos de prueba x1, x2, ..., x9; donde x1 está en la recta x = -4, x2; en x = -3; y así sucesivamente, hasta considerar x9, presente en la recta x = 4.
+
+Comparamos las clases predichas (vía moda de clases de vecinos) con las clases reales:
+
+Dato de prueba  |  Clases de 3 vecinos más cercanos  | Clase asignada/predicha  | Clase real
+
+x1              |         azul, azul, azul           |          azul            |    azul
+x2              |         azul, azul, azul           |          azul            |    azul
+x3              |         azul, azul, rojo           |          azul            |    azul
+x4              |         azul, rojo, rojo           |          rojo            |    rojo
+x5              |         rojo, rojo, azul           |          rojo            |    rojo
+x6              |         rojo, azul, rojo           |          rojo            |    azul
+x7              |         azul, rojo, rojo           |          rojo            |    rojo
+x8              |         rojo, rojo, rojo           |          rojo            |    rojo
+x9              |         rojo, rojo, rojo           |          rojo            |    rojo
+
+
+Número de predicciones incorrectas: 1 (debido a la instancia x6)
+```
+
+## Pregunta 17
+
+```md
+Método: KNN con K=1, pero variando la métrica y/o predictores
+
+Método de validación: 10-fold (como son 10 observaciones de entrenamiento, ese método equivale a LOOCV)
+
+Medida de desempeño: Error de clasificación
+
+
+
+Note del gráfico que las 10 observaciones de entrenamiento pueden ser indexadas, 
+
+de manera ordenada creciente vía su coordenada x1.
+
+En ese sentido, denotamos t1, t2, ..., t10 a las instancias donde 
+
+t1 posee coordenada x1 < -1; 
+
+t2, coordenada x1 aproximadamente -1;
+
+t3, la instancia mostrada como círculo en blanco a la derecha de t2;
+
+y así sucesivamente.
+
+
+
+Denotemos también T = {t1, ..., t10}; y, la clase, por el color del círculo en el gráfico (blanco o negro).
+
+
+
+Parte a:
+
+Predictores por usar: x1    
+
+Métrica por usar: Manhattan
+
+
+Iteraciones de 10-fold CV:
+
+Conjunto de validación  |  Conjunto de entrenamiento  |  Vecino más cercano  |  Clase predicha  |  Clase real
+        { t1 }          |         T \ {t1}            |          t2          |       negro      |     negro
+        { t2 }          |         T \ {t2}            |          t1          |       negro      |     negro
+        { t3 }          |         T \ {t3}            |          t4          |       negro      |     blanco
+        { t4 }          |         T \ {t4}            |          t3          |       blanco     |     negro                     
+        { t5 }          |         T \ {t5}            |          t4          |       negro      |     negro                     
+        { t6 }          |         T \ {t6}            |          t7          |       blanco     |     blanco                     
+        { t7 }          |         T \ {t7}            |          t8          |       blanco     |     blanco                          
+        { t8 }          |         T \ {t8}            |          t7          |       blanco     |     blanco                
+        { t9 }          |         T \ {t9}            |          t10         |       blanco     |     negro                          
+        { t10 }         |         T \ {t10}           |          t9          |       negro      |     blanco
+
+Error de clasificación: 4
+Tasa de error de clasificación: 4/10
+
+
+Parte b:
+
+Predictores por usar: x2 
+
+Métrica por usar: Manhattan
+
+
+Iteraciones de 10-fold CV:
+
+Conjunto de validación  |  Conjunto de entrenamiento  |  Vecino más cercano  |  Clase predicha  |  Clase real
+        { t1 }          |         T \ {t1}            |          t7          |       blanco     |     negro
+        { t2 }          |         T \ {t2}            |          t5          |       negro      |     negro            
+        { t3 }          |         T \ {t3}            |          t9          |       negro      |     blanco            
+        { t4 }          |         T \ {t4}            |          t7          |       blanco     |     negro            
+        { t5 }          |         T \ {t5}            |          t8          |       blanco     |     negro            
+        { t6 }          |         T \ {t6}            |          t2          |       negro      |     blanco             
+        { t7 }          |         T \ {t7}            |          t4          |       negro      |     blanco            
+        { t8 }          |         T \ {t8}            |          t5          |       negro      |     blanco            
+        { t9 }          |         T \ {t9}            |          t3          |       blanco     |     negro                 
+        { t10 }         |         T \ {t10}           |          t9          |       negro      |     blanco           
+
+Error de clasificación: 9
+Tasa de error de clasificación: 9/10
+
+
+Parte c:
+
+Predictores por usar: x1 y x2 
+
+Métrica por usar: Euclidiana
+
+
+Iteraciones de 10-fold CV:
+
+Conjunto de validación  |  Conjunto de entrenamiento  |  Vecino más cercano  |  Clase predicha  |  Clase real
+        { t1 }          |         T \ {t1}            |          t4          |        negro     |     negro
+        { t2 }          |         T \ {t2}            |          t3          |        blanco    |     negro
+        { t3 }          |         T \ {t3}            |          t2          |        negro     |     blanco
+        { t4 }          |         T \ {t4}            |          t1          |        negro     |     negro
+        { t5 }          |         T \ {t5}            |          t8          |        blanco    |     negro
+        { t6 }          |         T \ {t6}            |          t7          |        blanco    |     blanco
+        { t7 }          |         T \ {t7}            |          t6          |        blanco    |     blanco
+        { t8 }          |         T \ {t8}            |          t5          |        negro     |     blanco
+        { t9 }          |         T \ {t9}            |          t10         |        blanco    |     negro
+        { t10 }         |         T \ {t10}           |          t9          |        negro     |     blanco
+
+Error de clasificación: 6
+Tasa de error de clasificación: 6/10
+
+
+Parte d:
+
+El mejor de los métodos, en base a la medida de desempeño fijada, sería el 
+método con menor (tasa de) error de clasificación; es decir, el primer modelo,
+que solo emplea x1 como predictor y a la métrica Manhattan.
+
+Ahora que se va evuluar el modelo, volvemos a considerar a las 10 observaciones
+mostradas en el gráfico como conjunto de entrenamiento.
+
+En ese sentido, para el punto de test (-0.25, 0.25), su vecino más cercano sería
+t5, por lo que la clase predicha sería "negro".
+```
+
+
+## Pregunta 18
+
+Es con porcentaje (poner 20 si es 20% (0,02)); no como en la pregunta 13.
+
+
