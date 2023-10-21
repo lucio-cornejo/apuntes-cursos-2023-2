@@ -32,6 +32,10 @@ book:
       chapters: 
         - apuntes/clase-08.qmd
 
+    - part: "Semana 9"
+      chapters: 
+        - apuntes/clase-09.qmd
+
 format:
   html:
     theme: cosmo

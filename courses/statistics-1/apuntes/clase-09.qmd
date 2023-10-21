@@ -1,0 +1,265 @@
+# Apuntes de clase {-}
+
+## Decision Trees 
+
+- Sirven para predicción **numérica** (*regresión*) y **categórica** (*clasificación*).
+- Es un modelo **muy fácil de interpretar**, útil para **inferencia**.
+- Este modelo tiene **alta variabilidad** (válido para todo modelo de árboles).
+- Es **tan flexible**, que fácilmente produce **sobreajustes**.
+
+- Es un modelo **escalable**.
+
+- Este modelo no genera *directamente* la **probabilidad** de pertenencia a una 
+clase, sino la clasificación en sí. 
+    - Aún así, se puede **estimar la probabilidad**
+    de pertenencia a una clase $K$ , contando la proporción de observaciones (de la muestra)
+    que fue clasificada como clase $K$ .
+    - Sin embargo, cualquier observación pertenciente al **mismo nodo**
+    posee la misma probabilidad **estimada** de pertenencia a una clase.
+    - Por ello, la **curva ROC** de este modelo es **muy poligonal** ...
+    no funciona tan bien.
+
+
+### Partes de un Árbol de Decisión
+
+- **Nodo interno (root node)**: Denota una prueba sobre un atributo.
+- **Rama (branch)**: Corresponde a un *valor* de atributo; representa el resultado de una prueba.
+- **Nodo terminal (leaf node)**: Representa una *etiqueta* de clase.
+
+- Cada camino es una conjunción de valores de atributos.
+
+
+### Construcción de un Árbol de Decisión
+
+- Existen **diversos** *tree induction algorithms*, los cuales
+pueden generar árboles de decisión **muy diferentes**.
+
+
+## Características de Decision Trees
+
+- Este modelo se puede *construir rápidamente*.
+- **No requiere que las variables sean independientes**.
+- Permite evaluar qué **variables son importantes**
+y cómo interactúan ente ellos.
+- Es **robusto a outliers**.
+- Funciona bien incluso cuando hay **variables faltantes en observaciones** (datos perdidos).
+
+- Las variables se discretizan al momemto de generar
+el árbol de decisión. Esto se evidencia para predictores
+numéricos, pues, nodo por nodo, se discretizan en dos categorías/regiones vía un **punto de corte**.
+
+
+## Inducción en Decision Trees
+
+- **Construcción** del árbol:
+    - A la hora de fijar un punto de **corte**, podemos calcular la entropía asociada
+    a las nuevas regiones creadas, teniendo en cuenta que **entropía igual a cero**
+    maximiza la probabilidad de realizar una buena clasificación.
+- **Poda** del árbol: Identificar y remover ramas que causen ruido o tengan outliers.
+
+- El que se divida una región en **dos subregiones** no depende de si la variable
+es numérica o categórica, sino del **algoritmo de inducción empleado**.
+
+### Construcción
+
+### Múltiples árboles de decisión
+
+### Inducción
+
+
+## Medidas de Impureza
+
+- Coeficiente de Gini
+- Entropía
+
+- **Mayor valor** de estas medidas, implica **mayor impureza del nodo terminal**.
+- A mayor impureza, sería más difícil saber a que categoría pertenece una observación
+presente en un nodo terminal.
+
+- **Coeficiente de Gini** asociado a una partición que produce nodos terminales
+es el **promedio ponderado** de los coeficientes de Gini de aquellos nodos terminales,
+donde la ponderación es respecto al número de observaciones en cada nodo terminal.
+
+- Nodos con medida de impureza igual a cero no se dividen más, pues no es necesario.
+
+
+## Ejemplo práctico
+
+```{r}
+library(rpart)
+```
+
+- `minsplit`:
+    - Minimum number of observations in a node para que sea dividido.
+    - Default value: 20
+    - Suele no ser necesario alterar si se cuenta con **muchos datos**.
+
+- `minbucket`:
+    - Minimum number of observations in any terminal/leaf node.
+    - Default value: `minsplit / 3`
+
+- `cp`:
+    - **Parámetro de complejidad**
+    - **Valor más común por modificar** al usar el modelo Decision Tree.
+    - Indica que, si el criterio de impureza **no es reducido** 
+    (**restando** las métricas de complejidad (no quotient)) en
+    más de `cp` (**respecto al nivel anterior**) entonces, **se para**.
+    - Default value: `cp = 0.01`
+
+```{r}
+bupa <- read.table("../datos/bupa.txt", header = TRUE, sep = ",") 
+head(bupa)
+
+# Declarar V7 como un factor
+bupa[,7] <- as.factor(bupa[,7])
+```
+
+
+### Ejemplo 1
+
+- Consideramos: 
+    - `minbucket = 50` 
+    - `minsplit = 150`
+```{r}
+# Estimar el árbol
+arbol1 <- rpart(
+  V7 ~ V3 + V5, data = bupa, method = "class", minbucket = 50
+)
+arbol1
+```
+
+- **Interpretación**:
+    - 61 **predicciones incorrectas**, de un total de 140 observaciones, en el nodo terminal asociado a `V5 < 20.5`.
+    - 66 **predicciones incorrectas**, de un total de 205 observaciones, en el nodo terminal asociado a `V5 < 20.5`.
+
+```{r}
+# Graficando el arbol
+plot(arbol1, margin = 0.25)
+text(arbol1, use.n = TRUE)
+```
+
+
+```{r}
+# Mejoramos los gráficos
+library(partykit)
+
+plot(partykit::as.party(arbol1), tp_args = list(id = FALSE))
+```
+
+### Ejemplo 2
+
+Fijamos `minbucket = 20 (minsplit = 60)` para obtener un árbol con más ramas.
+
+```{r}
+arbol2 <- rpart(
+  V7 ~ V3 + V5, data = bupa, method = "class", minbucket = 20
+)
+plot(as.party(arbol2), tp_args = list(id = FALSE))
+```
+
+## Ejemplo 3
+
+Fijamos `cp = 0.05`.
+
+```{r}
+arbol3 <- rpart(
+  V7 ~ V3 + V5, data = bupa, method = "class", cp = 0.05
+)
+plot(as.party(arbol3), tp_args = list(id = FALSE))
+```
+
+### Ejemplo 4
+
+Fijamos `cp = 0.001` para obtener un árbol con más ramas.
+
+```{r}
+arbol4 <- rpart(
+  V7 ~ V3 + V5, data = bupa, method = "class", cp = 0.001
+)
+plot(as.party(arbol4), tp_args = list(id = FALSE))
+```
+
+### Ejemplo 5
+
+Fijamos `maxdepth = 3`.
+
+```{r}
+arbol5 <- rpart(
+  V7 ~ V3 + V5, data = bupa, method = "class", maxdepth = 3
+)
+plot(as.party(arbol5), tp_args = list(id = FALSE))
+```
+
+### Ejemplo 6: Podar el árbol
+
+```{r}
+set.seed(060717)
+# A propósito dejamos crecer mucho el árbol, fijando
+# un valor vajo de cp .
+arbol <- rpart(
+  V7~ V3 + V5, data = bupa, method = "class", cp = 0.001
+)
+
+# Fijar un criterio para podar el árbol
+arbol6 <- rpart::prune(arbol, cp = 0.1)
+
+plot(as.party(arbol), tp_args = list(id = FALSE))
+plot(as.party(arbol6), tp_args = list(id = FALSE))
+```
+
+#### Usamos validación estándar con cp como hiperparámetro
+
+```{r}
+# Elección del modelo con métrica menor (error) o mejor (accuracy, por ejemplo)
+rpart::printcp(arbol)
+```
+
+La columna `rel error` (relative error) no nos sirve, pues esos valores
+siempre están decreciendo, ya que la impureza siempre diminuye para
+niveles más altos del árbol.
+
+```{r}
+# Elección del modelo vía la regla del error estándar
+rpart::plotcp(arbol)
+```
+
+En el eje X están las medias geométricas, de dos en dos, de valores de CP
+en la tabla mostrada previamente.
+
+### Usando el criterio del Min xerror
+
+```{r}
+arbol7 <- prune(arbol, cp = 0.0137931)
+plot(as.party(arbol7), tp_args = list(id = FALSE))
+```
+
+### Usando el criterio de +-xstd
+
+```{r}
+arbol7 <- prune(arbol, cp = 0.053)
+plot(as.party(arbol7), tp_args = list(id = FALSE))
+```
+
+### Automatizando la selección del Valor óptimo de CP (criterio Min xerror)
+
+```{r}
+arbol.completo <- rpart(
+  V7 ~ ., data = bupa, method = "class", cp = 0, minbucket = 1
+)
+arbol.completo
+
+xerr <- arbol.completo$cptable[,"xerror"]
+minxerr <- which.min(xerr)
+mincp <- arbol.completo$cptable[minxerr, "CP"]
+arbol.prune <- prune(arbol.completo, cp = mincp)
+plot(as.party(arbol.prune), tp_args = list(id = FALSE))
+```
+
+```{r}
+# Predicción usando el árbol podado
+# Calcular los valores predichos
+pred <- predict(arbol.prune, bupa[,c(-7)], type = "class")
+
+# Calcular la matriz de confusión
+caret::confusionMatrix(pred, bupa$V7)
+```
