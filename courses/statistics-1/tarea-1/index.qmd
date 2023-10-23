@@ -1,0 +1,717 @@
+---
+title: Tarea 1 - 1EST17
+format: 
+  # html:
+  pdf:
+    toc: true
+    toc-depth: 3
+    toc-title: Tabla de Contenidos
+
+code-block-bg: true
+code-block-border-left: "#DC143C"
+---
+
+## Grupo
+
+- **Integrante**: Lucio Enrique Cornejo Ramírez
+- **Código**: 20192058
+
+## Problema 1
+
+```{r}
+library(ISLR2)
+data(Weekly)
+
+head(Weekly)
+str(Weekly)
+```
+
+
+Trataremos la categoría `Up` como valor *exitoso* de la variable `Direction` por predecir.
+
+```{r}
+Weekly$Direction <- relevel(Weekly$Direction, "Down")
+head(Weekly)
+```
+
+
+### Pregunta a
+
+```{r}
+modelo_logistic <- glm(
+  Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, 
+  family = binomial, data = Weekly
+)
+summary(modelo_logistic)
+```
+
+De la columna `Pr(>|z|)` en la tabla previa, notamos
+que solo la variable `Lag2` parece ser estadísticamente
+significativa en el modelo, puesto que presenta un p-valor
+asociado de `0.0296`, menor que **0.05**.
+
+### Pregunta b
+
+```{r}
+# Probabilidades predichas
+yprob <- predict(modelo_logistic, type = 'response')
+head(yprob)
+
+# Valores predichos
+ypred <- factor(as.numeric(yprob >= 0.5), labels = levels(Weekly$Direction))
+head(ypred)
+```
+
+```{r}
+# Matriz de confusión
+tmp <- caret::confusionMatrix(
+  data = ypred, reference = Weekly$Direction, 
+  # Fijamos la categoría "Up" de la variable 
+  # por predecir (Direction), como el valor de éxito
+  positive = "Up", mode = "everything"
+)
+```
+
+```{r}
+#| echo: false
+tmp[[2]][2:1, 2:1]
+tmp[3:4]
+```
+
+```{r}
+#| echo: false
+metricas_modelo <- c(
+  accuracy = 0.5611,
+  kappa = 0.035,
+  sensibilidad = 0.9207,
+  especificidad = 0.1116,
+  precision = 0.5643,
+  prevalencia = 0.5556,
+  ppv = 0.5643,
+  npv = 0.5294
+)
+
+metricas_modelo["indice_youden"] <- 
+  metricas_modelo["sensibilidad"] + metricas_modelo["especificidad"] - 1
+```
+
+
+**Interpretación de las métricas halladas**:
+
+
+| Métrica | Valor | Interpretación |
+|:---: | :---: | :---| 
+| Accuracy | `r metricas_modelo["accuracy"]` | Aproximadamente $56\%$ de las observaciones fueron clasificadas correctamente por el modelo.
+| Coeficiente Kappa | `r metricas_modelo["kappa"]` | Como el coeficiente de Kappa es positivo, pero tan cercano a cero, concluimos que el **grado de acuerdo** entre los valores de reales y los predichos por el modelo es insignificante. Es decir, las predicciones del modelo son casi tan precisas como si se predijese por simple azar.
+| Sensibilidad | `r metricas_modelo["sensibilidad"]` | El modelo predice correctamente aproximadamente $92\%$ de los casos positivos (mercado tuvo rendimiento positivo en una semana) .
+| Especificidad | `r metricas_modelo["especificidad"]` | El modelo predice correctamente aproximadamente $11\%$ de los casos negativos (mercado tuvo rendimiento negativo en una semana) .
+| Índice de Youden | `r metricas_modelo["indice_youden"]` | Como el índide de Youden es tan cercano a cero, esto implica que el modelo genera aproximadamente la misma proporción de predicciones *positivas/éxito* para observaciones exitosas y observaciones no exitosas. Es decir, este modelo es prácticamente inútil.
+| Precisión | `r metricas_modelo["precision"]` | Este modelo produce una probabilidad de aproximadamente $56\%$ de que una observación predicha como positiva/exitosa, realmente sea positiva/exitosa.
+| Prevalencia | `r metricas_modelo["prevalencia"]` | Se estima que, en la población asociada al conjunto de datos `Weekly`, aproximadamente $56\%$ de las instancias sean positivas (rendimiento positivo semanal del mercado).
+| PPV | `r metricas_modelo["ppv"]` | Según este modelo, la probabilidad de que una observación sea positiva (mercado haya tenido rendimiento positivo en una semana arbitraria entre 1990 y 2010) es de aproximadamente $56\%$ .
+| NPV | `r metricas_modelo["npv"]` | Según este modelo, la probabilidad de que una observación sea negativa (mercado haya tenido rendimiento negativo en una semana arbitraria entre 1990 y 2010) es de aproximadamente $53\%$ .
+
+
+### Pregunta c
+
+```{r}
+library(pROC)
+
+levels(Weekly$Direction)
+analysis <- roc(response = Weekly$Direction, predictor = yprob)
+```
+
+
+```{r}
+# Curva ROC
+plot(
+  1 - analysis$specificities, analysis$sensitivities,
+  ylab = "Sensitividad", xlab = "1 - Especificidad",
+  main = "Curva ROC para el modelo logístico",
+  type = "l", col = "blue", lwd = 2
+)
+abline(a = 0, b = 1, col = "red")
+```
+
+Notamos que la curva ROC del modelo está **muy alejada** del caso ideal.
+Es decir, los puntos de la curva ROC del modelo están lejos de la esquina superior izquierda, la cual representa el caso de un modelo perfecto, donde 
+la sensitividad y especificidad son máximas (valen 1).
+
+```{r}
+# Área bajo la curva
+analysis$auc
+```
+
+Como el área bajo la curva ROC es de $0.5537$, un valor muy cercano a $0.5$,
+concluimos que este modelo **no predice adecuadamente** si una observación
+arbitraria posee un valor positivo/exitoso de clase/Direction.
+
+
+### Pregunta d
+
+```{r}
+# Hallamos el punto de corte óptimo para un balance 
+# entre sensibilidad y especificidad del modelo
+e <- cbind(
+  analysis$thresholds,
+  analysis$sensitivities + analysis$specificities - 1
+)
+head(e)
+
+opt_t <- subset(e, e[,2] == max(e[,2]))[,1]
+opt_t
+```
+
+```{r}
+ypred2 <- factor(as.numeric(yprob >= opt_t ), labels = levels(Weekly$Direction))
+```
+
+```{r}
+# Nueva matriz de confusión
+tmp2 <- caret::confusionMatrix(
+  data = ypred2, reference = Weekly$Direction, 
+  positive = "Up", mode = "everything"
+)
+```
+
+```{r}
+#| echo: false
+tmp2[[2]][2:1, 2:1]
+```
+
+Comparamos las métricas del nuevo modelo (solo cambiamos el punto de corte):
+
+```{r}
+metricas_modelos <- rbind(
+  data.frame(as.list(c(tmp[[3]], tmp[[4]])), row.names = "Modelo 1"),
+  data.frame(as.list(c(tmp2[[3]], tmp2[[4]])), row.names = "Modelo 2")
+)
+knitr::kable(t(metricas_modelos))
+```
+
+**Conclusiones respecto a la tabla previa**:
+
+- El segundo modelo posee una **ligeramente mayor accuracy**.
+- Pese al incremento del coeficiente de Kappa, el nuevo valor, $0.099$ 
+es aún tan cercano a cero que el **grado de acuerdo** entre los valores
+reales y predichos por el nuevo modelo es aún **insignificante**.
+- Debido al balance entre sensibilidad y especificidad, el nuevo modelo 
+posee una **mayor especificidad**, pero **menor sensibilidad**.
+- Ambos modelos poseen la **misma prevalencia**, puesto que este valor
+depende de los datos (muestra); no del modelo.
+- Como se está realizando una clasificación **binaria**, el **aumento de PPV**
+produjo un **menor NPV** para el nuevo modelo.
+
+
+### Pregunta e
+
+```{r}
+summary(Weekly$Year)
+split_train_validation <- Weekly$Year < 2009
+```
+
+```{r}
+# Esquema de validación
+training_set <- Weekly[split_train_validation,]
+head(training_set)
+
+validation_set <- Weekly[!split_train_validation,]
+head(validation_set)
+```
+
+```{r}
+modelo_logistic3 <- glm(
+  Direction ~ Lag2, family = binomial, data = training_set
+)
+summary(modelo_logistic3)
+```
+
+```{r}
+# Probabilidades predichas
+yprob3 <- predict(
+  modelo_logistic3, newdata = validation_set, type = 'response'
+)
+head(yprob3)
+
+# Valores predichos
+ypred3 <- as.numeric(yprob3 >= 0.5) |>
+  factor(labels = levels(validation_set$Direction))
+head(ypred3)
+```
+
+
+```{r}
+# Matriz de confusión
+tmp3 <- caret::confusionMatrix(
+  data = ypred3, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+```
+
+```{r}
+#| echo: false
+tmp3[[2]][2:1, 2:1]
+```
+
+```{r}
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp3[[3]], tmp3[[4]])), row.names = "Modelo 3")
+)
+knitr::kable(t(metricas_modelos))
+```
+
+**Conclusiones**:
+
+- El nuevo modelo tiene **mayor accuracy** que los modelos
+previos, con un valor de $62.5\%$ .
+- El nuevo modelo presenta **mayor coeficiente de Kappa** que los modelos previos, aunque aún tan cercano a cero que no hay concordancia
+entre clases observadas y las pronosticadas.
+- El nuevo modelo es mejor que el segundo modelo en predecir una clase
+que positiva/exitosa ("Up") para observaciones positivas/exitosas;
+aunque no tan bueno como el primer modelo, pues presenta **menor sensibilidad**.
+- En base a los valores de especificidad, el nuevo modelo es mejor que el primer modelo, aunque no tanto como el segundo modelo, en predecir una clase
+negativa ("Down") para observaciones no exitosas ("Down" como valor de `Direction`).
+- En comparación a los dos primeros modelos, el nuevo modelo estima mayores probabilidades de que una nueva observación sea positiva/exitosa (PPV), y de que una nueva observación sea negativa (NPV).
+
+
+### Pregunta f
+
+```{r}
+#:::::::::::::::::::::::::::::::::::: #
+# Regresión binaria con enlace probit #
+#:::::::::::::::::::::::::::::::::::: #
+modelo_4_probit <- glm(
+  Direction ~ Lag2, family = binomial(link = "probit"), data = training_set
+)
+summary(modelo_4_probit)
+
+# Probabilidades predichas
+yprob4 <- predict(
+  modelo_4_probit, newdata = validation_set, type = 'response'
+)
+# Valores predichos
+ypred4 <- as.numeric(yprob4 >= 0.5) |>
+  factor(labels = levels(validation_set$Direction))
+
+# Matriz de confusión
+tmp4 <- caret::confusionMatrix(
+  data = ypred4, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp4[[3]], tmp4[[4]])), row.names = "Modelo 4: probit")
+)
+```
+
+```{r}
+#| echo: false
+tmp4[[2]][2:1, 2:1]
+```
+
+```{r}
+#::::::::::::::::::::::::::::::::::::: #
+# Regresión binaria con enlace cloglog #
+#::::::::::::::::::::::::::::::::::::: #
+modelo_5_cloglog <- glm(
+  Direction ~ Lag2, family = binomial(link = "cloglog"), data = training_set
+)
+summary(modelo_5_cloglog)
+
+# Probabilidades predichas
+yprob5 <- predict(
+  modelo_5_cloglog, newdata = validation_set, type = 'response'
+)
+# Valores predichos
+ypred5 <- as.numeric(yprob5 >= 0.5) |>
+  factor(labels = levels(validation_set$Direction))
+
+# Matriz de confusión
+tmp5 <- caret::confusionMatrix(
+  data = ypred5, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp5[[3]], tmp5[[4]])), row.names = "Modelo 5: cloglog")
+)
+```
+
+```{r}
+#| echo: false
+tmp5[[2]][2:1, 2:1]
+```
+
+
+```{r}
+#::::::::::::::::::::::::::::::::::::: #
+# Regresión binaria con enlace cauchit #
+#::::::::::::::::::::::::::::::::::::: #
+modelo_6_cauchit <- glm(
+  Direction ~ Lag2, family = binomial(link = "cauchit"), data = training_set
+)
+summary(modelo_6_cauchit)
+
+# Probabilidades predichas
+yprob6 <- predict(
+  modelo_6_cauchit, newdata = validation_set, type = 'response'
+)
+# Valores predichos
+ypred6 <- as.numeric(yprob6 >= 0.5) |>
+  factor(labels = levels(validation_set$Direction))
+
+# Matriz de confusión
+tmp6 <- caret::confusionMatrix(
+  data = ypred6, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp6[[3]], tmp6[[4]])), row.names = "Modelo 6: cauchit")
+)
+```
+
+```{r}
+#| echo: false
+tmp6[[2]][2:1, 2:1]
+```
+
+
+```{r}
+#::::::::::::::::::::::::::::::::::::::::::::: #
+# Modelo Naive Bayes con estimación no 
+# paramétrica de la densidad del predictor Lag2
+#::::::::::::::::::::::::::::::::::::::::::::: #
+library(naivebayes)
+
+modelo_7_naive_bayes <- naive_bayes(
+  x = training_set["Lag2"], y = training_set$Direction, 
+  usekernel = TRUE
+)
+
+# Probabilidades predichas
+yprob7 <- predict(modelo_7_naive_bayes, newdata = validation_set["Lag2"], type = 'prob')[,2]
+
+# Valores predichos
+ypred7 <- predict(modelo_7_naive_bayes, newdata = validation_set["Lag2"])
+
+# Matriz de confusión
+tmp7 <- caret::confusionMatrix(
+  data = ypred7, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp7[[3]], tmp7[[4]])), row.names = "Modelo 7: Naive Bayes")
+)
+```
+
+```{r}
+#| echo: false
+tmp7[[2]][2:1, 2:1]
+```
+
+Respecto al uso del modelo **KNN**, no es necesario 
+estandarizar las variables, ya que solo se tiene un predictor,
+`Lag2`, el cual es numérico, por lo que tampoco se tienen 
+predictores categóricos por binarizar.
+
+Asimismo, usaremos todos los datos de `Weekly` para 
+validación cruzada, en vez de dividir el conjunto de entrenamiento
+fijado previamente en uno o más pares 
+(nuevo conjunto de entrenamiento, nuevo conjunto de validación).
+Esto debido a que, con más datos, los modelos se entrenan mejor.
+
+Por último, emplearemos LOOCV y estaremos usando la tasa de error de 
+clasificación, como criterio de selección de los modelos KNN, 
+para distintos valores de K.
+
+```{r}
+# Consideramos el tamaño de la vecindad K entre 1 y 100
+numero_casos_K <- 100
+error_rate <- rep(0, numero_casos_K)
+
+# Fijamos semilla debido al posible caso de "tie-breaks"
+# cuando se vota por la clase por predecir.
+set.seed(6174)
+for (K in 1:numero_casos_K) {
+  error_rate[K] <- mean(
+    class::knn.cv(train = Weekly["Lag2"], cl = Weekly$Direction, k = K) != Weekly$Direction
+  )
+}
+
+plot(
+  error_rate, main = "LOOCV", type = 'l',
+  xlab = "Tamaño de vecindad (K)", ylab = "Tasa de error de clasificación"
+)
+```
+
+
+```{r}
+# Tamaño de vecindad que minimiza la tasa de error de clasificación
+optimum_K <- which.min(error_rate)
+optimum_K
+```
+
+
+```{r}
+#:::::::::::::::::::::::: #
+# Modelo KNN usando K = 33 
+#:::::::::::::::::::::::: #
+# Valores predichos
+ypred8 <- class::knn(
+  train = training_set["Lag2"], test = validation_set["Lag2"],
+  cl = training_set$Direction, k = optimum_K, prob = TRUE
+)
+
+# Estimaciones de probabilidades predichas
+yprob8 <- attr(ypred8, "prob")
+
+# Matriz de confusión
+tmp8 <- caret::confusionMatrix(
+  data = ypred8, reference = validation_set$Direction, 
+  positive = "Up", mode = "everything"
+)
+
+metricas_modelos <- rbind(
+  metricas_modelos,
+  data.frame(as.list(c(tmp8[[3]], tmp8[[4]])), row.names = "Modelo 8: KNN")
+)
+```
+
+```{r}
+#| echo: false
+tmp8[[2]][2:1, 2:1]
+```
+
+
+**Comparación de los modelos a partir de la pregunta anterior**:
+
+```{r}
+knitr::kable(t(metricas_modelos[-c(1, 2),]))
+```
+
+- Notamos que los cuatro modelos de tipo `glm()` presentan las mismas métricas
+respecto al conjunto de validación (accuracy, sensibilidad, etc).
+- Los mayores valores de **accuracy** y **coeficiente de Kappa** entre los modelos
+presentados ocurren para el modelo de regresión logística.
+- El modelo **Naive Bayes** presenta la **máxima sensibilidad** y **mínima especificidad**.
+- Por último, resaltamos que el modelo **Naive Bayes** no siempre presenta métricas
+con mayor valor que en el modelo **KNN**. Por ejemplo, **KNN** presenta mayor especificidad
+que **Naive Bayes**; mas, tiene menor coeficiente de Kappa.
+
+
+### Pregunta g
+
+
+```{r}
+# Curvas ROC
+curvas_roc <- list()
+curvas_roc[[1]] <- roc(response = validation_set$Direction, predictor = yprob3)
+curvas_roc[[2]] <- roc(response = validation_set$Direction, predictor = yprob4)
+curvas_roc[[3]] <- roc(response = validation_set$Direction, predictor = yprob5)
+curvas_roc[[4]] <- roc(response = validation_set$Direction, predictor = yprob6)
+curvas_roc[[5]] <- roc(response = validation_set$Direction, predictor = yprob7)
+curvas_roc[[6]] <- roc(response = validation_set$Direction, predictor = yprob8)
+```
+
+
+```{r}
+# Curva ROC
+plot(
+  1 - curvas_roc[[1]]$specificities, curvas_roc[[1]]$sensitivities,
+  ylab = "Sensitividad", xlab = "1 - Especificidad",
+  main = "Curvas ROC para los modelos 3, 4, 5, 6, 7 y 8",
+  type = "l", col = 1, lwd = 2
+)
+for (indice in 2:6) {
+  lines(1 - curvas_roc[[indice]]$specificities, curvas_roc[[indice]]$sensitivities, col = indice)
+}
+
+abline(a = 0, b = 1, col = "red")
+legend(0, 1, legend = 3:8, fill = 1:6)
+```
+
+De la gráfica notamos que ninguno de los modelos es cercano al modelo ideal, 
+pues las curvas ROC no están cercanas al punto $\left( 0, 1 \right)$ del gráfico.
+
+Asimismo, los modelos asociados al gráfico presentan curvas ROC relativamente
+cerca a la recta (diagonal) $x = y$ . Esto significa que las predicciones generadas
+por estos modelos no difieren mucho de si se predijese al azar la clase. Esto se evidencia
+por los valores tan cercanos a cero de los coeficientes de Kappa de estos modelos.
+
+También notamos que la curva ROC asociada al modelo KNN (color morado) es *muy poligonal* (no parece tan
+*continua* como las otras curvas). Esto es consecuencia de que las estimaciones de probabilidad
+de pertencia a una clase son mucho menos precisas para KNN, comparado a los otros modelos.
+Aquello debido a que tal probabilidad se estima según las proporciones de las clases
+respecto a los elementos de la vecindad; así, para cada vecindad considerada de **K** observaciones.
+
+Por último, inspeccionando una *distancia promedio* entre cada curva ROC y el punto
+$\left( 0, 1 \right)$, notamos que el modelo **Naive Bayes** (color celeste) podría considerarse el mejor
+entre los modelos testeados (curva ROC más cercana a $\left( 0,1 \right)$).
+
+
+### Pregunta h
+
+```{r}
+# Particionamos Weekly en 10 partes de 
+# aproximadamente la misma cantidad de observaciones
+
+# Número de folds
+k <- 10
+
+set.seed(1729)
+splitPlan <- vtreat::kWayCrossValidation(nRows = nrow(Weekly), k)
+```
+
+Para considerar distintos puntos de corte, fijaremos la métrica 
+área bajo la curva ROC (**AUC**) como criterio de comparación de modelos.
+
+
+```{r}
+resultados_finales <- data.frame(
+  Modelo = c(
+    "Binomial, Link logit", "Binomial, Link probit",
+    "Binomial, Link cloglog", "Binomial, Link cauchit",
+    "Naive Bayes", "KNN, K = 33"
+  )
+)
+
+# Para cada uno de los 10 folds, guardamos el valor hallado de AUC
+for (fold in 1:k) {
+  resultados_finales[paste0("AUC_", fold)] <- 0
+}
+resultados_finales
+```
+
+```{r}
+for(fold in 1:k) {
+  split <- splitPlan[[fold]]
+
+  # Hallamos las probabilidades predichas para el 
+  # conjunto de validación, para cada uno de los seis modelos .
+  for (fila in 1:6) {
+    prob_pred <- NULL
+
+    # Modelo glm(..., binomial("logit"))
+    if (fila == 1) {
+      modelo <- glm(
+        Direction ~ Lag2, family = binomial(link = "logit"), 
+        data = Weekly[split$train,]
+      )
+      prob_pred <- predict(
+        modelo, newdata = Weekly[split$app,], type = 'response'
+      )
+    }
+
+    # Modelo glm(..., binomial("probit"))
+    if (fila == 2) {
+      modelo <- glm(
+        Direction ~ Lag2, family = binomial(link = "probit"), 
+        data = Weekly[split$train,]
+      )
+      prob_pred <- predict(
+        modelo, newdata = Weekly[split$app,], type = 'response'
+      )
+    }
+
+    # Modelo glm(..., binomial("cloglog"))
+    if (fila == 3) {
+      modelo <- glm(
+        Direction ~ Lag2, family = binomial(link = "cloglog"), 
+        data = Weekly[split$train,]
+      )
+      prob_pred <- predict(
+        modelo, newdata = Weekly[split$app,], type = 'response'
+      )
+    }
+
+    # Modelo glm(..., binomial("cauchit"))
+    if (fila == 4) {
+      modelo <- glm(
+        Direction ~ Lag2, family = binomial(link = "cauchit"), 
+        data = Weekly[split$train,]
+      )
+      prob_pred <- predict(
+        modelo, newdata = Weekly[split$app,], type = 'response'
+      )
+    }
+
+    # Modelo Naive Bayes
+    if (fila == 5) {
+      modelo <- naive_bayes(
+        x = Weekly[split$train,]["Lag2"], y = Weekly[split$train,]$Direction, 
+        usekernel = TRUE
+      )
+      prob_pred <- predict(
+        modelo, newdata = Weekly[split$app,]["Lag2"],  type = 'prob'
+      )[,2]
+    }
+
+    # Modelo KNN con K = 33
+    if (fila == 6) {
+      modelo <- class::knn(
+        train = Weekly[split$train,]["Lag2"], test = Weekly[split$app,]["Lag2"],
+        cl = Weekly[split$train,]$Direction, k = optimum_K, prob = TRUE
+      )
+      prob_pred <- attr(modelo, "prob")
+    }
+
+    
+    # Grabar el valor de AUC asociado al fold, para cada modelo .
+    analysis <- roc(
+      response = Weekly[split$app,]$Direction, predictor = prob_pred
+    )
+    resultados_finales[fila, paste0("AUC_", fold)] <- analysis$auc
+  }
+}
+```
+
+```{r}
+knitr::kable(resultados_finales)
+```
+
+
+```{r}
+# Promediamos de manera ponderada los diez valores de AUC,
+# respecto a la cantidad de observaciones en los 10 conjuntos de validación
+resultados_finales["AUC_ponderado"] <- 0
+sum_sizes_validation_sets <- 0
+
+# Suma ponderada
+for (fila in 1:6) {
+  for (fold in 1:k) {
+    resultados_finales[fila, "AUC_ponderado"] <- resultados_finales[fila, "AUC_ponderado"] + resultados_finales[fila, paste0("AUC_", fold)] * length(splitPlan[[fold]]$app)
+  
+    if (fila == 1) {
+      sum_sizes_validation_sets <- sum_sizes_validation_sets + length(splitPlan[[fold]]$app)
+    }
+  }
+}
+
+# Dividir entre la suma de los tamaños de los 10 conjuntos de validación
+resultados_finales["AUC_ponderado"] <- resultados_finales["AUC_ponderado"] / sum_sizes_validation_sets
+```
+
+```{r}
+knitr::kable(resultados_finales[, c("Modelo", "AUC_ponderado")])
+```
+
+Como modelos de clasificación con mayor **AUC** suelen ser mejores,
+de la tabla previa concluimos que el modelo **Naive Bayes** tuvo
+el mejor desempeño entre los seis modelos, seguido por los cuatro
+modelos de tipo **glm(...)**; y, por último, **KNN**, modelo de menor desempeño.
+
+Estos resultados son consistentes con lo obtenido en la pregunta **g**,
+puesto que los modelos cuyas curvas ROC estaban más cercanas al punto
+$\left( 0, 1 \right)$ han sido los mismos que, en esta pregunta,
+hemos verificado tienen mejor desempeño predictivo.
+
+
+## Pregunta 2
+
