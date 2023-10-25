@@ -715,3 +715,105 @@ hemos verificado tienen mejor desempeño predictivo.
 
 ## Pregunta 2
 
+### CV incorrecto
+
+```{r}
+library(boot)
+# GENERAR DATOS; utilizar una semilla para la reproducibilidad
+set.seed(4268)
+n = 50 # número de observaciones
+p = 5000 # número de predictores
+
+d = 25 # principales predictores correlacionados elegidos
+
+# generando datos para los predictores
+xs = matrix(rnorm(n * p, 0, 4), ncol = p, nrow = n) # forma simple de predictores no correlacionados
+
+dim(xs) # n times p
+
+# generar etiquetas de clase independientes de los predictores, por
+# lo que si todo se clasifica como clase 1, esperamos un 50% de
+# errores en general
+ys = c(rep(0, n/2), rep(1, n/2)) # Ahora realmente el 50% de cada una
+table(ys)
+```
+
+```{r}
+corrs = apply(xs, 2, cor, y = ys)
+hist(corrs)
+selected = order(corrs^2, decreasing = TRUE)[1:d] # top d correlaciones seleccionadas
+data = data.frame(ys, xs[, selected])
+```
+
+```{r}
+logfit = glm(ys ~ ., family = "binomial", data = data)
+cost <- function(r, pi = 0) mean(abs(r - pi) > 0.5)
+kfold = 10
+cvres = cv.glm(data = data, cost = cost, glmfit = logfit, K = kfold)
+cvres$delta
+```
+
+### CV correcto
+
+```{r}
+# Fijamos índices que representan un orden aleatorio 
+# de las 50 observaciones (sin repetición)
+reorder = sample(1:n, replace = FALSE)
+
+validclass = NULL
+
+# Para cada uno de los 10 folds ()
+for (i in 1:kfold) {
+  # Cantidad (aproximada) de observaciones por fold
+  neach = n/kfold # (vale 5 en este ejemplo)
+
+  # Fijamos los identificadores del conjunto de entrenamiento.
+  # Para el fold 1: 
+  #   trainids es todos los ids en el dataset completo (1 a 50), 
+  #   salvo los ids de 1 a 5.
+  # Para el fold 2: 
+  #   trainids es todos los ids en el dataset completo (1 a 50), 
+  #   salvo los ids de 6 a 11.
+  # De esa manera, de 5 en 5, por un total de 10 veces, separamos
+  # los datos en conjuntos de entrenamiento y de validación
+  trainids = setdiff(1:n, (((i - 1) * neach + 1):(i * neach)))
+
+  # Los ids de trainids no se usarán respecto al número de fila en
+  # el conjunto de datos completo (xs), sino respecto al reordenamiento
+  # aleatorio que se fijó previamente en la variable reorder.
+  # Así, separamos los predictores y la response, creando, para este fold,
+  # el conjunto de entrenamiento (traindata) y el conjunto de validación (validdata)
+  traindata = data.frame(xs[reorder[trainids], ], ys[reorder[trainids]])
+  validdata = data.frame(xs[reorder[-trainids], ], ys[reorder[-trainids]])
+
+  # Asignamos nombres a las columnas del data frame para poder usar
+  # fácilmente la fórmula en la función glm()
+  colnames(traindata) = colnames(validdata) = c(paste("X", 1:p), "y")
+
+  # Para cada uno de los predictores, hallamos su correlación con
+  # la variable respuesta, respecto a los datos del training dataset .
+  foldcorrs = apply(traindata[, 1:p], 2, cor, y = traindata[, p + 1])
+
+  # Seleccionamos los d (25) predictores mayor correlacionados con la response
+  selected = order(foldcorrs^2, decreasing = TRUE)[1:d] #top d correlaciones seleccionadas
+
+  # Consideramos solo aquellos d (predictores) para el modelo por entrenar,
+  # así que filtramos la data de entrenamiento previa.
+  data = traindata[, c(selected, p + 1)]
+  trainlogfit = glm(y ~ ., family = binomial, data = data)
+  
+  # Predecimos la probabilidad que asignada el modelo entrenado,
+  # para los datos de validación (filtrando también ahí solo las d
+  # variables de mayor correlación con la variable response)
+  pred = plogis(predict.glm(trainlogfit, newdata = validdata[, selected]))
+  
+  # Asignamos la clase 1 si la probabilidad de pertenencia predicha es mayor a 0.5
+  validclass = c(validclass, ifelse(pred > 0.5, 1, 0))
+}
+
+# Matriz de confusión asociada al modelo
+table(ys[reorder], validclass)
+
+# Proporción de predicciones incorrectas, respecto al conjunto de validación
+1 - sum(diag(table(ys[reorder], validclass)))/n
+```

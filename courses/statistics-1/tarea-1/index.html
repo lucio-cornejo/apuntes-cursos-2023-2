@@ -93,6 +93,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pregunta-g" id="toc-pregunta-g" class="nav-link" data-scroll-target="#pregunta-g">Pregunta g</a></li>
   <li><a href="#pregunta-h" id="toc-pregunta-h" class="nav-link" data-scroll-target="#pregunta-h">Pregunta h</a></li>
   </ul></li>
+  <li><a href="#pregunta-2" id="toc-pregunta-2" class="nav-link" data-scroll-target="#pregunta-2">Pregunta 2</a>
+  <ul class="collapse">
+  <li><a href="#cv-incorrecto" id="toc-cv-incorrecto" class="nav-link" data-scroll-target="#cv-incorrecto">CV incorrecto</a></li>
+  <li><a href="#cv-correcto" id="toc-cv-correcto" class="nav-link" data-scroll-target="#cv-correcto">CV correcto</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -1381,81 +1386,80 @@ Setting direction: controls &lt; cases</code></pre>
 <span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Hallamos las probabilidades predichas para el </span></span>
 <span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conjunto de validación, para cada uno de los seis modelos .</span></span>
 <span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (fila <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
-<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    modelo <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>    prob_pred <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("logit"))</span></span>
-<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">1</span>) {</span>
-<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>), </span>
-<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
-<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb96-17"><a href="#cb96-17" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
-<span id="cb96-18"><a href="#cb96-18" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-19"><a href="#cb96-19" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-20"><a href="#cb96-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-21"><a href="#cb96-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("probit"))</span></span>
-<span id="cb96-22"><a href="#cb96-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">2</span>) {</span>
-<span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>), </span>
-<span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
-<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-27"><a href="#cb96-27" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb96-28"><a href="#cb96-28" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
-<span id="cb96-29"><a href="#cb96-29" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-30"><a href="#cb96-30" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-31"><a href="#cb96-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-32"><a href="#cb96-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("cloglog"))</span></span>
-<span id="cb96-33"><a href="#cb96-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">3</span>) {</span>
-<span id="cb96-34"><a href="#cb96-34" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb96-35"><a href="#cb96-35" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"cloglog"</span>), </span>
-<span id="cb96-36"><a href="#cb96-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
-<span id="cb96-37"><a href="#cb96-37" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-38"><a href="#cb96-38" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb96-39"><a href="#cb96-39" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
-<span id="cb96-40"><a href="#cb96-40" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-41"><a href="#cb96-41" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-42"><a href="#cb96-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-43"><a href="#cb96-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("cauchit"))</span></span>
-<span id="cb96-44"><a href="#cb96-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">4</span>) {</span>
-<span id="cb96-45"><a href="#cb96-45" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb96-46"><a href="#cb96-46" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"cauchit"</span>), </span>
-<span id="cb96-47"><a href="#cb96-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
-<span id="cb96-48"><a href="#cb96-48" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-49"><a href="#cb96-49" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb96-50"><a href="#cb96-50" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
-<span id="cb96-51"><a href="#cb96-51" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-52"><a href="#cb96-52" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-53"><a href="#cb96-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-54"><a href="#cb96-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo Naive Bayes</span></span>
-<span id="cb96-55"><a href="#cb96-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">5</span>) {</span>
-<span id="cb96-56"><a href="#cb96-56" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(</span>
-<span id="cb96-57"><a href="#cb96-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> Weekly[split<span class="sc">$</span>train,][<span class="st">"Lag2"</span>], <span class="at">y =</span> Weekly[split<span class="sc">$</span>train,]<span class="sc">$</span>Direction, </span>
-<span id="cb96-58"><a href="#cb96-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">usekernel =</span> <span class="cn">TRUE</span></span>
-<span id="cb96-59"><a href="#cb96-59" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-60"><a href="#cb96-60" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb96-61"><a href="#cb96-61" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,][<span class="st">"Lag2"</span>],  <span class="at">type =</span> <span class="st">'prob'</span></span>
-<span id="cb96-62"><a href="#cb96-62" aria-hidden="true" tabindex="-1"></a>      )[,<span class="dv">2</span>]</span>
-<span id="cb96-63"><a href="#cb96-63" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-64"><a href="#cb96-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-65"><a href="#cb96-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo KNN con K = 33</span></span>
-<span id="cb96-66"><a href="#cb96-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">6</span>) {</span>
-<span id="cb96-67"><a href="#cb96-67" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> class<span class="sc">::</span><span class="fu">knn</span>(</span>
-<span id="cb96-68"><a href="#cb96-68" aria-hidden="true" tabindex="-1"></a>        <span class="at">train =</span> Weekly[split<span class="sc">$</span>train,][<span class="st">"Lag2"</span>], <span class="at">test =</span> Weekly[split<span class="sc">$</span>app,][<span class="st">"Lag2"</span>],</span>
-<span id="cb96-69"><a href="#cb96-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">cl =</span> Weekly[split<span class="sc">$</span>train,]<span class="sc">$</span>Direction, <span class="at">k =</span> optimum_K, <span class="at">prob =</span> <span class="cn">TRUE</span></span>
-<span id="cb96-70"><a href="#cb96-70" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb96-71"><a href="#cb96-71" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">attr</span>(modelo, <span class="st">"prob"</span>)</span>
-<span id="cb96-72"><a href="#cb96-72" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb96-73"><a href="#cb96-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-74"><a href="#cb96-74" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb96-75"><a href="#cb96-75" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Grabar el valor de AUC asociado al fold, para cada modelo .</span></span>
-<span id="cb96-76"><a href="#cb96-76" aria-hidden="true" tabindex="-1"></a>    analysis <span class="ot">&lt;-</span> <span class="fu">roc</span>(</span>
-<span id="cb96-77"><a href="#cb96-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">response =</span> Weekly[split<span class="sc">$</span>app,]<span class="sc">$</span>Direction, <span class="at">predictor =</span> prob_pred</span>
-<span id="cb96-78"><a href="#cb96-78" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb96-79"><a href="#cb96-79" aria-hidden="true" tabindex="-1"></a>    resultados_finales[fila, <span class="fu">paste0</span>(<span class="st">"AUC_"</span>, fold)] <span class="ot">&lt;-</span> analysis<span class="sc">$</span>auc</span>
-<span id="cb96-80"><a href="#cb96-80" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb96-81"><a href="#cb96-81" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    prob_pred <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("logit"))</span></span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>), </span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
+<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
+<span id="cb96-17"><a href="#cb96-17" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-18"><a href="#cb96-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-19"><a href="#cb96-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-20"><a href="#cb96-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("probit"))</span></span>
+<span id="cb96-21"><a href="#cb96-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb96-22"><a href="#cb96-22" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>), </span>
+<span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
+<span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb96-27"><a href="#cb96-27" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
+<span id="cb96-28"><a href="#cb96-28" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-29"><a href="#cb96-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-30"><a href="#cb96-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-31"><a href="#cb96-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("cloglog"))</span></span>
+<span id="cb96-32"><a href="#cb96-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">3</span>) {</span>
+<span id="cb96-33"><a href="#cb96-33" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb96-34"><a href="#cb96-34" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"cloglog"</span>), </span>
+<span id="cb96-35"><a href="#cb96-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
+<span id="cb96-36"><a href="#cb96-36" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-37"><a href="#cb96-37" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb96-38"><a href="#cb96-38" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
+<span id="cb96-39"><a href="#cb96-39" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-40"><a href="#cb96-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-41"><a href="#cb96-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-42"><a href="#cb96-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo glm(..., binomial("cauchit"))</span></span>
+<span id="cb96-43"><a href="#cb96-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">4</span>) {</span>
+<span id="cb96-44"><a href="#cb96-44" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb96-45"><a href="#cb96-45" aria-hidden="true" tabindex="-1"></a>        Direction <span class="sc">~</span> Lag2, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"cauchit"</span>), </span>
+<span id="cb96-46"><a href="#cb96-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> Weekly[split<span class="sc">$</span>train,]</span>
+<span id="cb96-47"><a href="#cb96-47" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-48"><a href="#cb96-48" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb96-49"><a href="#cb96-49" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,], <span class="at">type =</span> <span class="st">'response'</span></span>
+<span id="cb96-50"><a href="#cb96-50" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-51"><a href="#cb96-51" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-52"><a href="#cb96-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-53"><a href="#cb96-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo Naive Bayes</span></span>
+<span id="cb96-54"><a href="#cb96-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">5</span>) {</span>
+<span id="cb96-55"><a href="#cb96-55" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> <span class="fu">naive_bayes</span>(</span>
+<span id="cb96-56"><a href="#cb96-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> Weekly[split<span class="sc">$</span>train,][<span class="st">"Lag2"</span>], <span class="at">y =</span> Weekly[split<span class="sc">$</span>train,]<span class="sc">$</span>Direction, </span>
+<span id="cb96-57"><a href="#cb96-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">usekernel =</span> <span class="cn">TRUE</span></span>
+<span id="cb96-58"><a href="#cb96-58" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-59"><a href="#cb96-59" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb96-60"><a href="#cb96-60" aria-hidden="true" tabindex="-1"></a>        modelo, <span class="at">newdata =</span> Weekly[split<span class="sc">$</span>app,][<span class="st">"Lag2"</span>],  <span class="at">type =</span> <span class="st">'prob'</span></span>
+<span id="cb96-61"><a href="#cb96-61" aria-hidden="true" tabindex="-1"></a>      )[,<span class="dv">2</span>]</span>
+<span id="cb96-62"><a href="#cb96-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-63"><a href="#cb96-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-64"><a href="#cb96-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modelo KNN con K = 33</span></span>
+<span id="cb96-65"><a href="#cb96-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (fila <span class="sc">==</span> <span class="dv">6</span>) {</span>
+<span id="cb96-66"><a href="#cb96-66" aria-hidden="true" tabindex="-1"></a>      modelo <span class="ot">&lt;-</span> class<span class="sc">::</span><span class="fu">knn</span>(</span>
+<span id="cb96-67"><a href="#cb96-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">train =</span> Weekly[split<span class="sc">$</span>train,][<span class="st">"Lag2"</span>], <span class="at">test =</span> Weekly[split<span class="sc">$</span>app,][<span class="st">"Lag2"</span>],</span>
+<span id="cb96-68"><a href="#cb96-68" aria-hidden="true" tabindex="-1"></a>        <span class="at">cl =</span> Weekly[split<span class="sc">$</span>train,]<span class="sc">$</span>Direction, <span class="at">k =</span> optimum_K, <span class="at">prob =</span> <span class="cn">TRUE</span></span>
+<span id="cb96-69"><a href="#cb96-69" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb96-70"><a href="#cb96-70" aria-hidden="true" tabindex="-1"></a>      prob_pred <span class="ot">&lt;-</span> <span class="fu">attr</span>(modelo, <span class="st">"prob"</span>)</span>
+<span id="cb96-71"><a href="#cb96-71" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-72"><a href="#cb96-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-73"><a href="#cb96-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-74"><a href="#cb96-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Grabar el valor de AUC asociado al fold, para cada modelo .</span></span>
+<span id="cb96-75"><a href="#cb96-75" aria-hidden="true" tabindex="-1"></a>    analysis <span class="ot">&lt;-</span> <span class="fu">roc</span>(</span>
+<span id="cb96-76"><a href="#cb96-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">response =</span> Weekly[split<span class="sc">$</span>app,]<span class="sc">$</span>Direction, <span class="at">predictor =</span> prob_pred</span>
+<span id="cb96-77"><a href="#cb96-77" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb96-78"><a href="#cb96-78" aria-hidden="true" tabindex="-1"></a>    resultados_finales[fila, <span class="fu">paste0</span>(<span class="st">"AUC_"</span>, fold)] <span class="ot">&lt;-</span> analysis<span class="sc">$</span>auc</span>
+<span id="cb96-79"><a href="#cb96-79" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb96-80"><a href="#cb96-80" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting levels: control = Down, case = Up</code></pre>
 </div>
@@ -1993,6 +1997,178 @@ Setting direction: controls &lt; cases</code></pre>
 </div>
 <p>Como modelos de clasificación con mayor <strong>AUC</strong> suelen ser mejores, de la tabla previa concluimos que el modelo <strong>Naive Bayes</strong> tuvo el mejor desempeño entre los seis modelos, seguido por los cuatro modelos de tipo <strong>glm(…)</strong>; y, por último, <strong>KNN</strong>, modelo de menor desempeño.</p>
 <p>Estos resultados son consistentes con lo obtenido en la pregunta <strong>g</strong>, puesto que los modelos cuyas curvas ROC estaban más cercanas al punto <span class="math inline">\(\left( 0, 1 \right)\)</span> han sido los mismos que, en esta pregunta, hemos verificado tienen mejor desempeño predictivo.</p>
+</section>
+</section>
+<section id="pregunta-2" class="level2">
+<h2 class="anchored" data-anchor-id="pregunta-2">Pregunta 2</h2>
+<section id="cv-incorrecto" class="level3">
+<h3 class="anchored" data-anchor-id="cv-incorrecto">CV incorrecto</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb220"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb220-1"><a href="#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'boot' was built under R version 4.1.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb222"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb222-1"><a href="#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GENERAR DATOS; utilizar una semilla para la reproducibilidad</span></span>
+<span id="cb222-2"><a href="#cb222-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4268</span>)</span>
+<span id="cb222-3"><a href="#cb222-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50</span> <span class="co"># número de observaciones</span></span>
+<span id="cb222-4"><a href="#cb222-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">5000</span> <span class="co"># número de predictores</span></span>
+<span id="cb222-5"><a href="#cb222-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-6"><a href="#cb222-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="dv">25</span> <span class="co"># principales predictores correlacionados elegidos</span></span>
+<span id="cb222-7"><a href="#cb222-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-8"><a href="#cb222-8" aria-hidden="true" tabindex="-1"></a><span class="co"># generando datos para los predictores</span></span>
+<span id="cb222-9"><a href="#cb222-9" aria-hidden="true" tabindex="-1"></a>xs <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> p, <span class="dv">0</span>, <span class="dv">4</span>), <span class="at">ncol =</span> p, <span class="at">nrow =</span> n) <span class="co"># forma simple de predictores no correlacionados</span></span>
+<span id="cb222-10"><a href="#cb222-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-11"><a href="#cb222-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(xs) <span class="co"># n times p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]   50 5000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb224"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb224-1"><a href="#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generar etiquetas de clase independientes de los predictores, por</span></span>
+<span id="cb224-2"><a href="#cb224-2" aria-hidden="true" tabindex="-1"></a><span class="co"># lo que si todo se clasifica como clase 1, esperamos un 50% de</span></span>
+<span id="cb224-3"><a href="#cb224-3" aria-hidden="true" tabindex="-1"></a><span class="co"># errores en general</span></span>
+<span id="cb224-4"><a href="#cb224-4" aria-hidden="true" tabindex="-1"></a>ys <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, n<span class="sc">/</span><span class="dv">2</span>), <span class="fu">rep</span>(<span class="dv">1</span>, n<span class="sc">/</span><span class="dv">2</span>)) <span class="co"># Ahora realmente el 50% de cada una</span></span>
+<span id="cb224-5"><a href="#cb224-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ys
+ 0  1 
+25 25 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb226"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb226-1"><a href="#cb226-1" aria-hidden="true" tabindex="-1"></a>corrs <span class="ot">=</span> <span class="fu">apply</span>(xs, <span class="dv">2</span>, cor, <span class="at">y =</span> ys)</span>
+<span id="cb226-2"><a href="#cb226-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(corrs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb227"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb227-1"><a href="#cb227-1" aria-hidden="true" tabindex="-1"></a>selected <span class="ot">=</span> <span class="fu">order</span>(corrs<span class="sc">^</span><span class="dv">2</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span>d] <span class="co"># top d correlaciones seleccionadas</span></span>
+<span id="cb227-2"><a href="#cb227-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(ys, xs[, selected])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb228"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb228-1"><a href="#cb228-1" aria-hidden="true" tabindex="-1"></a>logfit <span class="ot">=</span> <span class="fu">glm</span>(ys <span class="sc">~</span> ., <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb230"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb230-1"><a href="#cb230-1" aria-hidden="true" tabindex="-1"></a>cost <span class="ot">&lt;-</span> <span class="cf">function</span>(r, <span class="at">pi =</span> <span class="dv">0</span>) <span class="fu">mean</span>(<span class="fu">abs</span>(r <span class="sc">-</span> pi) <span class="sc">&gt;</span> <span class="fl">0.5</span>)</span>
+<span id="cb230-2"><a href="#cb230-2" aria-hidden="true" tabindex="-1"></a>kfold <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb230-3"><a href="#cb230-3" aria-hidden="true" tabindex="-1"></a>cvres <span class="ot">=</span> <span class="fu">cv.glm</span>(<span class="at">data =</span> data, <span class="at">cost =</span> cost, <span class="at">glmfit =</span> logfit, <span class="at">K =</span> kfold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb232"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb232-1"><a href="#cb232-1" aria-hidden="true" tabindex="-1"></a>cvres<span class="sc">$</span>delta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0</code></pre>
+</div>
+</div>
+</section>
+<section id="cv-correcto" class="level3">
+<h3 class="anchored" data-anchor-id="cv-correcto">CV correcto</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb234"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb234-1"><a href="#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fijamos índices que representan un orden aleatorio </span></span>
+<span id="cb234-2"><a href="#cb234-2" aria-hidden="true" tabindex="-1"></a><span class="co"># de las 50 observaciones (sin repetición)</span></span>
+<span id="cb234-3"><a href="#cb234-3" aria-hidden="true" tabindex="-1"></a>reorder <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb234-4"><a href="#cb234-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-5"><a href="#cb234-5" aria-hidden="true" tabindex="-1"></a>validclass <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb234-6"><a href="#cb234-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-7"><a href="#cb234-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Para cada uno de los 10 folds ()</span></span>
+<span id="cb234-8"><a href="#cb234-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>kfold) {</span>
+<span id="cb234-9"><a href="#cb234-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Cantidad (aproximada) de observaciones por fold</span></span>
+<span id="cb234-10"><a href="#cb234-10" aria-hidden="true" tabindex="-1"></a>  neach <span class="ot">=</span> n<span class="sc">/</span>kfold <span class="co"># (vale 5 en este ejemplo)</span></span>
+<span id="cb234-11"><a href="#cb234-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-12"><a href="#cb234-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fijamos los identificadores del conjunto de entrenamiento.</span></span>
+<span id="cb234-13"><a href="#cb234-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Para el fold 1: </span></span>
+<span id="cb234-14"><a href="#cb234-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   trainids es todos los ids en el dataset completo (1 a 50), </span></span>
+<span id="cb234-15"><a href="#cb234-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   salvo los ids de 1 a 5.</span></span>
+<span id="cb234-16"><a href="#cb234-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Para el fold 2: </span></span>
+<span id="cb234-17"><a href="#cb234-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   trainids es todos los ids en el dataset completo (1 a 50), </span></span>
+<span id="cb234-18"><a href="#cb234-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   salvo los ids de 6 a 11.</span></span>
+<span id="cb234-19"><a href="#cb234-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># De esa manera, de 5 en 5, por un total de 10 veces, separamos</span></span>
+<span id="cb234-20"><a href="#cb234-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># los datos en conjuntos de entrenamiento y de validación</span></span>
+<span id="cb234-21"><a href="#cb234-21" aria-hidden="true" tabindex="-1"></a>  trainids <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n, (((i <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> neach <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>(i <span class="sc">*</span> neach)))</span>
+<span id="cb234-22"><a href="#cb234-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-23"><a href="#cb234-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Los ids de trainids no se usarán respecto al número de fila en</span></span>
+<span id="cb234-24"><a href="#cb234-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># el conjunto de datos completo (xs), sino respecto al reordenamiento</span></span>
+<span id="cb234-25"><a href="#cb234-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># aleatorio que se fijó previamente en la variable reorder.</span></span>
+<span id="cb234-26"><a href="#cb234-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Así, separamos los predictores y la response, creando, para este fold,</span></span>
+<span id="cb234-27"><a href="#cb234-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># el conjunto de entrenamiento (traindata) y el conjunto de validación (validdata)</span></span>
+<span id="cb234-28"><a href="#cb234-28" aria-hidden="true" tabindex="-1"></a>  traindata <span class="ot">=</span> <span class="fu">data.frame</span>(xs[reorder[trainids], ], ys[reorder[trainids]])</span>
+<span id="cb234-29"><a href="#cb234-29" aria-hidden="true" tabindex="-1"></a>  validdata <span class="ot">=</span> <span class="fu">data.frame</span>(xs[reorder[<span class="sc">-</span>trainids], ], ys[reorder[<span class="sc">-</span>trainids]])</span>
+<span id="cb234-30"><a href="#cb234-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-31"><a href="#cb234-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Asignamos nombres a las columnas del data frame para poder usar</span></span>
+<span id="cb234-32"><a href="#cb234-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fácilmente la fórmula en la función glm()</span></span>
+<span id="cb234-33"><a href="#cb234-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(traindata) <span class="ot">=</span> <span class="fu">colnames</span>(validdata) <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">paste</span>(<span class="st">"X"</span>, <span class="dv">1</span><span class="sc">:</span>p), <span class="st">"y"</span>)</span>
+<span id="cb234-34"><a href="#cb234-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-35"><a href="#cb234-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Para cada uno de los predictores, hallamos su correlación con</span></span>
+<span id="cb234-36"><a href="#cb234-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># la variable respuesta, respecto a los datos del training dataset .</span></span>
+<span id="cb234-37"><a href="#cb234-37" aria-hidden="true" tabindex="-1"></a>  foldcorrs <span class="ot">=</span> <span class="fu">apply</span>(traindata[, <span class="dv">1</span><span class="sc">:</span>p], <span class="dv">2</span>, cor, <span class="at">y =</span> traindata[, p <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb234-38"><a href="#cb234-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-39"><a href="#cb234-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Seleccionamos los d (25) predictores mayor correlacionados con la response</span></span>
+<span id="cb234-40"><a href="#cb234-40" aria-hidden="true" tabindex="-1"></a>  selected <span class="ot">=</span> <span class="fu">order</span>(foldcorrs<span class="sc">^</span><span class="dv">2</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span>d] <span class="co">#top d correlaciones seleccionadas</span></span>
+<span id="cb234-41"><a href="#cb234-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-42"><a href="#cb234-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Consideramos solo aquellos d (predictores) para el modelo por entrenar,</span></span>
+<span id="cb234-43"><a href="#cb234-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># así que filtramos la data de entrenamiento previa.</span></span>
+<span id="cb234-44"><a href="#cb234-44" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> traindata[, <span class="fu">c</span>(selected, p <span class="sc">+</span> <span class="dv">1</span>)]</span>
+<span id="cb234-45"><a href="#cb234-45" aria-hidden="true" tabindex="-1"></a>  trainlogfit <span class="ot">=</span> <span class="fu">glm</span>(y <span class="sc">~</span> ., <span class="at">family =</span> binomial, <span class="at">data =</span> data)</span>
+<span id="cb234-46"><a href="#cb234-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb234-47"><a href="#cb234-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Predecimos la probabilidad que asignada el modelo entrenado,</span></span>
+<span id="cb234-48"><a href="#cb234-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># para los datos de validación (filtrando también ahí solo las d</span></span>
+<span id="cb234-49"><a href="#cb234-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># variables de mayor correlación con la variable response)</span></span>
+<span id="cb234-50"><a href="#cb234-50" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">=</span> <span class="fu">plogis</span>(<span class="fu">predict.glm</span>(trainlogfit, <span class="at">newdata =</span> validdata[, selected]))</span>
+<span id="cb234-51"><a href="#cb234-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb234-52"><a href="#cb234-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Asignamos la clase 1 si la probabilidad de pertenencia predicha es mayor a 0.5</span></span>
+<span id="cb234-53"><a href="#cb234-53" aria-hidden="true" tabindex="-1"></a>  validclass <span class="ot">=</span> <span class="fu">c</span>(validclass, <span class="fu">ifelse</span>(pred <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb234-54"><a href="#cb234-54" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb236"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb236-1"><a href="#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusión asociada al modelo</span></span>
+<span id="cb236-2"><a href="#cb236-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ys[reorder], validclass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   validclass
+     0  1
+  0  9 16
+  1 12 13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb238"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb238-1"><a href="#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Porcentaje (*100) de predicciones incorrectas .</span></span>
+<span id="cb238-2"><a href="#cb238-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">table</span>(ys[reorder], validclass)))<span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.56</code></pre>
+</div>
+</div>
 </section>
 </section>
 
