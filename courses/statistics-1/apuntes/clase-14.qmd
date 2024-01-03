@@ -1,0 +1,365 @@
+# Apuntes de clase {-}
+
+## Conglomerados
+
+- **Goal:** Agrupar observaciones, de modo que
+cierta **distancia** entre observaciones, por grupo,
+sea minimizada.
+
+### Intro
+
+- **Clustering** es una herramienta para **anáisis descriptivo**.
+- El objetivo principal es **encontrar subgrupos homogéneos**.
+
+- Se busca que observaciones del mismo grupo sean similares;
+mientras que, de grupos distintos, sean diferentes.
+
+- Clustering no es clasificar, pues no hay variables dependiente.
+- Por lo general, no es adecuado comparar cluster algorithms diferentes.
+
+- Clustering también puede servir para **reducir el tamaño de un conjunto de datos**.
+
+### Tipos de Análisis Cluster
+
+- Cluster jerárquico
+- Cluster Bayesiano
+- Cluster particional
+
+### Problemas comunes
+
+- Problemas principales: 
+    - **Aglutinación**: Ocurre cuando 
+    un **objeto puede pertenecer a más de un cluster**.  
+    Para mitigar esta situación, se usan **algoritmos difusos**.
+    - **Disección**: Ocurre cuando la población
+    asociada a los datos **no contiene clusters significativos**.
+
+- Presencia de outliers.
+
+- Datos no normalizados (no tener misma escala).
+
+### Similaridad, distancia y proximidad
+
+- **Medida o función de similaridad**:
+    - Cuantifica similaridad entre objetos.
+    - A mayor valor, objetos más similares.
+    - Usualmente es un valor entre 0 (no similaridad)
+    y 1 (objetos completamente similares.)
+
+- **Distancia** (medida de disimilaridad):
+    - Indica qué tan diferentes son los datos.
+    - Menor valor, objeto smás parecidos.
+    - Mínimo valor de disimilaridad suele ser 0.
+    - Rango suele ser $\left[0; 1\right]$ o $\left[0; \infty \right($  
+
+- **Proximidad**: Se refiere usualmente tanto a la similaridad como a la
+disimilaridad.
+
+### Matriz de distancias (disimilaridad)
+
+- Matriz $n\times n$ donde se registran las distancias $d \left( i, j \right)$ .
+- **Usualmente simétrica** (no siempre).
+
+::: {#prp}
+
+Las funciones de distancias son usualmente distintas para variables de
+tipo cuantitativa o categórica.
+
+:::
+
+### Distancias con datos numéricos: 
+
+- **Distancias de Minkowski**: Sí es una métrica matemática. 
+$$
+d \left( i, j \right) = \left( \sum_{k=1}^{M} | x_{ik} - x_{jk} |^p \right)^{\dfrac{1}{p}},
+$$
+
+donde los datos pertenecen a $\mathbb{R}^M$, y $p$ es el orden de la distancia ($L_p norm$ ).
+
+- **Distancia de Canberra**
+
+### Distancias con datos mixtos
+
+- **Distancia de Gower** (el profesor no recomienda usar esta distancia,
+dice que no tiene un sustento robusto, a menos que no tengamos una mejor opción)
+
+- Como alternativa, el profesor recomienda usar un **MD Cluster**.
+
+## Ejemplo práctico
+
+### Distancias
+
+#### Datos numéricos
+
+```{r}
+# Base R
+set.seed(666)
+
+x <- matrix(rnorm(20), nrow = 5)
+dist(x)
+dist(x, method = "manhattan", diag = TRUE)
+dist(x, method = "maximum", upper = TRUE)
+```
+
+**La función `dist` solo funciona con datos numéricos.**
+
+#### Datos numéricos y categóricos
+
+```{r}
+library(cluster)
+daisy(x)
+
+x <- cbind(rnorm(10), sample(1:3,10, replace = TRUE))
+x <- as.data.frame(x)
+x[,2] <- as.factor(x[,2])
+daisy(x)
+```
+
+### Métodos de Particionamiento
+
+- Los datos son particionados en un número $K$ fijado de conglomerados.
+- Luego, iterativamente se va reasignando las observaciones a los conglomerados hasta que algún **criterio de parada** (función a optimizar) se satisface, o, se cumplió el número **máximo fijado de iteraciones**.
+
+#### Método K-means
+
+
+::: {#prp}
+
+Se recomienda **normalizar** las variables antes de
+implementar este algoritmo.
+
+:::
+
+- Centroide es un representate del cluster al que pertenece.
+
+- **Metodología**: 
+    1. Asigna aleatoriamente un número, de 1 a $K$ , a cada una de las observaciones.
+    1. Iterar hasta que la asignación de los cluster deje de cambiar
+        1. Para cada uno de los $K$ cluster, calcular el centroide. El k-ésimo centroide es el vector con las $p$ medias de las variables para las observaciones en el k-ésimo cluster.
+        1. Asignar cada observación al cluster donde el entroide esté más cerca (donde cercanía se encuentra definida por la distancia Euclidiana).
+
+- Al inicio, el centroide es una observación; para las siguientes
+iteraciones, most likely ya no.
+
+- El algoritmo anterior garantiza que el valor del objetivo 
+asociado a este modelo **decrezca en cada etapa**.
+
+- Este algoritmo es **computacionalmente rápido**; usualmente
+se fija 20 o 25 como el **máximo de iteraciones**.
+
+- Cambiando la métrica usada para la función objetivo,
+se pueden obtener diferentes clusters.
+
+- **Desventajas**:
+    - Usualmente **no** se encuentra un **óptimo global**,
+    solo **óptimo local**; pero esto puede mitigarse permitiendo
+    un mayor número de iteraciones del loop del algoritmo.
+    - Es **sensible a outliers**, debido al uso de medias;
+    pero se puede mitigar vía el uso de **mediodes** (usar
+    mediana en vez de media), empleando la métrica $L_1$
+    en vez de $L_2$ también.
+
+## Ejemplo práctico: K-means
+
+### Datos no normalizados
+
+```{r}
+set.seed(007)
+x <- cbind(
+  rnorm(100,1000,100), c(rnorm(50), rnorm(50,10,1))
+)
+plot(x, pch = 16)
+#k-means datos originales
+res <- kmeans(x, 2)
+plot(x, col = c("green","red")[res$cluster], pch = 16)
+```
+
+### Datos normalizados
+
+```{r}
+# Estandarización
+xs <- scale(x)
+plot(xs, pch = 16)
+#k-means datos estandarizados
+res <- kmeans(xs, 2)
+plot(x, col = c("green","red")[res$cluster], pch = 16)
+```
+
+## Ejemplo práctico: K-means
+
+```{r}
+library(foreign)
+distritos=read.spss(
+  "../datos/distritos.sav",
+  use.value.labels = TRUE, max.value.labels = Inf, 
+  to.data.frame = TRUE
+)
+head(distritos)
+
+colnames(distritos) <- tolower(colnames(distritos))
+nombres  = distritos[,1]
+distritos = distritos[,-1]
+rownames(distritos) = nombres
+head(distritos)
+
+res <- kmeans(scale(distritos), 2)
+res
+```
+
+### Determinar número de conglomerados
+
+```{r}
+# Suma de cuadrados dentro de clusters
+wss <- numeric()
+for (h in 2:10) {
+  # Importante el argumento nstart ene este caso,
+  # para que los elementos de wss decrezcan
+  b <- kmeans(scale(distritos),h, nstart = 50)
+  wss[h-1] <- b$tot.withinss
+}
+plot(2:10, wss, type = "b")
+
+# Silueta
+diss.distritos = daisy(scale(distritos))
+par(mfrow = c(1,3))
+for(h in 2:4) {
+  res <- kmeans(scale(distritos), h)
+  plot(silhouette(
+    # Vector que indica a qué conglomerado pertenece cada observación
+    res$cluster,
+    # Matriz de disimilaridad (que usaste en K-means)
+    diss.distritos
+  ))
+
+  # En caso se tengan demasiadas observaciones
+  print(summary(silhouette(res$cluster, diss.distritos)))
+}
+par(mfrow = c(1,1))
+```
+
+::: {#prp}
+
+El valor **Mean** de la sección **Individual silhouette widths**
+del resultado de `summary`, es el indicador que usaríamos
+para saber qué tan bien se realizó el clustering.
+
+:::
+
+```{r}
+# Criterio de Calinski-Harabasz
+library(fpc)
+ch <- numeric()
+for (h in 2:10) {
+  res <- kmeans(scale(distritos),h,nstart = 100)
+  ch[h-1] <- calinhara(scale(distritos),res$cluster)
+}
+plot(
+  2:10,ch,type="b",xlab="k",
+  ylab="Criterio de Calinski-Harabasz"
+)
+
+# Criterio de Calinski-Harabasz
+kmeansruns(scale(distritos),criterion="ch")
+
+# Criterio anchura de silueta
+kmeansruns(scale(distritos),criterion="asw")
+
+res=kmeans(scale(distritos),2, nstart = 50)
+plotcluster(distritos,res$cluster)
+
+clusplot(
+  distritos,res$cluster, color = TRUE,
+  shade = TRUE, labels =2,lines=0,
+  main ="Gráfico de Conglomerados"
+)
+```
+
+**K=2 sería el valor idóneo para el número de clusters**, según este criterio.
+
+### Perfilado y caracterización de clusters
+
+```{r}
+# Adicionar los cluster a la base de datos
+distritos.new<-cbind(distritos,res$cluster)
+colnames(distritos.new)<-c(colnames(distritos.new[,-length(distritos.new)]), "cluster.km")
+head(distritos.new)
+
+# Tabla de medias
+med<-aggregate(x = distritos.new[,1:7],by = list(distritos.new$cluster.km),FUN = mean)
+med
+
+# Describir variables
+par(mfrow=c(2,4))
+for (i in 1:length(distritos.new[,1:7])) {
+boxplot(distritos.new[,i]~distritos.new$cluster.km, main=names(distritos.new[i]), type="l")
+}
+par(mfrow=c(1,1))
+```
+
+
+::: {#prp}
+
+Para el caso de **dos conglomerados**, 
+la conglomeración es **más adecuada** cuando
+el ratio **between_SS / total_SS** es muy cercano a $1$ .
+
+:::
+
+
+```{r}
+res$betweenss / (res$betweenss + res$tot.withins)
+```
+
+### Silueta
+
+- Representa **qué tan bien está agrupada la observación, en su conglomerado respectivo**.
+- **Mayor silueta, mayor similitud de la observación a las  observaciones en su conglomerado**.
+- Está entre $-1$  y $1$, pero un **valor negativo**
+indica que la observación no pertenece a un cluster adecuado.
+
+- El ancho de silueta de la i-ésima observación es definida
+por $\text{ sil }_i = \dfrac{b_i - a_i}{max \left( a_i, b_i \right)}$ .
+
+- Definiciones:
+    - $a_i$ : **Distancia promedio** entre la observación $i$ 
+    y todas las otras observaciones en el **mismo conglomerado que i**.
+    - $b_i$: Denota la **mínima distancia promedio** de $i$ a las
+    observaciones que están en otros conglomerados.
+
+- **Silueta con valor 1** indica que esa observación está
+perfectamente asignada en su cluster respectivo.
+
+- La **medida de silueta** se define como
+$\bar{s} = \dfrac{1}{n} \displaystyle{ \sum_{1}^{n} \text{ sil}_i }$ 
+
+
+### Criterio de Calinski-Harabasz
+
+- Valor por calcular:
+
+$$
+\dfrac{(n-k) \times \text{ Suma de cuadrados entre los grupos }}{(k-1) \times \text{ Suma de cuadrados dentro de los grupos }}
+$$
+
+- **Mayor valor, mejor agrupación de los objetos en conglomerados**.
+
+::: {#prp}
+
+Ambos criterios, silueta y Calinski-Harabasz, sirven
+para cualquier tipo de conglomeración, no solo para K-means.
+
+:::
+
+
+## Notas finales
+
+- Como falta cubrir el tema **conglomerados jerárquicos**,
+el profesor lo grabará y nos compartirá la grabación, como parte
+del material del curso por ser **evaluado**.
+
+- Próxima semana nos pasan la nota de la Tarea 1.
+
+- **Sábado 9, a la hora de clase, de manera sincrónica**,
+**será el examen final**. La metodología es parecida al parcial.
+
+- **La tarea 2 se puede entregar hasta el domingo 10**.

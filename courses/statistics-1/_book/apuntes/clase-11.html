@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Learning 1 - Apuntes de clase</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../apuntes/clase-12.html" rel="next">
+<link href="../apuntes/clase-09.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module">
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const sidebarSections = Array.from(
+        document.querySelectorAll(".sidebar-section")
+      );
+
+      // Hide each section's content menu, 
+      // if there more than 4 sections
+      if (sidebarSections.length > 4) {
+        sidebarSections.forEach(function(section) {
+          section.classList.remove("show");
+        });
+      }
+    }
+  )
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../apuntes/clase-11.html">Semana 11</a></li><li class="breadcrumb-item"><a href="../apuntes/clase-11.html">Apuntes de clase</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Learning 1</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sílabo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Semana 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Semana 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Semana 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Semana 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Semana 5</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Semana 6</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Semana 7</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Semana 8</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+ <span class="menu-text">Semana 9</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
+ <span class="menu-text">Semana 11</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-11.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="true">
+ <span class="menu-text">Semana 12</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true">
+ <span class="menu-text">Semana 13</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true">
+ <span class="menu-text">Semana 14</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apuntes/clase-14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apuntes de clase</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de Contenidos</h2>
+   
+  <ul>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link active" data-scroll-target="#boosting">Boosting</a>
+  <ul>
+  <li><a href="#cómo-funciona" id="toc-cómo-funciona" class="nav-link" data-scroll-target="#cómo-funciona">¿Cómo funciona?</a></li>
+  <li><a href="#adaboost-adaptative-boosting" id="toc-adaboost-adaptative-boosting" class="nav-link" data-scroll-target="#adaboost-adaptative-boosting">AdaBoost (Adaptative Boosting)</a>
+  <ul class="collapse">
+  <li><a href="#algoritmo" id="toc-algoritmo" class="nav-link" data-scroll-target="#algoritmo">Algoritmo</a></li>
+  <li><a href="#peso-de-clasificadores" id="toc-peso-de-clasificadores" class="nav-link" data-scroll-target="#peso-de-clasificadores">Peso de clasificadores</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bagging-vs-boosting" id="toc-bagging-vs-boosting" class="nav-link" data-scroll-target="#bagging-vs-boosting">Bagging vs Boosting</a></li>
+  <li><a href="#ejemplo-práctico-adabag" id="toc-ejemplo-práctico-adabag" class="nav-link" data-scroll-target="#ejemplo-práctico-adabag">Ejemplo práctico: AdaBag</a></li>
+  <li><a href="#máquinas-de-soporte-vectorial-svm" id="toc-máquinas-de-soporte-vectorial-svm" class="nav-link" data-scroll-target="#máquinas-de-soporte-vectorial-svm">Máquinas de Soporte Vectorial (SVM)</a>
+  <ul>
+  <li><a href="#clasificación-usando-hiperplanos-separadores" id="toc-clasificación-usando-hiperplanos-separadores" class="nav-link" data-scroll-target="#clasificación-usando-hiperplanos-separadores">Clasificación usando hiperplanos separadores</a></li>
+  <li><a href="#maximal-margin-classifier" id="toc-maximal-margin-classifier" class="nav-link" data-scroll-target="#maximal-margin-classifier">Maximal margin classifier</a></li>
+  <li><a href="#construcción-del-clasificador-de-frontera-máxima" id="toc-construcción-del-clasificador-de-frontera-máxima" class="nav-link" data-scroll-target="#construcción-del-clasificador-de-frontera-máxima">Construcción del clasificador de frontera máxima</a></li>
+  <li><a href="#casos-de-no-separación" id="toc-casos-de-no-separación" class="nav-link" data-scroll-target="#casos-de-no-separación">Casos de no separación</a></li>
+  </ul></li>
+  <li><a href="#clasificador-de-soporte-vectorial" id="toc-clasificador-de-soporte-vectorial" class="nav-link" data-scroll-target="#clasificador-de-soporte-vectorial">Clasificador de soporte vectorial</a></li>
+  <li><a href="#kernels" id="toc-kernels" class="nav-link" data-scroll-target="#kernels">Kernels</a></li>
+  <li><a href="#svm-para-más-de-dos-categorías" id="toc-svm-para-más-de-dos-categorías" class="nav-link" data-scroll-target="#svm-para-más-de-dos-categorías">SVM para más de dos categorías</a></li>
+  <li><a href="#ejemplo-práctico-svm" id="toc-ejemplo-práctico-svm" class="nav-link" data-scroll-target="#ejemplo-práctico-svm">Ejemplo práctico: SVM</a>
+  <ul>
+  <li><a href="#clasificación-binaria" id="toc-clasificación-binaria" class="nav-link" data-scroll-target="#clasificación-binaria">Clasificación binaria</a></li>
+  <li><a href="#clasificación-no-binaria" id="toc-clasificación-no-binaria" class="nav-link" data-scroll-target="#clasificación-no-binaria">Clasificación no binaria</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Apuntes de clase</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="boosting" class="level2">
+<h2 class="anchored" data-anchor-id="boosting">Boosting</h2>
+<ul>
+<li>La idea principal es realizar un <strong>ponderación con varios modelos</strong>.</li>
+<li>Es <strong>más complejo</strong> que <strong>bagging</strong> respecto a <strong>cómo calibrarlo</strong> (la ponderación).</li>
+</ul>
+<section id="cómo-funciona" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-funciona">¿Cómo funciona?</h3>
+<ol type="1">
+<li>Asignar pesos a las unidades de entrenamiento.</li>
+<li>Entrenar iterativamente <span class="math inline">\(k\)</span> clasificadores.</li>
+<li>Tras entrenar el clasificador <span class="math inline">\(M_i\)</span>, <strong>actualizar los pesos</strong> de manera que el siguiente clasificador <span class="math inline">\(M_{i+1}\)</span> ponga más atención a las unidades entrenamiento que <span class="math inline">\(M_i\)</span> <strong>clasificó erróneamente</strong>.</li>
+<li>El clasificador final combina los votos de cada clasificador individual, donde el peso del voto de cada clasificador es una función de su precisión.</li>
+</ol>
+</section>
+<section id="adaboost-adaptative-boosting" class="level3">
+<h3 class="anchored" data-anchor-id="adaboost-adaptative-boosting">AdaBoost (Adaptative Boosting)</h3>
+<ul>
+<li><p>Este algoritmo no surgió de Estadística … <strong>no hay supuestos</strong> (normalidad, etc) sobre los predictores y la response.</p></li>
+<li><p>Propiamnte dicho, el muestro de AdaBoost no es como en Bootstrap, pues las observaciones no siempre tienen el mismo peso al ser sampled with replacement.</p></li>
+<li><p>A <strong>mayor peso</strong> de unidad, <strong>más veces fue wrongly classified</strong>.</p></li>
+<li><p>La idea es <strong>centrarse más en las unidades que en el paso anterior fueron wrongly classified</strong>.</p></li>
+<li><p>En cada loop, el error de los modelos se calcula respecto a los <strong>mismos datos con los que fue entrenado</strong> (no validation ni testing sets).</p></li>
+</ul>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 </strong></span>AdaBoost no es adecuado de usar cuando las clases están <strong>muy desbalanceadas</strong>. Esto debido a que AdaBoost usa el <strong>error</strong> (complemnto de accuracy) para la ponderación de los clasificadores; pese a que otras métricas, como <strong>sensibilidad</strong> son más adecuadas para medir la eficiencia del modelo como predictor.</p>
+</div>
+<section id="algoritmo" class="level4">
+<h4 class="anchored" data-anchor-id="algoritmo">Algoritmo</h4>
+<ul>
+<li><strong>Input:</strong>
+<ul>
+<li><span class="math inline">\(D\)</span>: datos con <span class="math inline">\(d\)</span> unidades clasificadas</li>
+<li><span class="math inline">\(k\)</span> (<strong>hiperparámetro</strong>): número de iteracions (se genera un clasificador por iteración)</li>
+</ul></li>
+<li><strong>Output:</strong> Modelo compuesto
+<ol type="1">
+<li>Inicializar peso de unidad como <span class="math inline">\(\dfrac{1}{d}\)</span> .</li>
+<li><strong>Para cada iteración</strong>, muestrear <span class="math inline">\(D\)</span> <strong>con reemplazo</strong> de acuerdo a los pesos, para obtener <span class="math inline">\(D_i\)</span> .</li>
+<li>Usar <span class="math inline">\(D_i\)</span> para derivar <span class="math inline">\(M_i\)</span> .</li>
+<li>Calcular <span class="math inline">\(\text{ error}\left( M_i \right) = \displaystyle{ \sum_{j=1}^{d}} w_j \text{ err}\left( X_j \right)\)</span> , donde <span class="math inline">\(\text{ err }\left( X_j \right)\)</span> indica si la unidad <span class="math inline">\(X_j\)</span> fue mal clasificada.</li>
+<li>Si <span class="math inline">\(\text{ error }\left( M_i \right) &gt; 0.5\)</span>, volver al paso 2.</li>
+<li>Para cada unidad en <span class="math inline">\(D_i\)</span> <strong>bien clasificada</strong>, multiplicar su peso por <span class="math inline">\(\dfrac{\text{ error}\left( M_i \right)}{1- \text{ error}\left( M_i \right)}\)</span></li>
+<li>Actualizar los pesos y normalizarlos.</li>
+</ol></li>
+</ul>
+</section>
+<section id="peso-de-clasificadores" class="level4">
+<h4 class="anchored" data-anchor-id="peso-de-clasificadores">Peso de clasificadores</h4>
+<ul>
+<li><p>A <strong>menor tasa de error</strong>, el clasificador es más exacto, así que su <strong>voto vale más</strong>.</p></li>
+<li><p>El peso del voto del clasificador <span class="math inline">\(M_i\)</span> es <span class="math inline">\(\log \left( \dfrac{1- \text{ error}\left( M_i \right)}{\text{ error}\left( M_i \right)} \right)\)</span> .</p></li>
+<li><p>Para cada clase <span class="math inline">\(c\)</span>, se suman los pesos de cada clasificador que asignó la clase <span class="math inline">\(c\)</span> a la unidad de observación <span class="math inline">\(X\)</span>. Luego, <strong>gana</strong> la clase con la <strong>mayor suma de pesos</strong>, y esa corresponde a la predicción asignada a <span class="math inline">\(X\)</span> .</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="bagging-vs-boosting" class="level2">
+<h2 class="anchored" data-anchor-id="bagging-vs-boosting">Bagging vs Boosting</h2>
+<ul>
+<li><p>Como Boosting se focaliza en las <strong>unidades mal clasificadas</strong>, corre el riesgo de <strong>sobreajustar el modelo resultante a esos datos</strong>; mientras que <strong>Bagging es menos susceptible a un sobreajuste del modelo</strong>.</p></li>
+<li><p>Algunas veces, el modelo resultante puede ser <strong>menos preciso</strong> que un modelo único para los mismos datos.</p></li>
+<li><p>Boosting tiende a lograr <strong>mayor precisión</strong> que Bagging, del <strong>modelo resultante</strong>, en comparación a un modelo único.</p></li>
+</ul>
+</section>
+<section id="ejemplo-práctico-adabag" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-adabag">Ejemplo práctico: AdaBag</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(adabag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: rpart</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'rpart' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: caret</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'caret' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: foreach</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'foreach' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: doParallel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'doParallel' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: iterators</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'iterators' was built under R version 4.1.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: parallel</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(irir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in data(irir): data set 'irir' not found</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccion de datos de trabajo o entrenamiento,</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># se seleccionan 25 de cada especie</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, <span class="dv">25</span>), <span class="fu">sample</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">25</span>), <span class="fu">sample</span>(<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>, <span class="dv">25</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelamos la especie a partir de todas las variables en los datos de entrenamiento</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mfinal -&gt; N de iteraciones</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># boos -&gt; Permite submuestrear para generar los pesos</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>iris.adaboost <span class="ot">&lt;-</span> adabag<span class="sc">::</span><span class="fu">boosting</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> ., <span class="at">data =</span> iris[train,], </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">boos =</span> <span class="cn">TRUE</span>, <span class="at">mfinal =</span> <span class="dv">10</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>iris.adaboost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$formula
+Species ~ .
+
+$trees
+$trees[[1]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 48 virginica (0.29333333 0.34666667 0.36000000)  
+  2) Petal.Length&lt; 4.85 47 22 versicolor (0.46808511 0.53191489 0.00000000)  
+    4) Petal.Length&lt; 2.45 22  0 setosa (1.00000000 0.00000000 0.00000000) *
+    5) Petal.Length&gt;=2.45 25  0 versicolor (0.00000000 1.00000000 0.00000000) *
+  3) Petal.Length&gt;=4.85 28  1 virginica (0.00000000 0.03571429 0.96428571) *
+
+$trees[[2]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 48 setosa (0.36000000 0.30666667 0.33333333)  
+  2) Petal.Length&lt; 2.6 27  0 setosa (1.00000000 0.00000000 0.00000000) *
+  3) Petal.Length&gt;=2.6 48 23 virginica (0.00000000 0.47916667 0.52083333)  
+    6) Petal.Width&lt; 1.75 23  1 versicolor (0.00000000 0.95652174 0.04347826) *
+    7) Petal.Width&gt;=1.75 25  1 virginica (0.00000000 0.04000000 0.96000000) *
+
+$trees[[3]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 48 virginica (0.3333333 0.3066667 0.3600000)  
+  2) Petal.Length&lt; 2.8 25  0 setosa (1.0000000 0.0000000 0.0000000) *
+  3) Petal.Length&gt;=2.8 50 23 virginica (0.0000000 0.4600000 0.5400000)  
+    6) Petal.Length&lt; 4.75 16  0 versicolor (0.0000000 1.0000000 0.0000000) *
+    7) Petal.Length&gt;=4.75 34  7 virginica (0.0000000 0.2058824 0.7941176) *
+
+$trees[[4]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 34 versicolor (0.2000000 0.5466667 0.2533333)  
+  2) Petal.Length&lt; 2.6 15  0 setosa (1.0000000 0.0000000 0.0000000) *
+  3) Petal.Length&gt;=2.6 60 19 versicolor (0.0000000 0.6833333 0.3166667)  
+    6) Petal.Width&lt; 1.9 48  7 versicolor (0.0000000 0.8541667 0.1458333) *
+    7) Petal.Width&gt;=1.9 12  0 virginica (0.0000000 0.0000000 1.0000000) *
+
+$trees[[5]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 43 virginica (0.17333333 0.40000000 0.42666667)  
+  2) Petal.Width&lt; 1.75 43 16 versicolor (0.30232558 0.62790698 0.06976744)  
+    4) Sepal.Length&lt; 5.55 13  0 setosa (1.00000000 0.00000000 0.00000000) *
+    5) Sepal.Length&gt;=5.55 30  3 versicolor (0.00000000 0.90000000 0.10000000) *
+  3) Petal.Width&gt;=1.75 32  3 virginica (0.00000000 0.09375000 0.90625000) *
+
+$trees[[6]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+ 1) root 75 39 versicolor (0.1466667 0.4800000 0.3733333)  
+   2) Petal.Length&lt; 2.45 11  0 setosa (1.0000000 0.0000000 0.0000000) *
+   3) Petal.Length&gt;=2.45 64 28 versicolor (0.0000000 0.5625000 0.4375000)  
+     6) Petal.Length&lt; 4.85 32  4 versicolor (0.0000000 0.8750000 0.1250000)  
+      12) Sepal.Length&lt; 6.05 25  0 versicolor (0.0000000 1.0000000 0.0000000) *
+      13) Sepal.Length&gt;=6.05 7  3 virginica (0.0000000 0.4285714 0.5714286) *
+     7) Petal.Length&gt;=4.85 32  8 virginica (0.0000000 0.2500000 0.7500000) *
+
+$trees[[7]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+ 1) root 75 42 versicolor (0.1333333 0.4400000 0.4266667)  
+   2) Petal.Length&lt; 2.45 10  0 setosa (1.0000000 0.0000000 0.0000000) *
+   3) Petal.Length&gt;=2.45 65 32 versicolor (0.0000000 0.5076923 0.4923077)  
+     6) Petal.Length&lt; 5.05 49 16 versicolor (0.0000000 0.6734694 0.3265306)  
+      12) Sepal.Width&gt;=2.25 42  9 versicolor (0.0000000 0.7857143 0.2142857)  
+        24) Petal.Width&lt; 1.75 26  0 versicolor (0.0000000 1.0000000 0.0000000) *
+        25) Petal.Width&gt;=1.75 16  7 virginica (0.0000000 0.4375000 0.5625000) *
+      13) Sepal.Width&lt; 2.25 7  0 virginica (0.0000000 0.0000000 1.0000000) *
+     7) Petal.Length&gt;=5.05 16  0 virginica (0.0000000 0.0000000 1.0000000) *
+
+$trees[[8]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+ 1) root 75 26 versicolor (0.06666667 0.65333333 0.28000000)  
+   2) Petal.Length&lt; 5.05 68 19 versicolor (0.07352941 0.72058824 0.20588235)  
+     4) Sepal.Width&gt;=2.85 44  5 versicolor (0.11363636 0.88636364 0.00000000)  
+       8) Petal.Length&lt; 4.5 7  2 setosa (0.71428571 0.28571429 0.00000000) *
+       9) Petal.Length&gt;=4.5 37  0 versicolor (0.00000000 1.00000000 0.00000000) *
+     5) Sepal.Width&lt; 2.85 24 10 virginica (0.00000000 0.41666667 0.58333333)  
+      10) Petal.Width&lt; 1.45 10  0 versicolor (0.00000000 1.00000000 0.00000000) *
+      11) Petal.Width&gt;=1.45 14  0 virginica (0.00000000 0.00000000 1.00000000) *
+   3) Petal.Length&gt;=5.05 7  0 virginica (0.00000000 0.00000000 1.00000000) *
+
+$trees[[9]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 75 27 versicolor (0.06666667 0.64000000 0.29333333)  
+  2) Petal.Length&lt; 5.05 66 18 versicolor (0.07575758 0.72727273 0.19696970)  
+    4) Sepal.Width&gt;=2.85 52  8 versicolor (0.07692308 0.84615385 0.07692308) *
+    5) Sepal.Width&lt; 2.85 14  5 virginica (0.07142857 0.28571429 0.64285714) *
+  3) Petal.Length&gt;=5.05 9  0 virginica (0.00000000 0.00000000 1.00000000) *
+
+$trees[[10]]
+n= 75 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+ 1) root 75 37 versicolor (0.18666667 0.50666667 0.30666667)  
+   2) Sepal.Length&lt; 5.35 14  0 setosa (1.00000000 0.00000000 0.00000000) *
+   3) Sepal.Length&gt;=5.35 61 23 versicolor (0.00000000 0.62295082 0.37704918)  
+     6) Petal.Length&lt; 4.85 35  3 versicolor (0.00000000 0.91428571 0.08571429) *
+     7) Petal.Length&gt;=4.85 26  6 virginica (0.00000000 0.23076923 0.76923077)  
+      14) Petal.Width&lt; 1.75 7  1 versicolor (0.00000000 0.85714286 0.14285714) *
+      15) Petal.Width&gt;=1.75 19  0 virginica (0.00000000 0.00000000 1.00000000) *
+
+
+$weights
+ [1] 1.7986561 1.8633467 0.9054636 0.8980642 0.5340658 0.8290422 0.9012836
+ [8] 1.5820530 0.6341534 0.7857651
+
+$votes
+            [,1]       [,2]       [,3]
+ [1,]  8.7779095  1.9539843  0.0000000
+ [2,] 10.0977403  0.6341534  0.0000000
+ [3,] 10.0977403  0.6341534  0.0000000
+ [4,] 10.0977403  0.6341534  0.0000000
+ [5,] 10.0977403  0.6341534  0.0000000
+ [6,] 10.0977403  0.6341534  0.0000000
+ [7,] 10.0977403  0.6341534  0.0000000
+ [8,]  9.3119753  1.4199185  0.0000000
+ [9,] 10.0977403  0.6341534  0.0000000
+[10,] 10.0977403  0.6341534  0.0000000
+[11,]  8.7779095  1.9539843  0.0000000
+[12,]  9.3119753  1.4199185  0.0000000
+[13,] 10.0977403  0.6341534  0.0000000
+[14,] 10.0977403  0.6341534  0.0000000
+[15,] 10.0977403  0.6341534  0.0000000
+[16,] 10.0977403  0.6341534  0.0000000
+[17,] 10.0977403  0.6341534  0.0000000
+[18,] 10.0977403  0.6341534  0.0000000
+[19,]  8.5156874  1.5820530  0.6341534
+[20,] 10.0977403  0.6341534  0.0000000
+[21,] 10.0977403  0.6341534  0.0000000
+[22,] 10.0977403  0.6341534  0.0000000
+[23,]  9.3119753  1.4199185  0.0000000
+[24,] 10.0977403  0.6341534  0.0000000
+[25,] 10.0977403  0.6341534  0.0000000
+[26,]  0.0000000  6.5277340  4.2041597
+[27,]  0.0000000  9.9028516  0.8290422
+[28,]  0.0000000  9.9028516  0.8290422
+[29,]  0.0000000 10.0977403  0.6341534
+[30,]  1.5820530  8.3207986  0.8290422
+[31,]  0.0000000  9.9028516  0.8290422
+[32,]  0.0000000  9.2686981  1.4631956
+[33,]  0.0000000  8.3632345  2.3686592
+[34,]  0.0000000 10.0977403  0.6341534
+[35,]  0.0000000  9.9028516  0.8290422
+[36,]  0.0000000  9.9028516  0.8290422
+[37,]  1.5820530  9.1498408  0.0000000
+[38,]  1.5820530  9.1498408  0.0000000
+[39,]  1.5820530  9.1498408  0.0000000
+[40,]  0.0000000 10.0977403  0.6341534
+[41,]  0.0000000  9.9028516  0.8290422
+[42,]  0.0000000 10.0977403  0.6341534
+[43,]  0.5340658  9.5636746  0.6341534
+[44,]  0.0000000  9.9028516  0.8290422
+[45,]  0.0000000 10.0977403  0.6341534
+[46,]  0.0000000  9.1964567  1.5354370
+[47,]  0.0000000 10.7318938  0.0000000
+[48,]  0.0000000  7.1987318  3.5331619
+[49,]  1.3198309  8.7779095  0.6341534
+[50,]  1.5820530  9.1498408  0.0000000
+[51,]  0.0000000  0.0000000 10.7318938
+[52,]  0.0000000  0.0000000 10.7318938
+[53,]  0.0000000  0.0000000 10.7318938
+[54,]  0.0000000  0.0000000 10.7318938
+[55,]  0.0000000  0.0000000 10.7318938
+[56,]  0.0000000  0.0000000 10.7318938
+[57,]  0.0000000  0.0000000 10.7318938
+[58,]  0.0000000  0.0000000 10.7318938
+[59,]  0.0000000  0.0000000 10.7318938
+[60,]  0.0000000  0.0000000 10.7318938
+[61,]  0.0000000  0.8980642  9.8338295
+[62,]  0.0000000  0.0000000 10.7318938
+[63,]  0.0000000  0.0000000 10.7318938
+[64,]  0.0000000  0.8980642  9.8338295
+[65,]  0.0000000  0.0000000 10.7318938
+[66,]  0.0000000  0.0000000 10.7318938
+[67,]  0.0000000  0.0000000 10.7318938
+[68,]  0.0000000  3.1142706  7.6176231
+[69,]  0.0000000  0.8980642  9.8338295
+[70,]  0.0000000  0.0000000 10.7318938
+[71,]  0.0000000  4.0812418  6.6506519
+[72,]  0.0000000  3.4824854  7.2494083
+[73,]  0.0000000  0.0000000 10.7318938
+[74,]  0.0000000  0.0000000 10.7318938
+[75,]  0.0000000  0.0000000 10.7318938
+
+$prob
+            [,1]       [,2]       [,3]
+ [1,] 0.81792736 0.18207264 0.00000000
+ [2,] 0.94090946 0.05909054 0.00000000
+ [3,] 0.94090946 0.05909054 0.00000000
+ [4,] 0.94090946 0.05909054 0.00000000
+ [5,] 0.94090946 0.05909054 0.00000000
+ [6,] 0.94090946 0.05909054 0.00000000
+ [7,] 0.94090946 0.05909054 0.00000000
+ [8,] 0.86769171 0.13230829 0.00000000
+ [9,] 0.94090946 0.05909054 0.00000000
+[10,] 0.94090946 0.05909054 0.00000000
+[11,] 0.81792736 0.18207264 0.00000000
+[12,] 0.86769171 0.13230829 0.00000000
+[13,] 0.94090946 0.05909054 0.00000000
+[14,] 0.94090946 0.05909054 0.00000000
+[15,] 0.94090946 0.05909054 0.00000000
+[16,] 0.94090946 0.05909054 0.00000000
+[17,] 0.94090946 0.05909054 0.00000000
+[18,] 0.94090946 0.05909054 0.00000000
+[19,] 0.79349345 0.14741601 0.05909054
+[20,] 0.94090946 0.05909054 0.00000000
+[21,] 0.94090946 0.05909054 0.00000000
+[22,] 0.94090946 0.05909054 0.00000000
+[23,] 0.86769171 0.13230829 0.00000000
+[24,] 0.94090946 0.05909054 0.00000000
+[25,] 0.94090946 0.05909054 0.00000000
+[26,] 0.00000000 0.60825556 0.39174444
+[27,] 0.00000000 0.92274968 0.07725032
+[28,] 0.00000000 0.92274968 0.07725032
+[29,] 0.00000000 0.94090946 0.05909054
+[30,] 0.14741601 0.77533367 0.07725032
+[31,] 0.00000000 0.92274968 0.07725032
+[32,] 0.00000000 0.86365914 0.13634086
+[33,] 0.00000000 0.77928786 0.22071214
+[34,] 0.00000000 0.94090946 0.05909054
+[35,] 0.00000000 0.92274968 0.07725032
+[36,] 0.00000000 0.92274968 0.07725032
+[37,] 0.14741601 0.85258399 0.00000000
+[38,] 0.14741601 0.85258399 0.00000000
+[39,] 0.14741601 0.85258399 0.00000000
+[40,] 0.00000000 0.94090946 0.05909054
+[41,] 0.00000000 0.92274968 0.07725032
+[42,] 0.00000000 0.94090946 0.05909054
+[43,] 0.04976436 0.89114510 0.05909054
+[44,] 0.00000000 0.92274968 0.07725032
+[45,] 0.00000000 0.94090946 0.05909054
+[46,] 0.00000000 0.85692767 0.14307233
+[47,] 0.00000000 1.00000000 0.00000000
+[48,] 0.00000000 0.67077927 0.32922073
+[49,] 0.12298210 0.81792736 0.05909054
+[50,] 0.14741601 0.85258399 0.00000000
+[51,] 0.00000000 0.00000000 1.00000000
+[52,] 0.00000000 0.00000000 1.00000000
+[53,] 0.00000000 0.00000000 1.00000000
+[54,] 0.00000000 0.00000000 1.00000000
+[55,] 0.00000000 0.00000000 1.00000000
+[56,] 0.00000000 0.00000000 1.00000000
+[57,] 0.00000000 0.00000000 1.00000000
+[58,] 0.00000000 0.00000000 1.00000000
+[59,] 0.00000000 0.00000000 1.00000000
+[60,] 0.00000000 0.00000000 1.00000000
+[61,] 0.00000000 0.08368180 0.91631820
+[62,] 0.00000000 0.00000000 1.00000000
+[63,] 0.00000000 0.00000000 1.00000000
+[64,] 0.00000000 0.08368180 0.91631820
+[65,] 0.00000000 0.00000000 1.00000000
+[66,] 0.00000000 0.00000000 1.00000000
+[67,] 0.00000000 0.00000000 1.00000000
+[68,] 0.00000000 0.29018836 0.70981164
+[69,] 0.00000000 0.08368180 0.91631820
+[70,] 0.00000000 0.00000000 1.00000000
+[71,] 0.00000000 0.38029093 0.61970907
+[72,] 0.00000000 0.32449869 0.67550131
+[73,] 0.00000000 0.00000000 1.00000000
+[74,] 0.00000000 0.00000000 1.00000000
+[75,] 0.00000000 0.00000000 1.00000000
+
+$class
+ [1] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+ [6] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[11] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[16] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[21] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[26] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[31] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[36] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[41] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[46] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[51] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[56] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[61] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[66] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[71] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+
+$importance
+Petal.Length  Petal.Width Sepal.Length  Sepal.Width 
+   65.483536    22.138266     6.220378     6.157821 
+
+$terms
+Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+attr(,"variables")
+list(Species, Sepal.Length, Sepal.Width, Petal.Length, Petal.Width)
+attr(,"factors")
+             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Species                 0           0            0           0
+Sepal.Length            1           0            0           0
+Sepal.Width             0           1            0           0
+Petal.Length            0           0            1           0
+Petal.Width             0           0            0           1
+attr(,"term.labels")
+[1] "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width" 
+attr(,"order")
+[1] 1 1 1 1
+attr(,"intercept")
+[1] 1
+attr(,"response")
+[1] 1
+attr(,".Environment")
+&lt;environment: R_GlobalEnv&gt;
+attr(,"predvars")
+list(Species, Sepal.Length, Sepal.Width, Petal.Length, Petal.Width)
+attr(,"dataClasses")
+     Species Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+    "factor"    "numeric"    "numeric"    "numeric"    "numeric" 
+
+$call
+adabag::boosting(formula = Species ~ ., data = iris[train, ], 
+    boos = TRUE, mfinal = 10)
+
+attr(,"vardep.summary")
+    setosa versicolor  virginica 
+        25         25         25 
+attr(,"class")
+[1] "boosting"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficamos las variables según su porcentaje de relevancia  </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># El largo de pétalo es la más relevante.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  iris.adaboost<span class="sc">$</span>imp[<span class="fu">order</span>(iris.adaboost<span class="sc">$</span>imp, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)],</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">main =</span> <span class="st">"Importancia Relativa de las Variables"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"lightblue"</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustamos a los nuevos datos, y vemos el ajuste</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>iris.predboosting <span class="ot">&lt;-</span> adabag<span class="sc">::</span><span class="fu">predict.boosting</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  iris.adaboost, <span class="at">newdata =</span> iris[<span class="sc">-</span>train,]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>iris.predboosting</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$formula
+Species ~ .
+
+$votes
+            [,1]       [,2]       [,3]
+ [1,] 10.0977403  0.6341534  0.0000000
+ [2,] 10.0977403  0.6341534  0.0000000
+ [3,] 10.0977403  0.6341534  0.0000000
+ [4,]  9.3119753  1.4199185  0.0000000
+ [5,] 10.0977403  0.6341534  0.0000000
+ [6,]  8.7779095  1.9539843  0.0000000
+ [7,]  9.3119753  1.4199185  0.0000000
+ [8,] 10.0977403  0.6341534  0.0000000
+ [9,] 10.0977403  0.6341534  0.0000000
+[10,]  9.3119753  1.4199185  0.0000000
+[11,] 10.0977403  0.6341534  0.0000000
+[12,] 10.0977403  0.6341534  0.0000000
+[13,] 10.0977403  0.6341534  0.0000000
+[14,] 10.0977403  0.6341534  0.0000000
+[15,] 10.0977403  0.6341534  0.0000000
+[16,] 10.0977403  0.6341534  0.0000000
+[17,]  9.3119753  1.4199185  0.0000000
+[18,] 10.0977403  0.6341534  0.0000000
+[19,] 10.0977403  0.6341534  0.0000000
+[20,] 10.0977403  0.6341534  0.0000000
+[21,] 10.0977403  0.6341534  0.0000000
+[22,] 10.0977403  0.6341534  0.0000000
+[23,] 10.0977403  0.6341534  0.0000000
+[24,] 10.0977403  0.6341534  0.0000000
+[25,] 10.0977403  0.6341534  0.0000000
+[26,]  0.0000000  7.1987318  3.5331619
+[27,]  0.0000000  7.6866452  3.0452486
+[28,]  0.0000000 10.0977403  0.6341534
+[29,]  1.3198309  8.7779095  0.6341534
+[30,]  1.3198309  8.7779095  0.6341534
+[31,]  1.3198309  7.8766259  1.5354370
+[32,]  1.5820530  9.1498408  0.0000000
+[33,]  1.5820530  8.3207986  0.8290422
+[34,]  0.0000000 10.7318938  0.0000000
+[35,]  0.0000000  6.7853616  3.9465322
+[36,]  0.0000000 10.0977403  0.6341534
+[37,]  0.0000000  4.9825254  5.7493683
+[38,]  0.0000000  9.2686981  1.4631956
+[39,]  1.5820530  8.3207986  0.8290422
+[40,]  0.0000000 10.7318938  0.0000000
+[41,]  0.5340658  9.5636746  0.6341534
+[42,]  0.5340658  9.5636746  0.6341534
+[43,]  0.0000000  4.0812418  6.6506519
+[44,]  0.5340658 10.1978280  0.0000000
+[45,]  0.0000000  9.2686981  1.4631956
+[46,]  0.5340658  9.5636746  0.6341534
+[47,]  0.5340658  9.5636746  0.6341534
+[48,]  1.5820530  8.3207986  0.8290422
+[49,]  1.3198309  8.7779095  0.6341534
+[50,]  0.0000000 10.0977403  0.6341534
+[51,]  0.0000000  0.0000000 10.7318938
+[52,]  0.0000000  0.8980642  9.8338295
+[53,]  0.0000000  0.0000000 10.7318938
+[54,]  1.3198309  7.1958565  2.2162064
+[55,]  0.0000000  0.8980642  9.8338295
+[56,]  0.0000000  0.8980642  9.8338295
+[57,]  0.0000000  0.0000000 10.7318938
+[58,]  0.0000000  0.0000000 10.7318938
+[59,]  0.0000000  0.8980642  9.8338295
+[60,]  0.0000000  0.0000000 10.7318938
+[61,]  0.0000000  0.0000000 10.7318938
+[62,]  0.0000000  0.0000000 10.7318938
+[63,]  0.0000000  0.0000000 10.7318938
+[64,]  0.0000000  4.0812418  6.6506519
+[65,]  0.0000000  0.0000000 10.7318938
+[66,]  0.0000000  4.0812418  6.6506519
+[67,]  0.0000000  4.0812418  6.6506519
+[68,]  0.0000000  0.0000000 10.7318938
+[69,]  0.0000000  0.8980642  9.8338295
+[70,]  0.0000000  6.5277340  4.2041597
+[71,]  0.0000000  0.0000000 10.7318938
+[72,]  0.0000000  0.0000000 10.7318938
+[73,]  0.0000000  0.0000000 10.7318938
+[74,]  0.0000000  0.0000000 10.7318938
+[75,]  0.0000000  0.0000000 10.7318938
+
+$prob
+            [,1]       [,2]       [,3]
+ [1,] 0.94090946 0.05909054 0.00000000
+ [2,] 0.94090946 0.05909054 0.00000000
+ [3,] 0.94090946 0.05909054 0.00000000
+ [4,] 0.86769171 0.13230829 0.00000000
+ [5,] 0.94090946 0.05909054 0.00000000
+ [6,] 0.81792736 0.18207264 0.00000000
+ [7,] 0.86769171 0.13230829 0.00000000
+ [8,] 0.94090946 0.05909054 0.00000000
+ [9,] 0.94090946 0.05909054 0.00000000
+[10,] 0.86769171 0.13230829 0.00000000
+[11,] 0.94090946 0.05909054 0.00000000
+[12,] 0.94090946 0.05909054 0.00000000
+[13,] 0.94090946 0.05909054 0.00000000
+[14,] 0.94090946 0.05909054 0.00000000
+[15,] 0.94090946 0.05909054 0.00000000
+[16,] 0.94090946 0.05909054 0.00000000
+[17,] 0.86769171 0.13230829 0.00000000
+[18,] 0.94090946 0.05909054 0.00000000
+[19,] 0.94090946 0.05909054 0.00000000
+[20,] 0.94090946 0.05909054 0.00000000
+[21,] 0.94090946 0.05909054 0.00000000
+[22,] 0.94090946 0.05909054 0.00000000
+[23,] 0.94090946 0.05909054 0.00000000
+[24,] 0.94090946 0.05909054 0.00000000
+[25,] 0.94090946 0.05909054 0.00000000
+[26,] 0.00000000 0.67077927 0.32922073
+[27,] 0.00000000 0.71624313 0.28375687
+[28,] 0.00000000 0.94090946 0.05909054
+[29,] 0.12298210 0.81792736 0.05909054
+[30,] 0.12298210 0.81792736 0.05909054
+[31,] 0.12298210 0.73394557 0.14307233
+[32,] 0.14741601 0.85258399 0.00000000
+[33,] 0.14741601 0.77533367 0.07725032
+[34,] 0.00000000 1.00000000 0.00000000
+[35,] 0.00000000 0.63226134 0.36773866
+[36,] 0.00000000 0.94090946 0.05909054
+[37,] 0.00000000 0.46427271 0.53572729
+[38,] 0.00000000 0.86365914 0.13634086
+[39,] 0.14741601 0.77533367 0.07725032
+[40,] 0.00000000 1.00000000 0.00000000
+[41,] 0.04976436 0.89114510 0.05909054
+[42,] 0.04976436 0.89114510 0.05909054
+[43,] 0.00000000 0.38029093 0.61970907
+[44,] 0.04976436 0.95023564 0.00000000
+[45,] 0.00000000 0.86365914 0.13634086
+[46,] 0.04976436 0.89114510 0.05909054
+[47,] 0.04976436 0.89114510 0.05909054
+[48,] 0.14741601 0.77533367 0.07725032
+[49,] 0.12298210 0.81792736 0.05909054
+[50,] 0.00000000 0.94090946 0.05909054
+[51,] 0.00000000 0.00000000 1.00000000
+[52,] 0.00000000 0.08368180 0.91631820
+[53,] 0.00000000 0.00000000 1.00000000
+[54,] 0.12298210 0.67051134 0.20650655
+[55,] 0.00000000 0.08368180 0.91631820
+[56,] 0.00000000 0.08368180 0.91631820
+[57,] 0.00000000 0.00000000 1.00000000
+[58,] 0.00000000 0.00000000 1.00000000
+[59,] 0.00000000 0.08368180 0.91631820
+[60,] 0.00000000 0.00000000 1.00000000
+[61,] 0.00000000 0.00000000 1.00000000
+[62,] 0.00000000 0.00000000 1.00000000
+[63,] 0.00000000 0.00000000 1.00000000
+[64,] 0.00000000 0.38029093 0.61970907
+[65,] 0.00000000 0.00000000 1.00000000
+[66,] 0.00000000 0.38029093 0.61970907
+[67,] 0.00000000 0.38029093 0.61970907
+[68,] 0.00000000 0.00000000 1.00000000
+[69,] 0.00000000 0.08368180 0.91631820
+[70,] 0.00000000 0.60825556 0.39174444
+[71,] 0.00000000 0.00000000 1.00000000
+[72,] 0.00000000 0.00000000 1.00000000
+[73,] 0.00000000 0.00000000 1.00000000
+[74,] 0.00000000 0.00000000 1.00000000
+[75,] 0.00000000 0.00000000 1.00000000
+
+$class
+ [1] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+ [6] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[11] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[16] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[21] "setosa"     "setosa"     "setosa"     "setosa"     "setosa"    
+[26] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[31] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[36] "versicolor" "virginica"  "versicolor" "versicolor" "versicolor"
+[41] "versicolor" "versicolor" "virginica"  "versicolor" "versicolor"
+[46] "versicolor" "versicolor" "versicolor" "versicolor" "versicolor"
+[51] "virginica"  "virginica"  "virginica"  "versicolor" "virginica" 
+[56] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[61] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+[66] "virginica"  "virginica"  "virginica"  "virginica"  "versicolor"
+[71] "virginica"  "virginica"  "virginica"  "virginica"  "virginica" 
+
+$confusion
+               Observed Class
+Predicted Class setosa versicolor virginica
+     setosa         25          0         0
+     versicolor      0         23         2
+     virginica       0          2        23
+
+$error
+[1] 0.05333333</code></pre>
+</div>
+</div>
+</section>
+<section id="máquinas-de-soporte-vectorial-svm" class="level2">
+<h2 class="anchored" data-anchor-id="máquinas-de-soporte-vectorial-svm">Máquinas de Soporte Vectorial (SVM)</h2>
+<ul>
+<li>La idea principal es usar un <strong>hiperplano</strong> como frontera para <strong>realizar clasificaciones</strong>.</li>
+</ul>
+<section id="clasificación-usando-hiperplanos-separadores" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación-usando-hiperplanos-separadores">Clasificación usando hiperplanos separadores</h3>
+<ul>
+<li><p>Considere el conjunto de observaciones como una matriz <span class="math inline">\(X\)</span> cuyas filas son las observaciones; y, las columnas representan a los predictores.</p></li>
+<li><p>Trataremos primero el caso de <strong>clasificación binaria</strong>, considerando que las observaciones pertenecen a dos clases, <span class="math inline">\(1\)</span> y <span class="math inline">\(-1\)</span>.</p></li>
+<li><p>Así, un <strong>hiperplano separador</strong> tendrá la propiedad <span class="math inline">\(y_i \left( \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} \right) &gt; 0\)</span> para todo <span class="math inline">\(i = 1, \dots, n\)</span>.</p></li>
+<li><p><span class="math inline">\(x^*\)</span> es clasificado basado en el signo de <span class="math inline">\(f(x^*) = \beta_0 + \beta_1 x_{1}^* + \cdots + \beta_p x_{p}^*\)</span>:</p>
+<ul>
+<li>Si <strong><span class="math inline">\(f(x^*)\)</span> está lejos de cero</strong>, entonces <span class="math inline">\(x\)</span> cae lejos del hiperplano, por lo que podemos estar <strong>confiados acerca de la clasificación</strong>.</li>
+<li>Si <strong><span class="math inline">\(f(x^*)\)</span> está cerca de cero</strong>, entonces <span class="math inline">\(x\)</span> cae cerca del hiperplano, por lo que podemos estar <strong>menos confiados acerca de la clasificación</strong>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="maximal-margin-classifier" class="level3">
+<h3 class="anchored" data-anchor-id="maximal-margin-classifier">Maximal margin classifier</h3>
+<ul>
+<li><p>El <strong>hiperplano de frontera máxima</strong>, también conocido como el <strong>hiperplano separador óptimo</strong>, es el hiperplano separador que se encuentra <strong>más lejos</strong> de las observaciones de entrenamiento.</p></li>
+<li><p>Es posible que usar el <strong>hiperplano de frontera máxima</strong> genere un <strong>modelo sobreajustado</strong>.</p></li>
+</ul>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 </strong></span>Se espera que el clasificador que tenga una mayor frontera para los datos de entrenamiento tambi´en lo tenga para los datos de preuba.</p>
+</div>
+<ul>
+<li><p>El <strong>hiperplano de fontera máxima</strong> es <strong>sensible respecto a los outliers</strong>.</p></li>
+<li><p>Las observaciones/<strong>vectores</strong> que son <strong>equidistantes</strong> al hiperplano de frontera máxima son conocida como los <strong>vectores de soporte</strong>.</p></li>
+</ul>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 3 </strong></span>Una propiedad muy importante es que el hiperplano de frontera máxima depende directamente de estos vectores de soporte, pero <strong>no de las otras observaciones</strong>.</p>
+</div>
+</section>
+<section id="construcción-del-clasificador-de-frontera-máxima" class="level3">
+<h3 class="anchored" data-anchor-id="construcción-del-clasificador-de-frontera-máxima">Construcción del clasificador de frontera máxima</h3>
+<ul>
+<li><p>Tenemos <span class="math inline">\(n\)</span> observaciones de entrenamiento <span class="math inline">\(x_1, \dots, x_n \in \mathbb{R}^p\)</span>, con etiquetas de clase <span class="math inline">\(y_1, \dots, y_n \in \left\{ 1, -1 \right\}\)</span> .</p></li>
+<li><p>El hiperplano de frontera máxima</p></li>
+</ul>
+<p>(LLEEENAAAAR)</p>
+</section>
+<section id="casos-de-no-separación" class="level3">
+<h3 class="anchored" data-anchor-id="casos-de-no-separación">Casos de no separación</h3>
+<p>(LLEEENAAAAR, also include la diapo comentarios generales)</p>
+</section>
+</section>
+<section id="clasificador-de-soporte-vectorial" class="level2">
+<h2 class="anchored" data-anchor-id="clasificador-de-soporte-vectorial">Clasificador de soporte vectorial</h2>
+<ul>
+<li><p>Estos no son las máquinas de soporte vectorial; sino, son una versión con <strong>frontera relajada</strong> del hiperplano de frontera máxima.</p></li>
+<li><p>En vez de buscar la mayor frontera, <strong>suavizamos la frontera</strong>, de manera que se permite que algunas observaciones se encuentre en el lado incorrecto de la frontera e incluso del hiperplano.</p></li>
+</ul>
+<p>(LLEENAAAR)</p>
+</section>
+<section id="kernels" class="level2">
+<h2 class="anchored" data-anchor-id="kernels">Kernels</h2>
+<ul>
+<li><p>Como <strong>no siempre existe al menos un hiperplano separador (perfecto)</strong>, los datos pueden ser <strong>embedded</strong> into un espacio de mayor dimensión, vía un <strong>kernel</strong> (es una función). Esto con el fin de que, en aquel espacio de mayor dimensión, <strong>sí exista</strong> un hiperplano separador.</p></li>
+<li><p>Cuando se emplea algún kernel para un clasificador de soporte vectorial, el modelo se denomina <strong>Máquina de Soporte Vectorial</strong>.</p></li>
+</ul>
+</section>
+<section id="svm-para-más-de-dos-categorías" class="level2">
+<h2 class="anchored" data-anchor-id="svm-para-más-de-dos-categorías">SVM para más de dos categorías</h2>
+<ul>
+<li>Para clasificación no binaria, se suelen usar dos alternativas:
+<ul>
+<li><strong>Clasificación uno contra uno</strong>:</li>
+<li><strong>Clasificación uno contra todos</strong>:</li>
+</ul></li>
+</ul>
+</section>
+<section id="ejemplo-práctico-svm" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-svm">Ejemplo práctico: SVM</h2>
+<section id="clasificación-binaria" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación-binaria">Clasificación binaria</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Support Vector Machines</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'e1071' was built under R version 4.1.3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generación de datos con fronteras no lineales</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">200</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,] <span class="ot">=</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,] <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>,] <span class="ot">=</span> x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>,] <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">150</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">50</span>))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">as.factor</span>(y))</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># El ploteo de los datos muestra claramente que las fronteras no son lineales</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se dividen los datos aleatoriamente en grupos de entrenamiento y prueba</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">200</span>, <span class="dv">100</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Se ajusta el svm usando un kernel radial y gamma = 1</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>svmfit <span class="ot">&lt;-</span> e1071<span class="sc">::</span><span class="fu">svm</span>(</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span>., <span class="at">data =</span> dat[train,], </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"radial"</span>, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">cost =</span> <span class="dv">1</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit, dat[train,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener información adicional</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svmfit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+svm(formula = y ~ ., data = dat[train, ], kernel = "radial", gamma = 1, 
+    cost = 1)
+
+
+Parameters:
+   SVM-Type:  C-classification 
+ SVM-Kernel:  radial 
+       cost:  1 
+
+Number of Support Vectors:  31
+
+ ( 16 15 )
+
+
+Number of Classes:  2 
+
+Levels: 
+ 1 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Incremento del costo para reducir el número de errores de entrenamiento</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>svmfit <span class="ot">=</span> e1071<span class="sc">::</span><span class="fu">svm</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span>., <span class="at">data =</span> dat[train,], </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"radial"</span>, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">cost =</span> <span class="fl">1e5</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit,dat[train,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Es posible realizar validación cruzada usando tune() para seleccionar la mejor opción de</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gamma y costo con un kernel radial</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>tune.out <span class="ot">=</span> e1071<span class="sc">::</span><span class="fu">tune</span>(</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  svm, y <span class="sc">~</span>., <span class="at">data =</span> dat[train,], </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">"radial"</span>, </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ranges =</span> <span class="fu">list</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cost =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">1000</span>),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span> ,<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="co"># La mejor elección resultó ser con costo=1 y gamma=0.5.</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Se realiza la predicción con el conjunto de entrenamiento</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tune.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Parameter tuning of 'svm':
+
+- sampling method: 10-fold cross validation 
+
+- best parameters:
+ cost gamma
+    1   0.5
+
+- best performance: 0.07 
+
+- Detailed performance results:
+    cost gamma error dispersion
+1  1e-01   0.5  0.26 0.15776213
+2  1e+00   0.5  0.07 0.08232726
+3  1e+01   0.5  0.07 0.08232726
+4  1e+02   0.5  0.14 0.15055453
+5  1e+03   0.5  0.11 0.07378648
+6  1e-01   1.0  0.22 0.16193277
+7  1e+00   1.0  0.07 0.08232726
+8  1e+01   1.0  0.09 0.07378648
+9  1e+02   1.0  0.12 0.12292726
+10 1e+03   1.0  0.11 0.11005049
+11 1e-01   2.0  0.27 0.15670212
+12 1e+00   2.0  0.07 0.08232726
+13 1e+01   2.0  0.11 0.07378648
+14 1e+02   2.0  0.12 0.13165612
+15 1e+03   2.0  0.16 0.13498971
+16 1e-01   3.0  0.27 0.15670212
+17 1e+00   3.0  0.07 0.08232726
+18 1e+01   3.0  0.08 0.07888106
+19 1e+02   3.0  0.13 0.14181365
+20 1e+03   3.0  0.15 0.13540064
+21 1e-01   4.0  0.27 0.15670212
+22 1e+00   4.0  0.07 0.08232726
+23 1e+01   4.0  0.09 0.07378648
+24 1e+02   4.0  0.13 0.14181365
+25 1e+03   4.0  0.15 0.13540064</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">true =</span> dat[<span class="sc">-</span>train, <span class="st">"y"</span>], </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pred =</span> <span class="fu">predict</span>(tune.out<span class="sc">$</span>best.model,<span class="at">newx=</span>dat[<span class="sc">-</span>train,])</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    pred
+true  1  2
+   1 54 23
+   2 17  6</code></pre>
+</div>
+</div>
+</section>
+<section id="clasificación-no-binaria" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación-no-binaria">Clasificación no binaria</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rbind</span>(x, <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">50</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(y, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">50</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>x[y <span class="sc">==</span> <span class="dv">0</span>,<span class="dv">2</span>]<span class="ot">=</span> x [y <span class="sc">==</span> <span class="dv">0</span>,<span class="dv">2</span>] <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">as.factor</span>(y))</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> (y<span class="sc">+</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>svmfit <span class="ot">=</span> <span class="fu">svm</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span>., <span class="at">data =</span> dat, <span class="at">kernel =</span> <span class="st">"radial"</span>, <span class="at">cost =</span> <span class="dv">10</span>, <span class="at">gamma =</span> <span class="dv">1</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit, dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="clase-11_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 4 </strong></span>Fijada la data sobre la cual se realiza <strong>validación cruzada</strong>, el parámetro <strong>costo</strong>; mientras que el parámetro <strong>gamma</strong></p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../apuntes/clase-09.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Apuntes de clase</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../apuntes/clase-12.html" class="pagination-link">
+        <span class="nav-page-text">Apuntes de clase</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

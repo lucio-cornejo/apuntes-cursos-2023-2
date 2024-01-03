@@ -1,0 +1,705 @@
+---
+title: Tarea 2 - 1EST17
+# execute: 
+  # cache: true
+format: 
+  # html:
+  pdf:
+    toc: true
+    toc-depth: 4
+    toc-title: Tabla de Contenidos
+
+code-block-bg: true
+code-block-border-left: "#DC143C"
+---
+
+## Grupo
+
+- **Integrante**: Lucio Enrique Cornejo Ramírez
+- **Código**: 20192058
+
+## Problema 1
+
+```{r}
+library(rpart)
+library(party)
+library(ggplot2)
+```
+
+### Caso particular
+
+```{r}
+# Tamaño de muestra
+n <- 100
+
+datos <- data.frame(
+  X1 = runif(n, 0, 1),
+  X2 = runif(n, 0, 1),
+  X3 = runif(n, 0, 1),
+  X4 = sample(1:4, n, replace = TRUE),
+  Y = rbinom(n, size = 1, prob = 0.5)
+)
+
+# Variables categóricas
+datos$X4 <- as.factor(datos$X4)
+datos$Y <- as.factor(datos$Y)
+
+head(datos, 20)
+```
+
+```{r}
+r_arbol <- rpart(
+  Y ~ ., data = datos, method = 'class', cp = 0
+)
+r_arbol
+```
+
+```{r}
+plot(r_arbol, margin = 0.25)
+text(r_arbol, use.n = TRUE)
+```
+
+```{r}
+c_arbol <- ctree(
+  Y ~ ., data = datos,
+  controls = ctree_control(mincriterion = 0)
+)
+c_arbol
+```
+
+```{r}
+plot(c_arbol)
+```
+
+### Simulación
+
+```{r}
+var.rpart <- function(fit) {
+  tabla <- table(fit$frame$var)[-1]
+  sol <- as.numeric(tabla > 0)
+  names(sol) <- names(tabla)
+  return(sol)
+}
+
+var.ctree <- function(fit){
+  require(gdata)
+  a <- capture.output(print(fit))
+  a <- a[-c(1:7)]
+  a <- trim(a)
+  
+  v <- character()
+  for(h in 1:length(a)){
+    b <- a[h]
+    b <- gsub(") ","q", b)
+    b <- gsub(")", "q", b)
+    b <- gsub(" < ", "q", b)
+    b <- gsub(" > ", "q", b)
+    b <- gsub(" <= ", "q", b)
+    b <- gsub(" >= ", "q", b)
+    b <- gsub(" weights = ", "q", b)
+    v[h] <- unlist(strsplit(b, "q"))[2]
+  }
+  
+  v <- factor(
+    v, levels = names(fit@data@get("input"))
+  )
+  v <- v[is.na(v)==F]
+  tabla <- table(v) > 0
+  sol <- as.numeric(table(v) > 0)
+  names(sol) <- names(tabla)
+  return(sol)
+}
+
+# Funciones auxiliares
+random_df <- function(n = 100) {
+  # n: Tamaño de muestra
+  datos <- data.frame(
+    X1 = runif(n, 0, 1),
+    X2 = runif(n, 0, 1),
+    X3 = runif(n, 0, 1),
+    X4 = sample(1:4, n, replace = TRUE),
+    Y = rbinom(n, size = 1, prob = 0.5)
+  )
+
+  # Variables categóricas
+  datos$X4 <- as.factor(datos$X4)
+  datos$Y <- as.factor(datos$Y)
+
+  return(datos)
+}
+
+r_tree <- function(df) {
+  rpart(Y ~ ., data = df, method = 'class', cp = 0)
+}
+
+c_tree <- function(df) {
+  ctree(Y ~ ., data = df, controls = ctree_control(mincriterion = 0))
+}
+```
+
+```{r}
+num_simul <- 10**4
+```
+
+```{r}
+r_vars_frequency <- rep(0, 4)
+names(r_vars_frequency) <- paste0("X", 1:4)
+
+c_vars_frequency <- rep(0, 4)
+names(c_vars_frequency) <- paste0("X", 1:4)
+
+set.seed(6174)
+for (simul_n in 1:num_simul) {
+  df <- random_df()
+
+  tree <- r_tree(df)
+  # plot(tree)
+  # text(tree, use.n = TRUE)
+  vars <- var.rpart(tree)
+  for (var_name in names(vars)) {
+    r_vars_frequency[var_name] <- 1 + r_vars_frequency[var_name]
+  }
+
+  tree <- c_tree(df)
+  # plot(tree)
+  vars <- var.ctree(tree)
+  for (var_name in names(vars)) {
+    c_vars_frequency[var_name] <- 1 + c_vars_frequency[var_name]
+  }
+}
+```
+
+```{r}
+# Frecuencia con que cada covariable fue seleccionada
+r_vars_frequency
+c_vars_frequency
+```
+
+```{r}
+# Gráfico de las frecuencias por covariables
+vars_frequencies <- data.frame(
+  variables = paste0("X", 1:4),
+  rpart_freq = r_vars_frequency,
+  ctree_freq = c_vars_frequency
+)
+
+vars_frequencies <- rbind(
+  data.frame(
+    variables = paste0("X", 1:4),
+    frecuencia = unname(r_vars_frequency),
+    caso = as.factor("rpart")
+  ),
+  data.frame(
+    variables = paste0("X", 1:4),
+    frecuencia = unname(c_vars_frequency),
+    caso = as.factor("ctree")
+  )
+)
+
+ggplot(vars_frequencies) +
+  aes(x = variables, y = frecuencia / num_simul, fill = caso) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = "Variables", y = "Frecuencia relativa", 
+    title = "Frecuencia relativa de covariables, por función de árbol"
+  )
+```
+
+
+### Respuesta
+
+En base a la simulación presentada, estimamos que, para los **dos** tipos empleados de construcción de un árbol (funciones `r_tree` y `c_tree`), la **probabilidad de que una covariable sea seleccionada**
+es de:
+
+| Caso | X1 | X2 | X3 | X4 
+|:---:|:---:|:---:|:---:|:---:|
+| `rpart` | `r r_vars_frequency["X1"] / num_simul` | `r r_vars_frequency["X2"] / num_simul` | `r r_vars_frequency["X3"] / num_simul` | `r r_vars_frequency["X4"] / num_simul` |
+| `ctree` | `r c_vars_frequency["X1"] / num_simul` | `r c_vars_frequency["X2"] / num_simul` | `r c_vars_frequency["X3"] / num_simul` | `r c_vars_frequency["X4"] / num_simul` |
+
+En base a que las probabilidades en la segunda fila de la tabla previa son todas del mismo valor ($1$, en particular), concluimos
+a favor de la afirmación de *Hothorn et al.*. 
+Esto debido a que la ausencia del sesgo a la hora de seleccionar una 
+covariable es evidente, comparado a como se observa en la primera 
+fila de la tabla previa, donde se observa un **menor sesgo** por escoger la covariable $X4$, variable categórica con una menor
+cantidad de posibles puntos de corte, comparado a variables numéricas.
+
+## Problema 2
+
+```{r}
+library(e1071)
+library(ISLR2)
+data(OJ)
+
+str(OJ)
+```
+
+### Parte `a)`
+
+```{r}
+# Separamos datos en conjuntos de entrenamiento y de prueba
+set.seed(4268)
+train_id <- sample(1:nrow(OJ), 800)
+train <- OJ[train_id,]
+test <- OJ[-train_id,]
+```
+
+### Parte `b)`
+
+```{r}
+svmfit <- svm(
+  Purchase ~ ., data = train, kernel = "linear", cost = 0.01
+)
+summary(svmfit)
+```
+
+Note que la cantidad de vectores de soporte, `431`, representa
+aproximadamente el `50%` de las observaciones en los datos
+con los que fue entrenado el modelo. 
+
+Este porcentaje relativamente elevado es un **posible indicador**
+de que un kernel lineal **no es apropiado** para la separación de
+los datos vía un hiperplano.
+
+### Parte `c)`
+
+```{r}
+# Función auxiliar para matriz de confusión y tasa de error
+confusion_matrix_y_error <- function(df, svm.model) {
+  confusion_matrix <- table(
+    true = df$Purchase, pred = predict(svm.model, df[,-1])
+  )
+
+  error_rate <- 
+    (confusion_matrix[1, 2] + confusion_matrix[2, 1]) / nrow(df)
+
+  return(list(tabla = confusion_matrix, error = error_rate))
+}
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit)
+train_confusion_matrix_b <- tmp[["tabla"]]
+train_confusion_matrix_b
+
+train_error_b <- tmp[["error"]]
+train_error_b 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit)
+test_confusion_matrix_b <- tmp[["tabla"]]
+test_confusion_matrix_b
+
+test_error_b <- tmp[["error"]]
+test_error_b 
+```
+
+Las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_b` `%`  y `r 100*test_error_b` `%` .
+
+
+### Parte `d)`
+
+```{r}
+set.seed(4268)
+tune.costo = tune(
+  svm, Purchase ~., data = train, kernel = "linear", 
+  ranges = list(cost = seq(0.01, 10, length.out = 20))
+)
+summary(tune.costo)
+```
+
+Respecto a los veinte casos evaluados para el valor de `costo`,
+el valor encontrado de **costo óptimo** es de `8.948421`.
+
+
+### Parte `e)`
+
+```{r}
+# Seleccionamos el mejor (según costo) modelo encontrado
+svmfit_d <- tune.costo$best.model
+svmfit_d
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit_d)
+train_confusion_matrix_d <- tmp[["tabla"]]
+train_confusion_matrix_d
+
+train_error_d <- tmp[["error"]]
+train_error_d 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit_d)
+test_confusion_matrix_d <- tmp[["tabla"]]
+test_confusion_matrix_d
+
+test_error_d <- tmp[["error"]]
+test_error_d 
+```
+
+Para el *mejor* modelo encontrado en la parte `d)`, las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_d` `%`  y `r 100*test_error_d` `%` .
+
+
+### Parte `f)`
+
+#### Parte `f.b)`
+
+Evitaremos especificar el valor de `gamma`, en la función `svm`,
+con el fin de usar su **valor predeterminado**.
+
+```{r}
+svmfit_f <- svm(
+  Purchase ~ ., data = train, kernel = "radial", cost = 0.01
+)
+summary(svmfit_f)
+```
+
+Respecto a este nuevo modelo, con kernel radial, encontramos que el número de vectores de soporte (`629`) representa aproximadamente
+el `80%` de las observaciones de los datos de entrenamiento.
+
+En ese sentido, respecto al valor de costo especificado, 
+podríamos inferir que aquel modelo radial no es tan apropiado 
+(incluso menos apropiado que el modelo lineal en la parte `b)`)
+para clasificación de observaciones.
+
+
+#### Parte `f.c)`
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit_f)
+train_confusion_matrix_f.b <- tmp[["tabla"]]
+train_confusion_matrix_f.b
+
+train_error_f.b <- tmp[["error"]]
+train_error_f.b 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit_f)
+test_confusion_matrix_f.b <- tmp[["tabla"]]
+test_confusion_matrix_f.b
+
+test_error_f.b <- tmp[["error"]]
+test_error_f.b 
+```
+
+Las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_f.b` `%`  y `r 100*test_error_f.b` `%` .
+
+
+#### Parte `f.d)`
+
+```{r}
+set.seed(4268)
+tune.costo_f = tune(
+  svm, Purchase ~., data = train, kernel = "radial", 
+  ranges = list(cost = seq(0.01, 10, length.out = 20))
+)
+summary(tune.costo_f)
+```
+
+Respecto a los veinte casos evaluados para el valor de `costo`,
+el valor encontrado de **costo óptimo** es de `3.164737`.
+
+
+#### Parte `f.e)`
+
+```{r}
+# Seleccionamos el mejor (según costo) modelo encontrado
+svmfit_f.d <- tune.costo_f$best.model
+svmfit_f.d
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit_f.d)
+train_confusion_matrix_f.d <- tmp[["tabla"]]
+train_confusion_matrix_f.d
+
+train_error_f.d <- tmp[["error"]]
+train_error_f.d 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit_f.d)
+test_confusion_matrix_f.d <- tmp[["tabla"]]
+test_confusion_matrix_f.d
+
+test_error_f.d <- tmp[["error"]]
+test_error_f.d 
+```
+
+Para el *mejor* modelo encontrado en la parte `d)`, las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_f.d` `%`  y `r 100*test_error_f.d` `%` .
+
+
+### Parte `g)`
+
+#### Parte `g.b)`
+
+```{r}
+svmfit_g <- svm(
+  Purchase ~ ., data = train, cost = 0.01,
+  kernel = "polynomial", degree = 2
+)
+summary(svmfit_g)
+```
+
+Respecto a este nuevo modelo (kernel polinomial de rado 2) encontramos que el número de vectores de soporte (`632`) representa aproximadamente
+el `80%` de las observaciones de los datos de entrenamiento.
+
+En ese sentido, respecto al valor de costo especificado, 
+podríamos inferir que aquel modelo no es tan apropiado 
+(incluso menos apropiado que el modelo lineal en la parte `b)`)
+para clasificación de observaciones.
+
+
+#### Parte `g.c)`
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit_g)
+train_confusion_matrix_g.b <- tmp[["tabla"]]
+train_confusion_matrix_g.b
+
+train_error_g.b <- tmp[["error"]]
+train_error_g.b 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit_g)
+test_confusion_matrix_g.b <- tmp[["tabla"]]
+test_confusion_matrix_g.b
+
+test_error_g.b <- tmp[["error"]]
+test_error_g.b 
+```
+
+Las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_g.b` `%`  y `r 100*test_error_g.b` `%` .
+
+
+#### Parte `g.d)`
+
+```{r}
+set.seed(4268)
+tune.costo_g = tune(
+  svm, Purchase ~., data = train, 
+  kernel = "polynomial", degree = 2,
+  ranges = list(cost = seq(0.01, 10, length.out = 20))
+)
+summary(tune.costo_g)
+```
+
+Respecto a los veinte casos evaluados para el valor de `costo`,
+el valor encontrado de **costo óptimo** es de `4.216316`.
+
+
+#### Parte `g.e)`
+
+```{r}
+# Seleccionamos el mejor (según costo) modelo encontrado
+svmfit_g.d <- tune.costo_g$best.model
+svmfit_g.d
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(train, svmfit_g.d)
+train_confusion_matrix_g.d <- tmp[["tabla"]]
+train_confusion_matrix_g.d
+
+train_error_g.d <- tmp[["error"]]
+train_error_g.d 
+```
+
+```{r}
+tmp <- confusion_matrix_y_error(test, svmfit_g.d)
+test_confusion_matrix_g.d <- tmp[["tabla"]]
+test_confusion_matrix_g.d
+
+test_error_g.d <- tmp[["error"]]
+test_error_g.d 
+```
+
+Para el *mejor* modelo encontrado en la parte `d)`, las tasas de error de entrenamiento y prueba son, respectivamente, 
+`r 100*train_error_g.d` `%`  y `r 100*test_error_g.d` `%` .
+
+
+### Parte `h)`
+
+Primero, presentamos en una tabla las tasas de error
+calculadas tanto en las partes `b, f, g` y sus subpartes.
+
+En la siguiente tabla, respecto a la columna `modelo`,
+entiéndase aquellos nombres que terminan con `.b`, como referentes
+a los modelos creados en la parte `b` (o subparte `b`, para las partes `f` y `g`). 
+
+Análogamente para los nombres de esa columna que terminan en `.d`,
+haciendo referencia al *mejor modelo* encontrado, respecto al rango
+de `costo`, en los tres casos analizados para el kernel.
+
+```{r}
+resumen_modelos <- data.frame(
+  modelo = c(
+    "Lineal.b", "Lineal.d", 
+    "Radial.b", "Radial.d", 
+    "Polinomial.b", "Polinomial.d"
+  ),
+  train_error_rate = c(
+    train_error_b, train_error_d,
+    train_error_f.b, train_error_f.d,
+    train_error_g.b, train_error_g.d
+  ),
+  test_error_rate = c(
+    test_error_b, test_error_d,
+    test_error_f.b, test_error_f.d,
+    test_error_g.b, test_error_g.d
+  )
+)
+knitr::kable(resumen_modelos)
+```
+
+Como ya es costumbre, compararemos a los seis modelos planteados
+según su **métrica de prueba**, en este caso, la **tasa de error de prueba**, no según la tasa de error de entrenamiento (métrica que puede ser sesgada a estar muy cercana a cero, en casos como overfitting).
+
+Asimismo, recalcamos que los modelos cuyo nombre termina en `.d`,
+en comparación con los que acaban en `.b`, son referentes más apropiados respecto al tipo de modelo empleado. 
+Esto debido a que su selección requirió el uso de **validación cruzada** (por medio de la función `tune()`), por lo cual se tiene
+una mayor certeza (estimación más precisa respecto a la población estadística) sobre su tasa de error de prueba asociado, comparado a los modelos de las (sub)partes `.b`, donde no se empleó
+validación cruzada.
+
+En ese sentido, entre los modelos construidos, el enfoque que
+parece brindar mejores resultados (menor tasa de error de prueba)
+con estos datos es el modelo
+`Lineal.d`, con kernel lineal y costo de valor `8.948421`.
+
+Sin embargo, debido a que los datos consisten de pocas observaciones 
+(`OJ` tiene aproximadamente solo 1000 filas), y el hecho que 
+el modelo `Polinomial.d` tiene una tasa de error de prueba 
+relativamente pequeña, y **muy cercana** a la tasa de error de 
+prueba del modelo `Lineal.d`; no se tiene suficiente evidencia 
+como para declarar que el modelo `Lineal.d` es realmente más adecuado
+que el modelo `Polinomial.d` (kernel polinomial de grado 2).
+
+Ambos enfoques/modelos mencionados presentan un relativamente 
+buen enfoque para la clasificación de observaciones referentes 
+al conjunto de datos `OJ`.
+
+
+## Problema 3
+
+```{r}
+library(foreign)
+```
+
+```{r}
+departamentos <- read.spss(
+  "./DepartamentosPeru.sav",
+  use.value.labels = TRUE, max.value.labels = Inf, 
+  to.data.frame = TRUE
+)
+colnames(departamentos) <- tolower(colnames(departamentos))
+head(departamentos)
+
+# Solo mantener columnas numéricas
+nombres_departamentos <-  departamentos[,1]
+departamentos <-  departamentos[,-1]
+rownames(departamentos) <-  nombres_departamentos
+head(departamentos)
+```
+
+### Parte `a)`
+
+```{r}
+library(fpc)
+library(cluster)
+```
+
+#### Criterio de Calinski-Harabasz
+
+```{r}
+kmeansruns(scale(departamentos), criterion = "ch")
+```
+
+Según el criterio de `Calinski-Harabasz`, el número adecuado
+de conglomerados que se debería usar para agrupar los departamentos
+es `2`.
+
+Asimismo, para este caso de dos conglomerados, un valor más cercano
+a `1` para `between_SS / total_SS` representa que la conglomeración
+es más adecuada. 
+
+Sin embargo, sgún el criterio de `Calinski-Harabaszs`, se 
+ha obtenido `between_SS / total_SS = 49.7%`, valor no tan cercano a 1. Así que no basta este criterio (CH) para afirmar lo correcto
+que resulta agrupas por los departamentos en solo 2 conglomerados.
+
+
+#### Criterio `anchura de silueta`
+
+```{r}
+kmeansruns(scale(departamentos), criterion = "asw")
+```
+
+Según el criterio de `anchura de silueta`, el número adecuado
+de conglomerados que se debería usar para agrupar los departamentos
+es `2`.
+
+Similar al caso del criterio previo, se obtiene 
+`between_SS / total_SS = 49.7%`, por lo que concluimos lo mismo
+que en el criterio anterior.
+
+
+#### Criterio de `mean individual silhoette widths`
+
+```{r}
+min_num_clusters <- 2
+max_num_clusters <- 10
+
+# Suma de cuadrados dentro de clusters
+wss <- numeric()
+for (h in min_num_clusters:max_num_clusters) {
+  b <- kmeans(
+    scale(departamentos), h, 
+    # Argumento importante para que los elementos de wss decrezcan
+    nstart = 50
+  )
+  wss <- append(wss, b$tot.withinss)
+}
+plot(
+  min_num_clusters:max_num_clusters, wss, type = "b",
+  xlab = "Número de clusters"
+)
+```
+
+
+```{r}
+mean_ind_sil_widths <- numeric()
+diss.departamentos <- daisy(scale(departamentos))
+
+for (h in min_num_clusters:max_num_clusters) {
+  res <- kmeans(scale(departamentos), h)
+  resumen <- summary(silhouette(res$cluster, diss.departamentos))
+  # Extraer la media
+  mean_ind_sil_widths <- append(mean_ind_sil_widths, unname(resumen[[1]]["Mean"]))
+}
+mean_ind_sil_widths
+```
+
+La silueta representa qué tan bien está agrupada una observación
+en su conglomerado respectivo. A **mayor silueta**, mayor similitud de la
+observación a las observaciones en su conglomerado.
+
+```{r}
+# Cantidad de clusters, con el cual se maximiza el promedio
+# de los anchos de siluetas de las observaciones
+(min_num_clusters:max_num_clusters)[which.max(mean_ind_sil_widths)]
+```
+
+Por lo tanto, según el criterio de `promedio de anchos individuales de silueta`, 
+el número adecuado de conglomerados que se debería usar para agrupar los departamentos
+es `2`.
+
+
+## Parte `b)`

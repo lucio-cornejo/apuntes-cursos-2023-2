@@ -1,0 +1,173 @@
+---
+title: Ejercicio Adicional (opcional)
+author: Lucio Cornejo
+format: 
+  # html:
+  pdf:
+    toc: true
+    toc-depth: 3
+    toc-title: Tabla de Contenidos
+    # page-layout: full
+
+code-block-bg: true
+code-block-border-left: "#DC143C"
+---
+
+
+```{r}
+library(arules)
+```
+
+## Pregunta a
+
+```{r}
+# Leer los identificadores y sus artistas respectivos
+datos <- read.transactions(
+  './lastfm.csv', header = TRUE, encoding = 'UTF-8',
+  format = 'single', sep = ',', cols = c('user', 'artist'),
+  rm.duplicates = TRUE
+)
+```
+
+### Parte i
+
+```{r}
+summary(datos)
+
+# Artistas más populares/frecuentes en los datos
+itemFrequencyPlot(datos, topN = 20, type = 'absolute')
+```
+
+```{r}
+# Aplicar algoritmo A priori
+rules <- apriori(
+  datos, 
+  parameter = list(supp = 0.01, conf = 0.2, target = "rules")
+)
+rules <- sort(rules, by = 'confidence', decreasing = TRUE)
+inspect(rules[1:20])
+```
+
+### Partes ii y iii
+
+```{r}
+summary(rules)
+```
+
+Como el **soporte máximo** resultó ser aproximadamente
+$6\%$, concluimos que para todas las reglas de asociación
+$X \rightarrow Y$ consideradas, el porcentaje de usarios 
+que escucha a los artistas pertenecientes al itemset
+$X \cup Y$ es muy bajo (menor que $6\%$).
+
+Dado que la **confianza máxima** resultó ser aproximadamente $66\%$,
+existe un par de itemsets $X_0, Y_0$ tales que aproximadamente $66\%$ 
+de las transacciones que contienen $X_0$, también contienen $Y_0$ .
+Este valor de confianza es relativamente grande, por lo que,
+a personas que escuchan los artistas pertenecientes a $X_0$,
+se esperaría que también les guste escuchar a los artistas 
+pertenecientes al itemset $Y_0$ .
+
+En ese sentido, a mayor confianza de una regla de asociación $X \rightarrow Y$,
+sería una mejor recomendación para una persona que le gusta
+escuchar a los artistas del itemset $X$, que escuche a los
+artistas del itemset $Y$ .
+
+En base a que el **lift mínimo** es mayor que $1$, concluimos que,
+para las reglas de asociación $X \rightarrow Y$ consideradas, 
+la ocurrencia del itemset $X$ está positivamente correlacionada
+con la ocurrencia del itemset $Y$ . Es decir, las reglas de asociación
+$X \rightarrow Y$ consideradas realmente sirven para recomendar 
+a usuarios que escuchan artistas del itemset $X$, que prueben 
+escuchar (pues muy probablemente les guste) a artistas del itemset $Y$ .
+
+En ese sentido, a mayor lift de una regla de asociación $X \rightarrow Y$,
+sería una mejor recomendación para una persona que le gusta
+escuchar a los artistas del itemset $X$, que escuche a los
+artistas del itemset $Y$ .
+
+
+## Pregunta b
+
+```{r}
+lift_mayor_a_5 <- subset(rules, subset = lift > 5)
+lift_mayor_a_5 <- sort(lift_mayor_a_5, by = 'lift', decreasing = TRUE)
+summary(lift_mayor_a_5)
+```
+
+Tras inspeccionar las 136 reglas filtradas,  mostramos las reglas
+de asociación $X \rightarrow Y$ tales que el itemset  $X$
+contenga al artista **Judas Priest**.
+
+```{r}
+inspect(lift_mayor_a_5[17])
+```
+
+Del valor aproximado de confianza, $50\%$, concluimos que,
+respecto a la base de datos, a casi el $50\%$ de los usuarios
+que escuchan a Judas Priest, escucha también a **Iron Maiden**.
+
+Asimismo, el valor del lift de la regla de asociación mostrada
+es mucho mayor que 1 ($8.562992$).
+
+En base a aquellos dos valores numérico, se tiene que es
+**muy probable** que a usuarios que escuchen a Judas Priest,
+les guste escuchar a Iron Maiden, **artista que recomendaríamos**.
+
+Tras inspeccionar las 136 reglas filtradas, mostramos las reglas de asociación 
+tales que el itemset contenga al artista The Pussycat Dolls.
+
+```{r}
+inspect(lift_mayor_a_5[4])
+```
+
+Respecto a la última regla de asociacón mostrada, de los valores relativamente 
+altos que posee para confianza y lift ($0.5777778$ y $13.41589$ respectivamente),
+similar a como se comentó para el caso de Judas Priest, se tiene que para usuarios
+que escuchen a The Pussycat Dolls, sería una buena recomendación 
+(con mayor probabilidad de éxito que la recomendación que presentamos para usuarios
+que esuchan a Judas Priest, ya que confianza y lift son mayores, respectivamente)
+que escuchen a la artista **Rihanna**.
+
+
+## Pregunta c
+
+```{r}
+# Filtro de lift y confianza
+filtro_c <- subset(rules, subset = lift > 4)
+filtro_c <- subset(filtro_c, subset = confidence > 0.35)
+# Filtrar reglas cuyo itemset antecedente posea algún
+# nombre de artista que contiene la palaba 'the'
+filtro_c <- subset(filtro_c, subset = lhs %pin% 'the')
+inspect(filtro_c)
+```
+
+
+```{r}
+# Tras revisar las pocas reglas de asociación filtradas,
+# filtramos solo las reglas de asociación cuyo itemset
+# antecedent posee un nombre de artista que empieza
+# con la la palabra 'the'
+filtro_c <- filtro_c[-c(8, 14)]
+
+# Ordenar de forma descendente respecto a confianza
+filtro_c <- sort(filtro_c, by = 'confidence', decreasing = TRUE)
+inspect(filtro_c)
+```
+
+
+```{r}
+# Dos primeras reglas de asociación más relevantes
+inspect(filtro_c[1:2])
+```
+
+Note que ambas reglas de asociación poseen relativamente
+altos valores de confianza y lift, los cuales, como mencionamos
+en la **parte a**, indican qué tan exitosa/apropiada sería
+la recomendación de artista(s) (consecuente), en base al itemset antecedente.
+
+En ese sentido, concluimos que, respecto a la base de datos,
+a usuarios que escuchan al par de artistas **Oasis y The Killers**, 
+se les recomendaría escuchar a la banda **Coldplay**; mientras que,
+a usuarios que escuchan al par de artistas **Led Zeppelin y The Doors**, 
+se les recomendaría escuchar a la banda **Pink Floyd**.

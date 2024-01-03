@@ -1,0 +1,330 @@
+# Apuntes de clase {-}
+
+## Boosting
+
+- La idea principal es realizar un **ponderación con varios modelos**.
+- Es **más complejo** que **bagging** respecto a **cómo calibrarlo** (la ponderación).
+
+### ¿Cómo funciona?
+
+1. Asignar pesos a las unidades de entrenamiento.
+1. Entrenar iterativamente $k$ clasificadores.
+1. Tras entrenar el clasificador $M_i$, **actualizar los pesos**
+de manera que el siguiente clasificador $M_{i+1}$ ponga más atención
+a las unidades entrenamiento que $M_i$ **clasificó erróneamente**.
+1. El clasificador final combina los votos de cada clasificador individual,
+donde el peso del voto de cada clasificador es una función de su precisión.
+
+### AdaBoost (Adaptative Boosting)
+
+- Este algoritmo no surgió de Estadística ... **no hay supuestos**
+(normalidad, etc) sobre los predictores y la response.
+
+- Propiamnte dicho, el muestro de AdaBoost no es como en Bootstrap,
+pues las observaciones no siempre tienen el mismo peso al ser sampled with replacement.
+
+- A **mayor peso** de unidad, **más veces fue wrongly classified**.
+
+- La idea es **centrarse más en las unidades que en el paso anterior fueron wrongly classified**.
+
+- En cada loop, el error de los modelos se calcula respecto a los 
+**mismos datos con los que fue entrenado** (no validation ni testing sets).
+
+::: {#prp-}
+
+AdaBoost no es adecuado de usar cuando las clases están **muy desbalanceadas**.
+Esto debido a que AdaBoost usa el **error** (complemnto de accuracy)
+para la ponderación de los clasificadores; pese a que otras métricas,
+como **sensibilidad** son más adecuadas para medir la eficiencia del modelo
+como predictor.
+
+:::
+
+
+#### Algoritmo
+
+- **Input:**
+    - $D$: datos con $d$ unidades clasificadas
+    - $k$ (**hiperparámetro**): número de iteracions (se genera un clasificador por iteración)
+
+- **Output:** Modelo compuesto
+    1. Inicializar peso de unidad como $\dfrac{1}{d}$ .
+    1. **Para cada iteración**, muestrear $D$ **con reemplazo** de acuerdo a los pesos, para obtener $D_i$ .
+    1. Usar $D_i$ para derivar $M_i$ .
+    1. Calcular $\text{ error}\left( M_i \right) = \displaystyle{ \sum_{j=1}^{d}} w_j \text{ err}\left( X_j \right)$ , 
+    donde $\text{ err }\left( X_j \right)$ indica si la unidad $X_j$ fue mal clasificada.
+    1. Si $\text{ error }\left( M_i \right) > 0.5$, volver al paso 2.
+    1. Para cada unidad en $D_i$ **bien clasificada**, multiplicar su peso por 
+    $\dfrac{\text{ error}\left( M_i \right)}{1- \text{ error}\left( M_i \right)}$ 
+    1. Actualizar los pesos y normalizarlos.
+
+#### Peso de clasificadores
+
+- A **menor tasa de error**, el clasificador es más exacto, así que su **voto vale más**.
+
+- El peso del voto del clasificador $M_i$ es 
+$\log \left( \dfrac{1- \text{ error}\left( M_i \right)}{\text{ error}\left( M_i \right)} \right)$ .
+
+- Para cada clase $c$, se suman los pesos de cada clasificador que asignó
+la clase $c$ a la unidad de observación $X$. Luego, **gana** la clase con la
+**mayor suma de pesos**, y esa corresponde a la predicción asignada a $X$ .
+
+
+## Bagging vs Boosting
+
+- Como Boosting se focaliza en las **unidades mal clasificadas**,
+corre el riesgo de **sobreajustar el modelo resultante a esos datos**;
+mientras que **Bagging es menos susceptible a un sobreajuste del modelo**.
+
+- Algunas veces, el modelo resultante puede ser **menos preciso**
+que un modelo único para los mismos datos.
+
+- Boosting tiende a lograr **mayor precisión** que Bagging,
+del **modelo resultante**, en comparación a un modelo único.
+
+
+## Ejemplo práctico: AdaBag
+
+```{r}
+library(adabag)
+
+library(rpart)
+data(irir)
+head(iris)
+```
+
+```{r}
+# Seleccion de datos de trabajo o entrenamiento,
+# se seleccionan 25 de cada especie
+train <- c(
+  sample(1:50, 25), sample(51:100, 25), sample(101:150, 25)
+)
+```
+
+```{r}
+# Modelamos la especie a partir de todas las variables en los datos de entrenamiento
+# mfinal -> N de iteraciones
+# boos -> Permite submuestrear para generar los pesos
+iris.adaboost <- adabag::boosting(
+  Species ~ ., data = iris[train,], 
+  boos = TRUE, mfinal = 10
+)
+iris.adaboost
+```
+
+
+```{r}
+# Graficamos las variables según su porcentaje de relevancia  
+# El largo de pétalo es la más relevante.
+barplot(
+  iris.adaboost$imp[order(iris.adaboost$imp, decreasing = TRUE)],
+  ylim = c(0, 100), main = "Importancia Relativa de las Variables",
+  col = "lightblue"
+)
+```
+
+
+```{r}
+# Ajustamos a los nuevos datos, y vemos el ajuste
+iris.predboosting <- adabag::predict.boosting(
+  iris.adaboost, newdata = iris[-train,]
+)
+iris.predboosting
+```
+
+## Máquinas de Soporte Vectorial (SVM)
+
+- La idea principal es usar un **hiperplano** como frontera
+para **realizar clasificaciones**.
+
+### Clasificación usando hiperplanos separadores
+
+- Considere el conjunto de observaciones como una matriz 
+$X$ cuyas filas son las observaciones; y, las columnas
+representan a los predictores.
+
+- Trataremos primero el caso de **clasificación binaria**,
+considerando que las observaciones pertenecen a dos clases, 
+$1$  y $-1$.
+
+- Así, un **hiperplano separador** tendrá la propiedad
+$y_i \left( \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} \right) > 0$ 
+para todo $i = 1, \dots, n$.
+
+- $x^*$ es clasificado basado en el signo de
+$f(x^*) = \beta_0 + \beta_1 x_{1}^* + \cdots + \beta_p x_{p}^*$:
+    - Si **$f(x^*)$ está lejos de cero**, entonces $x$ 
+    cae lejos del hiperplano, por lo
+    que podemos estar **confiados acerca de la clasificación**.
+    - Si **$f(x^*)$ está cerca de cero**, entonces $x$ 
+    cae cerca del hiperplano, por lo
+    que podemos estar **menos confiados acerca de la clasificación**.
+
+### Maximal margin classifier
+
+- El **hiperplano de frontera máxima**, también conocido como el 
+**hiperplano separador óptimo**, es el hiperplano separador que
+se encuentra **más lejos** de las observaciones de entrenamiento.
+
+- Es posible que usar el **hiperplano de frontera máxima**
+genere un **modelo sobreajustado**.
+
+::: {#prp-}
+
+Se espera que el clasificador que tenga una mayor frontera para los
+datos de entrenamiento tambi´en lo tenga para los datos de preuba.
+
+:::
+
+- El **hiperplano de fontera máxima** es **sensible respecto a los outliers**.
+
+- Las observaciones/**vectores** que son **equidistantes** al hiperplano
+de frontera máxima son conocida como los **vectores de soporte**.
+
+::: {#prp-}
+
+Una propiedad muy importante es que el hiperplano de frontera máxima
+depende directamente de estos vectores de soporte, pero 
+**no de las otras observaciones**.
+
+:::
+
+### Construcción del clasificador de frontera máxima
+
+- Tenemos $n$ observaciones de entrenamiento $x_1, \dots, x_n \in \mathbb{R}^p$,
+con etiquetas de clase $y_1, \dots, y_n \in \left\{ 1, -1 \right\}$ .
+
+- El hiperplano de frontera máxima 
+
+
+(LLEEENAAAAR)
+
+### Casos de no separación
+
+(LLEEENAAAAR, also include la diapo comentarios generales)
+
+
+
+## Clasificador de soporte vectorial
+
+- Estos no son las máquinas de soporte vectorial; sino, son
+una versión con **frontera relajada** del hiperplano de frontera máxima.
+
+- En vez de buscar la mayor frontera, **suavizamos la frontera**, de manera que
+se permite que algunas observaciones se encuentre en el lado incorrecto
+de la frontera e incluso del hiperplano.
+
+(LLEENAAAR)
+
+## Kernels
+
+- Como **no siempre existe al menos un hiperplano separador (perfecto)**,
+los datos pueden ser **embedded** into un espacio de mayor dimensión,
+vía un **kernel** (es una función). Esto con el fin de que, en aquel
+espacio de mayor dimensión, **sí exista** un hiperplano separador.
+
+- Cuando se emplea algún kernel para un clasificador de soporte
+vectorial, el modelo se denomina **Máquina de Soporte Vectorial**.
+
+## SVM para más de dos categorías
+
+- Para clasificación no binaria, se suelen usar dos alternativas:
+    - **Clasificación uno contra uno**: 
+    - **Clasificación uno contra todos**:
+
+
+## Ejemplo práctico: SVM
+
+### Clasificación binaria
+
+```{r}
+# Support Vector Machines
+library(e1071)
+```
+
+```{r}
+# Generación de datos con fronteras no lineales
+set.seed(1)
+x <- matrix(rnorm(200*2), ncol=2)
+x[1:100,] = x[1:100,] + 2
+x[101:150,] = x[101:150,] - 2
+
+y <- c(rep(1,150), rep(2,50))
+dat <- data.frame(x = x, y = as.factor(y))
+
+# El ploteo de los datos muestra claramente que las fronteras no son lineales
+plot(x, col = y)
+```
+
+```{r}
+# Se dividen los datos aleatoriamente en grupos de entrenamiento y prueba
+train <- sample(200, 100)
+
+# Se ajusta el svm usando un kernel radial y gamma = 1
+svmfit <- e1071::svm(
+  y ~., data = dat[train,], 
+  kernel = "radial", gamma = 1, cost = 1
+)
+plot(svmfit, dat[train,])
+
+# Obtener información adicional
+summary(svmfit)
+```
+
+
+```{r}
+# Incremento del costo para reducir el número de errores de entrenamiento
+svmfit = e1071::svm(
+  y ~., data = dat[train,], 
+  kernel = "radial", gamma = 1, cost = 1e5
+)
+plot(svmfit,dat[train,])
+```
+
+
+```{r}
+# Es posible realizar validación cruzada usando tune() para seleccionar la mejor opción de
+# gamma y costo con un kernel radial
+set.seed(1)
+tune.out = e1071::tune(
+  svm, y ~., data = dat[train,], 
+  kernel = "radial", 
+  ranges = list(
+    cost = c(0.1, 1, 10, 100, 1000),
+    gamma = c(0.5, 1, 2 ,3, 4)
+  )
+)
+# La mejor elección resultó ser con costo=1 y gamma=0.5.
+# Se realiza la predicción con el conjunto de entrenamiento
+summary(tune.out)
+table(
+  true = dat[-train, "y"], 
+  pred = predict(tune.out$best.model,newx=dat[-train,])
+)
+```
+
+### Clasificación no binaria
+
+```{r}
+set.seed(1)
+x <- rbind(x, matrix(rnorm(50*2), ncol=2))
+y <- c(y, rep(0, 50))
+x[y == 0,2]= x [y == 0,2] + 2
+
+dat <- data.frame(x = x, y = as.factor(y))
+par(mfrow = c(1, 1))
+plot(x, col = (y+1))
+
+svmfit = svm(
+  y ~., data = dat, kernel = "radial", cost = 10, gamma = 1
+)
+plot(svmfit, dat)
+```
+
+::: {#prp-}
+
+Fijada la data sobre la cual se realiza **validación cruzada**,
+ambos parámetros **costo** y **gamma** deben volver a estimarse,
+en caso **cambies el tipo de kernel**.
+:::
+

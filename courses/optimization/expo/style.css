@@ -1,0 +1,14 @@
+.remark-slide {
+  filter: invert(1);
+}
+
+.remark-slide-content {
+  font-size: 2rem;
+  padding: 1em 4em 1em 4em;
+}
+
+.math-tool {
+  color: crimson;
+  font-weight: bold;
+  text-decoration: underline;
+}

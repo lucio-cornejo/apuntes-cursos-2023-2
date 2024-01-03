@@ -31,10 +31,24 @@ book:
     - part: "Semana 8"
       chapters: 
         - apuntes/clase-08.qmd
-
     - part: "Semana 9"
       chapters: 
         - apuntes/clase-09.qmd
+    # - part: "Semana 10"
+    #   chapters: 
+    #     - apuntes/clase-10.qmd
+    - part: "Semana 11"
+      chapters: 
+        - apuntes/clase-11.qmd
+    - part: "Semana 12"
+      chapters: 
+        - apuntes/clase-12.qmd
+    - part: "Semana 13"
+      chapters: 
+        - apuntes/clase-13.qmd
+    - part: "Semana 14"
+      chapters: 
+        - apuntes/clase-14.qmd
 
 format:
   html:

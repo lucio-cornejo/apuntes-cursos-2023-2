@@ -1,0 +1,63 @@
+# Apuntes de clase {-}
+
+## Aprendizaje No Supervisado
+
+- Como no hay variable **response**, la **evaluación**
+de los modelos es más *subjetiva*. Por ello, para modelos
+**no supervisados**, es de mayor importancia el **field expertise**.
+
+### Reglas de asociación
+
+- Son útiles para **descubrir relaciones de interés** en los datos.
+
+- Base de datos de **transacciones**:
+
+| Transaction ID | Items 
+| :---: | :---:
+1 | A, B, C
+2 | A, C
+3 | B, C, D, E
+
+- **Regla de asociación**: 
+    - Es una implicancia de la forma $X \Rightarrow Y$, donde
+    $X\subset I, Y\subset I$ y $X\cap Y = \emptyset$ .
+    - $I$ es el conjunto de **todos** los items en la base de datos de transaccciones.
+    - $X$ se denomina **regla antecedente**; Y, **regla consecuente**.
+    - De la tabla anterior, se tiene la siguiente regla
+    de asociación $\left\{ A \right\} \rightarrow \left\{ B \right\}$ .
+
+::: {#prp-}
+
+Las reglas de asociación **no deben ser interpretadas** 
+como verdades universales; simpemente son caracterizadas por 
+medidas estadísticas que cuantifican la **fuerza de la asociación**.
+
+:::
+
+
+### Confianza y soporte
+
+- **Itemset**: Colección de uno o más items.
+- **Soporte**: **Frecuencia** con la que ocurre un itemset.
+
+Ejemplo de soporte: $s\left( \left\{ B, C \right\} \right) = \dfrac{2}{3}$ .
+
+- **Regla de asociación**: Es una relación entre dos itemsets. 
+$X\rightarrow Y$ representa el **patrón de que cuando X ocurre; Y también**.
+
+
+- **Medidas de evaluación de una regla** $X \rightarrow Y$:
+    - **Soporte**: 
+        - $s\left( X \rightarrow Y \right) = s \left( X \cup Y \right)$ 
+        $= \dfrac{\text{ \# de trans. que contienen a (X U Y) }}{\text{ \# total de transacciones }}$ 
+
+    - **Confianza**: 
+        - $c \left( X \rightarrow Y \right) = P(Y \mid X ) = \dfrac{s\left( X \cup Y \right)}{s(X)}$ 
+    
+    - **Lift**:
+        - $lift \left( X \rightarrow Y \right) = \dfrac{s\left( X \cup Y \right)}{s\left( X \right) s\left( Y \right)}$
+        - **lift = 1** significa que los items antecendentes y consecuentes son **independientes**.
+        - **lift > 1** implica que existe **mayor asociación** entre los itemsets.
+        - Un valor de **lift cercano 0** implica que los itemsets son **sustitutorios**;
+        es decir, puede reemplazarse el uno por el otro.
+
